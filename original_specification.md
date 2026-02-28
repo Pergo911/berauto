@@ -1,3 +1,11 @@
+# Original Assignment Specification
+
+This is the unmodified project specification provided by the university course. It is kept here as a reference for the original requirements. All text below is in Hungarian.
+
+**IMPORTANT:** This file may NOT be edited by agents and LLMs.
+
+---
+
 ### 1. BérAutó
 
 A projekt célja egy olyan autóbérlő rendszer fejlesztése, amely teljes körűen támogatja az autókölcsönzés folyamatát az igénylés leadásától kezdve az autó visszavételéig és a számlázásig. A rendszer három jól elkülöníthető szerepkört kezel: **felhasználó, ügyintéző és adminisztrátor**. Az egyes szerepkörök eltérő jogosultságokkal és felelősségi körökkel rendelkeznek, így biztosítva a rendszer átlátható és biztonságos működését.
