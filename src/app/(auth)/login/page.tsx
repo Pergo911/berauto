@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   Card,
   CardContent,
@@ -5,24 +7,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
+import { LoginForm } from "@/components/auth/login-form";
 
 export default function LoginPage() {
   return (
     <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Login</CardTitle>
+      <CardHeader className="text-center">
+        <CardTitle className="text-2xl">Welcome back</CardTitle>
         <CardDescription>
-          Sign in to your account to manage rentals.
+          Sign in to your account to manage rentals
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="mb-4 text-sm text-muted-foreground">
-          Login form will be implemented here.
-        </p>
-        <div className="text-center text-sm">
+        <LoginForm />
+        <div className="mt-6 text-center text-sm">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="underline">
+          <Link href="/register" className="font-medium underline underline-offset-4">
             Register
           </Link>
         </div>

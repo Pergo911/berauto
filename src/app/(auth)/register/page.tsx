@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   Card,
   CardContent,
@@ -5,25 +7,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
+import { RegisterForm } from "@/components/auth/register-form";
 
 export default function RegisterPage() {
   return (
     <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Register</CardTitle>
+      <CardHeader className="text-center">
+        <CardTitle className="text-2xl">Create an account</CardTitle>
         <CardDescription>
-          Create a new account to start renting cars.
+          Register to start renting cars
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="mb-4 text-sm text-muted-foreground">
-          Registration form will be implemented here.
-        </p>
-        <div className="text-center text-sm">
+        <RegisterForm />
+        <div className="mt-6 text-center text-sm">
           Already have an account?{" "}
-          <Link href="/login" className="underline">
-            Login
+          <Link href="/login" className="font-medium underline underline-offset-4">
+            Sign in
           </Link>
         </div>
       </CardContent>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { auth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,8 +10,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { SignOutButton } from "@/components/shared/sign-out-button";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await auth();
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
@@ -20,12 +24,26 @@ export default function HomePage() {
           </Link>
           <nav className="flex items-center gap-4">
             <ThemeToggle />
-            <Link href="/login">
-              <Button variant="ghost">Login</Button>
-            </Link>
-            <Link href="/register">
-              <Button>Register</Button>
-            </Link>
+            {session?.user ? (
+              <>
+                <Link href="/dashboard">
+                  <Button variant="ghost">Dashboard</Button>
+                </Link>
+                <span className="text-sm text-muted-foreground">
+                  {session.user.name}
+                </span>
+                <SignOutButton />
+              </>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost">Login</Button>
+                </Link>
+                <Link href="/register">
+                  <Button>Register</Button>
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       </header>

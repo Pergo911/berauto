@@ -1,13 +1,17 @@
 import Link from "next/link";
 
+import { auth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { SignOutButton } from "@/components/shared/sign-out-button";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
@@ -27,11 +31,12 @@ export default function DashboardLayout({
               </Button>
             </Link>
             <ThemeToggle />
-            <form>
-              <Button variant="outline" size="sm" type="submit">
-                Sign Out
-              </Button>
-            </form>
+            {session?.user && (
+              <span className="text-sm text-muted-foreground">
+                {session.user.name}
+              </span>
+            )}
+            <SignOutButton />
           </nav>
         </div>
       </header>
