@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 export default function DashboardLayout({
   children,
@@ -25,6 +26,7 @@ export default function DashboardLayout({
                 My Rentals
               </Button>
             </Link>
+            <ThemeToggle />
             <form>
               <Button variant="outline" size="sm" type="submit">
                 Sign Out

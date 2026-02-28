@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 export default function AuthLayout({
   children,
@@ -14,7 +15,8 @@ export default function AuthLayout({
           <Link href="/" className="text-xl font-bold">
             BerAuto
           </Link>
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2">
+            <ThemeToggle />
             <Link href="/">
               <Button variant="ghost" size="sm">
                 Back to Home

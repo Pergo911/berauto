@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 export default function AdminLayout({
   children,
@@ -33,6 +34,7 @@ export default function AdminLayout({
                 Users
               </Button>
             </Link>
+            <ThemeToggle />
             <form>
               <Button variant="outline" size="sm" type="submit">
                 Sign Out

@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function CarDetailPage(props: {
@@ -21,6 +22,7 @@ export default function CarDetailPage(props: {
             BerAuto
           </Link>
           <nav className="ml-auto flex items-center gap-4">
+            <ThemeToggle />
             <Link href="/login">
               <Button variant="ghost">Login</Button>
             </Link>
