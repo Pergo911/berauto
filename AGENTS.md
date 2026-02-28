@@ -1,7 +1,7 @@
 # AGENTS.md — BérAutó
 
 Guidelines for agentic coding agents operating in this repository.
-The project is a **Next.js 15 (App Router) + TypeScript** fullstack car rental application.
+The project is a **Next.js 16 (App Router) + TypeScript** fullstack car rental application.
 Refer to `tech_stack.md` for architectural decisions and `original_specification.md` for requirements.
 
 ---
@@ -89,16 +89,16 @@ src/
 
 ### Naming Conventions
 
-| Thing | Convention | Example |
-|-------|-----------|---------|
-| Files & folders | `kebab-case` | `rental-card.tsx` |
-| React components | `PascalCase` | `RentalCard` |
-| Functions / variables | `camelCase` | `getRentalById` |
-| Zod schemas | `camelCase` + `Schema` suffix | `createRentalSchema` |
-| DB table names | `snake_case` (Drizzle convention) | `rental_events` |
-| Drizzle table objects | `camelCase` | `rentalEvents` |
-| Enums | `SCREAMING_SNAKE_CASE` values | `RENTAL_STATUS.PENDING` |
-| Constants | `SCREAMING_SNAKE_CASE` | `MAX_RENTAL_DAYS` |
+| Thing                 | Convention                        | Example                 |
+| --------------------- | --------------------------------- | ----------------------- |
+| Files & folders       | `kebab-case`                      | `rental-card.tsx`       |
+| React components      | `PascalCase`                      | `RentalCard`            |
+| Functions / variables | `camelCase`                       | `getRentalById`         |
+| Zod schemas           | `camelCase` + `Schema` suffix     | `createRentalSchema`    |
+| DB table names        | `snake_case` (Drizzle convention) | `rental_events`         |
+| Drizzle table objects | `camelCase`                       | `rentalEvents`          |
+| Enums                 | `SCREAMING_SNAKE_CASE` values     | `RENTAL_STATUS.PENDING` |
+| Constants             | `SCREAMING_SNAKE_CASE`            | `MAX_RENTAL_DAYS`       |
 
 ### Imports
 
