@@ -34,7 +34,7 @@ Never edit migration files manually — regenerate them via `db:generate`.
 ## Linting & Formatting
 
 ```
-pnpm lint             # ESLint (next lint)
+pnpm lint             # ESLint (eslint .)
 pnpm lint:fix         # ESLint with --fix
 pnpm format           # Prettier --write on all files
 pnpm format:check     # Prettier --check (used in CI)
@@ -47,6 +47,8 @@ All four must pass on `pnpm build`. Fix lint/type errors before marking a task d
 
 ## Testing
 
+> **Not yet configured.** No testing framework (Vitest or otherwise) is installed. The scripts below are the intended target state once Vitest is added.
+
 ```
 pnpm test             # run all tests (Vitest)
 pnpm test:watch       # watch mode
@@ -55,7 +57,7 @@ pnpm test -t "test name pattern"     # run tests matching a pattern
 pnpm test:coverage    # coverage report
 ```
 
-Test files live next to the code they test: `foo.ts` → `foo.test.ts`.
+Test files should live next to the code they test: `foo.ts` → `foo.test.ts`.
 Integration tests that hit the DB go in `src/__tests__/`.
 
 ---
@@ -73,7 +75,7 @@ src/
     api/                 # Route Handlers (explicit REST/webhooks only)
   components/
     ui/                  # shadcn/ui primitives (auto-generated, do not edit manually)
-    shared/              # layout components, nav, breadcrumbs
+    shared/              # theme provider and shared UI utilities (nav, breadcrumbs planned)
     cars/                # domain components for cars
     rentals/             # domain components for rentals
     invoices/            # domain components for invoices
@@ -87,7 +89,7 @@ src/
     utils.ts             # generic utility functions (cn(), formatDate(), etc.)
   actions/               # Server Actions (one file per domain: cars.ts, rentals.ts…)
   types/                 # shared TypeScript types and enums
-  middleware.ts          # Auth.js route protection middleware
+  proxy.ts               # Auth.js route protection middleware (Next.js middleware entry point)
 ```
 
 ---
@@ -146,7 +148,7 @@ import { RentalCard } from "@/components/rentals/rental-card";
 - Use `cn()` from `@/lib/utils` (a `clsx` + `tailwind-merge` wrapper) for conditional class composition.
 - Never write inline `style={{}}` — use Tailwind utility classes.
 - shadcn/ui components live in `src/components/ui/`. Do not modify them directly; compose them.
-- Color palette and design tokens are configured in `tailwind.config.ts` — add new ones there, not inline.
+- The project uses **Tailwind CSS v4**. Design tokens and the color palette are configured via `@theme` directives in `src/app/globals.css` — no `tailwind.config.ts` exists. Add new tokens there, not inline.
 
 ---
 
@@ -175,7 +177,7 @@ export async function approveRental(id: string): Promise<ActionResult<Rental>> {
 ## Authentication & Authorization
 
 - Auth config is in `src/lib/auth.ts`. Do not duplicate auth logic elsewhere.
-- `middleware.ts` protects route groups based on role:
+- `proxy.ts` protects route groups based on role (via Auth.js `authorized` callback):
   - `/agent/*` → requires `role === "agent" || role === "admin"`
   - `/admin/*` → requires `role === "admin"`
   - `/dashboard/*` → requires any authenticated session
