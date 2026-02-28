@@ -45,23 +45,6 @@ All four must pass on `pnpm build`. Fix lint/type errors before marking a task d
 
 ---
 
-## Testing
-
-> **Not yet configured.** No testing framework (Vitest or otherwise) is installed. The scripts below are the intended target state once Vitest is added.
-
-```
-pnpm test             # run all tests (Vitest)
-pnpm test:watch       # watch mode
-pnpm test src/path/to/file.test.ts   # run a single test file
-pnpm test -t "test name pattern"     # run tests matching a pattern
-pnpm test:coverage    # coverage report
-```
-
-Test files should live next to the code they test: `foo.ts` → `foo.test.ts`.
-Integration tests that hit the DB go in `src/__tests__/`.
-
----
-
 ## Project Structure
 
 ```
