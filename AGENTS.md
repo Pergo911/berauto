@@ -133,6 +133,16 @@ import { RentalCard } from "@/components/rentals/rental-card";
 - shadcn/ui components live in `src/components/ui/`. Do not modify them directly; compose them.
 - The project uses **Tailwind CSS v4**. Design tokens and the color palette are configured via `@theme` directives in `src/app/globals.css` — no `tailwind.config.ts` exists. Add new tokens there, not inline.
 
+### Responsive Design
+
+- All pages must be usable on viewports from 320 px to wide desktop.
+- Use the shared `<Navbar>` component from `@/components/shared/navbar` for every page header. It renders nav items inline on `lg` (1024 px+) screens and collapses them into a hamburger Sheet below that breakpoint. Never build one-off inline headers.
+- Use Tailwind responsive prefixes (`sm:`, `md:`, `lg:`, `xl:`) for layout shifts. Prefer mobile-first: write the small-screen style first, then add overrides at larger breakpoints.
+- Grids should start at a single column and add columns at `sm` / `lg` breakpoints (e.g., `grid gap-6 sm:grid-cols-2 lg:grid-cols-3`).
+- Data tables that exceed the viewport width should be wrapped in a horizontal-scroll container (`overflow-x-auto`) or replaced with a card-based layout on mobile.
+- Always apply `container mx-auto px-4` (or equivalent) on `<main>` to ensure edge padding on small screens. Never rely on `container` alone — it does not auto-center or auto-pad in Tailwind v4.
+- Avoid fixed pixel widths on content elements. Use `max-w-*` with `w-full` for flexible-but-bounded sizing (e.g., `w-full max-w-md` for forms).
+
 ---
 
 ## Server Actions

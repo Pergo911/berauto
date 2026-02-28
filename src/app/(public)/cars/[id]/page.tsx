@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { Navbar } from "@/components/shared/navbar";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function CarDetailPage(props: {
@@ -16,22 +17,21 @@ export default function CarDetailPage(props: {
 }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b">
-        <div className="container mx-auto flex h-16 items-center px-4">
+      <Navbar
+        brand={
           <Link href="/" className="text-xl font-bold">
             BerAuto
           </Link>
-          <nav className="ml-auto flex items-center gap-4">
-            <ThemeToggle />
-            <Link href="/login">
-              <Button variant="ghost">Login</Button>
-            </Link>
-            <Link href="/register">
-              <Button>Register</Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
+        }
+      >
+        <ThemeToggle />
+        <Link href="/login">
+          <Button variant="ghost">Login</Button>
+        </Link>
+        <Link href="/register">
+          <Button>Register</Button>
+        </Link>
+      </Navbar>
 
       <main className="container mx-auto flex-1 px-4 py-8">
         <Link

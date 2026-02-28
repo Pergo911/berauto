@@ -11,46 +11,46 @@ import {
 } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { SignOutButton } from "@/components/shared/sign-out-button";
+import { Navbar } from "@/components/shared/navbar";
 
 export default async function HomePage() {
   const session = await auth();
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <Navbar
+        brand={
           <Link href="/" className="text-xl font-bold">
             BerAuto
           </Link>
-          <nav className="flex items-center gap-4">
-            <ThemeToggle />
-            {session?.user ? (
-              <>
-                <Link href="/dashboard">
-                  <Button variant="ghost">Dashboard</Button>
-                </Link>
-                <span className="text-sm text-muted-foreground">
-                  {session.user.name}
-                </span>
-                <SignOutButton />
-              </>
-            ) : (
-              <>
-                <Link href="/login">
-                  <Button variant="ghost">Login</Button>
-                </Link>
-                <Link href="/register">
-                  <Button>Register</Button>
-                </Link>
-              </>
-            )}
-          </nav>
-        </div>
-      </header>
+        }
+      >
+        <ThemeToggle />
+        {session?.user ? (
+          <>
+            <Link href="/dashboard">
+              <Button variant="ghost">Dashboard</Button>
+            </Link>
+            <span className="text-sm text-muted-foreground">
+              {session.user.name}
+            </span>
+            <SignOutButton />
+          </>
+        ) : (
+          <>
+            <Link href="/login">
+              <Button variant="ghost">Login</Button>
+            </Link>
+            <Link href="/register">
+              <Button>Register</Button>
+            </Link>
+          </>
+        )}
+      </Navbar>
 
       <main className="container mx-auto flex-1 px-4 py-8">
         <section className="mb-12 text-center">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight">
+          <h1 className="mb-4 text-2xl font-bold tracking-tight sm:text-4xl">
             Welcome to BerAuto
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
