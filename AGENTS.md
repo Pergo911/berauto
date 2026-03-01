@@ -1,7 +1,7 @@
 # AGENTS.md — BérAutó
 
 Guidelines for agentic coding agents operating in this repository.
-The project is a **Next.js 15 (App Router) + TypeScript** fullstack car rental application.
+The project is a **Next.js 16 (App Router) + TypeScript** fullstack car rental application.
 Refer to `tech_stack.md` for architectural decisions and `original_specification.md` for requirements.
 
 ---
@@ -34,7 +34,7 @@ Never edit migration files manually — regenerate them via `db:generate`.
 ## Linting & Formatting
 
 ```
-pnpm lint             # ESLint (next lint)
+pnpm lint             # ESLint (eslint .)
 pnpm lint:fix         # ESLint with --fix
 pnpm format           # Prettier --write on all files
 pnpm format:check     # Prettier --check (used in CI)
@@ -42,21 +42,6 @@ pnpm typecheck        # tsc --noEmit
 ```
 
 All four must pass on `pnpm build`. Fix lint/type errors before marking a task done.
-
----
-
-## Testing
-
-```
-pnpm test             # run all tests (Vitest)
-pnpm test:watch       # watch mode
-pnpm test src/path/to/file.test.ts   # run a single test file
-pnpm test -t "test name pattern"     # run tests matching a pattern
-pnpm test:coverage    # coverage report
-```
-
-Test files live next to the code they test: `foo.ts` → `foo.test.ts`.
-Integration tests that hit the DB go in `src/__tests__/`.
 
 ---
 
@@ -73,7 +58,8 @@ src/
     api/                 # Route Handlers (explicit REST/webhooks only)
   components/
     ui/                  # shadcn/ui primitives (auto-generated, do not edit manually)
-    shared/              # layout components, nav, breadcrumbs
+    shared/              # navbar, theme provider, theme toggle, sign-out button
+    auth/                # login and register forms
     cars/                # domain components for cars
     rentals/             # domain components for rentals
     invoices/            # domain components for invoices
@@ -87,7 +73,7 @@ src/
     utils.ts             # generic utility functions (cn(), formatDate(), etc.)
   actions/               # Server Actions (one file per domain: cars.ts, rentals.ts…)
   types/                 # shared TypeScript types and enums
-  middleware.ts          # Auth.js route protection middleware
+  proxy.ts               # Auth.js route protection middleware (Next.js middleware entry point)
 ```
 
 ---
@@ -104,16 +90,16 @@ src/
 
 ### Naming Conventions
 
-| Thing | Convention | Example |
-|-------|-----------|---------|
-| Files & folders | `kebab-case` | `rental-card.tsx` |
-| React components | `PascalCase` | `RentalCard` |
-| Functions / variables | `camelCase` | `getRentalById` |
-| Zod schemas | `camelCase` + `Schema` suffix | `createRentalSchema` |
-| DB table names | `snake_case` (Drizzle convention) | `rental_events` |
-| Drizzle table objects | `camelCase` | `rentalEvents` |
-| Enums | `SCREAMING_SNAKE_CASE` values | `RENTAL_STATUS.PENDING` |
-| Constants | `SCREAMING_SNAKE_CASE` | `MAX_RENTAL_DAYS` |
+| Thing                 | Convention                        | Example                 |
+| --------------------- | --------------------------------- | ----------------------- |
+| Files & folders       | `kebab-case`                      | `rental-card.tsx`       |
+| React components      | `PascalCase`                      | `RentalCard`            |
+| Functions / variables | `camelCase`                       | `getRentalById`         |
+| Zod schemas           | `camelCase` + `Schema` suffix     | `createRentalSchema`    |
+| DB table names        | `snake_case` (Drizzle convention) | `rental_events`         |
+| Drizzle table objects | `camelCase`                       | `rentalEvents`          |
+| Enums                 | `SCREAMING_SNAKE_CASE` values     | `RENTAL_STATUS.PENDING` |
+| Constants             | `SCREAMING_SNAKE_CASE`            | `MAX_RENTAL_DAYS`       |
 
 ### Imports
 
@@ -146,7 +132,17 @@ import { RentalCard } from "@/components/rentals/rental-card";
 - Use `cn()` from `@/lib/utils` (a `clsx` + `tailwind-merge` wrapper) for conditional class composition.
 - Never write inline `style={{}}` — use Tailwind utility classes.
 - shadcn/ui components live in `src/components/ui/`. Do not modify them directly; compose them.
-- Color palette and design tokens are configured in `tailwind.config.ts` — add new ones there, not inline.
+- The project uses **Tailwind CSS v4**. Design tokens and the color palette are configured via `@theme` directives in `src/app/globals.css` — no `tailwind.config.ts` exists. Add new tokens there, not inline.
+
+### Responsive Design
+
+- All pages must be usable on viewports from 320 px to wide desktop.
+- Use the shared `<Navbar>` component from `@/components/shared/navbar` for every page header. It renders nav items inline on `lg` (1024 px+) screens and collapses them into a hamburger Sheet below that breakpoint. Never build one-off inline headers.
+- Use Tailwind responsive prefixes (`sm:`, `md:`, `lg:`, `xl:`) for layout shifts. Prefer mobile-first: write the small-screen style first, then add overrides at larger breakpoints.
+- Grids should start at a single column and add columns at `sm` / `lg` breakpoints (e.g., `grid gap-6 sm:grid-cols-2 lg:grid-cols-3`).
+- Data tables that exceed the viewport width should be wrapped in a horizontal-scroll container (`overflow-x-auto`) or replaced with a card-based layout on mobile.
+- Always apply `container mx-auto px-4` (or equivalent) on `<main>` to ensure edge padding on small screens. Never rely on `container` alone — it does not auto-center or auto-pad in Tailwind v4.
+- Avoid fixed pixel widths on content elements. Use `max-w-*` with `w-full` for flexible-but-bounded sizing (e.g., `w-full max-w-md` for forms).
 
 ---
 
@@ -175,7 +171,7 @@ export async function approveRental(id: string): Promise<ActionResult<Rental>> {
 ## Authentication & Authorization
 
 - Auth config is in `src/lib/auth.ts`. Do not duplicate auth logic elsewhere.
-- `middleware.ts` protects route groups based on role:
+- `proxy.ts` protects route groups based on role (via Auth.js `authorized` callback):
   - `/agent/*` → requires `role === "agent" || role === "admin"`
   - `/admin/*` → requires `role === "admin"`
   - `/dashboard/*` → requires any authenticated session
@@ -200,7 +196,12 @@ Sensitive values go in `.env.local` (never committed). Required variables:
 DATABASE_URL=          # Neon connection string (pooled)
 DATABASE_URL_UNPOOLED= # Neon direct connection (for migrations)
 AUTH_SECRET=           # Auth.js secret (generate with: openssl rand -base64 32)
-AUTH_URL=              # e.g. http://localhost:3000 in dev
+AUTH_TRUST_HOST=true   # tells Auth.js to infer the origin from request headers
 ```
+
+> **Do NOT set `AUTH_URL`.** In next-auth v5 the host is inferred from request headers.
+> Setting `AUTH_URL` causes the library to hard-replace every request's origin with
+> that value (`reqWithEnvURL`), which breaks redirects (sign-out, unauthorized, etc.)
+> whenever the app is accessed from a different host or port.
 
 Access env vars only through a validated config module (`src/lib/env.ts` using `@t3-oss/env-nextjs` or `zod`). Never access `process.env` directly in application code.

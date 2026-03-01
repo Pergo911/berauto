@@ -17,9 +17,10 @@ A fullstack car rental platform with role-based access (user / agent / admin), s
 
 ## Tech Stack
 
-### Framework — Next.js 15 (App Router)
+### Framework — Next.js 16 (App Router)
 
 Single repository covering both frontend and backend. The App Router enables:
+
 - **React Server Components** for data-fetching without client-side waterfalls.
 - **Server Actions** for form submissions and mutations (no separate REST layer needed for most operations).
 - **Route Handlers** (`app/api/...`) for any explicit REST/webhook endpoints (e.g., PDF invoice download).
@@ -47,11 +48,12 @@ End-to-end type safety. Shared types between the database layer and UI component
 - Credential-based login (email + password) with bcrypt hashing.
 - Session strategy: **JWT** stored in an HTTP-only cookie (no DB session table needed; keeps things stateless for serverless).
 - Role (`user` | `agent` | `admin`) embedded in the JWT payload.
-- Middleware at `middleware.ts` enforces route-level access before any page renders.
+- Middleware at `proxy.ts` enforces route-level access before any page renders.
 
 ### Validation — Zod
 
 Used in two places:
+
 1. Server Action / Route Handler input validation.
 2. Form validation on the client via `react-hook-form` + `@hookform/resolvers/zod`.
 
@@ -119,20 +121,20 @@ invoices
 
 ## Application Routes & Role Guards
 
-| Path | Accessible by |
-|------|--------------|
-| `/` | Everyone (car listing) |
-| `/cars/[id]` | Everyone (car detail + rental form) |
-| `/auth/login` `/auth/register` | Unauthenticated |
-| `/dashboard` | Authenticated users |
-| `/dashboard/rentals` | Users (own history) |
-| `/agent` | Agent, Admin |
-| `/agent/requests` | Agent, Admin (approve/reject queue) |
-| `/agent/active` | Agent, Admin (active rentals) |
-| `/agent/invoices` | Agent, Admin |
-| `/admin` | Admin only |
-| `/admin/cars` | Admin only |
-| `/admin/users` | Admin only |
+| Path                           | Accessible by                       |
+| ------------------------------ | ----------------------------------- |
+| `/`                            | Everyone (car listing)              |
+| `/cars/[id]`                   | Everyone (car detail + rental form) |
+| `/auth/login` `/auth/register` | Unauthenticated                     |
+| `/dashboard`                   | Authenticated users                 |
+| `/dashboard/rentals`           | Users (own history)                 |
+| `/agent`                       | Agent, Admin                        |
+| `/agent/requests`              | Agent, Admin (approve/reject queue) |
+| `/agent/active`                | Agent, Admin (active rentals)       |
+| `/agent/invoices`              | Agent, Admin                        |
+| `/admin`                       | Admin only                          |
+| `/admin/cars`                  | Admin only                          |
+| `/admin/users`                 | Admin only                          |
 
 ---
 
@@ -145,6 +147,7 @@ Vercel's free tier does not support long-running Node servers. A separate backen
 ### Why Neon over Supabase?
 
 Both are free and excellent. Neon is chosen because:
+
 - Its serverless HTTP driver is purpose-built for edge/serverless environments.
 - Less opinionated — no need to use Supabase's client SDK or row-level security model when Drizzle + Auth.js already handle auth/authz.
 - Supabase remains a valid alternative if a real-time feature (e.g., live status updates for agents) becomes desirable later.
@@ -161,26 +164,26 @@ Avoids an extra DB round-trip on every request. The role and user ID in the JWT 
 
 ## Development Tooling
 
-| Tool | Purpose |
-|------|---------|
-| `pnpm` | Fast, disk-efficient package manager |
-| `drizzle-kit` | Schema migrations (`pnpm db:migrate`) |
-| `eslint` + `prettier` | Linting & formatting |
-| `husky` + `lint-staged` | Pre-commit hooks |
+| Tool                    | Purpose                               |
+| ----------------------- | ------------------------------------- |
+| `pnpm`                  | Fast, disk-efficient package manager  |
+| `drizzle-kit`           | Schema migrations (`pnpm db:migrate`) |
+| `eslint` + `prettier`   | Linting & formatting                  |
+| `husky` + `lint-staged` | Pre-commit hooks                      |
 
 ---
 
 ## Summary
 
-| Concern | Solution |
-|---------|---------|
-| Fullstack framework | Next.js 15 (App Router) |
-| Language | TypeScript |
-| Database | Neon — Serverless PostgreSQL |
-| ORM | Drizzle ORM |
-| Auth & RBAC | Auth.js v5 (JWT) |
-| Forms & validation | react-hook-form + Zod |
-| UI components | Tailwind CSS + shadcn/ui |
-| PDF generation | @react-pdf/renderer (server-side) |
-| Deployment | Vercel Hobby (free) |
-| Package manager | pnpm |
+| Concern             | Solution                          |
+| ------------------- | --------------------------------- |
+| Fullstack framework | Next.js 16 (App Router)           |
+| Language            | TypeScript                        |
+| Database            | Neon — Serverless PostgreSQL      |
+| ORM                 | Drizzle ORM                       |
+| Auth & RBAC         | Auth.js v5 (JWT)                  |
+| Forms & validation  | react-hook-form + Zod             |
+| UI components       | Tailwind CSS + shadcn/ui          |
+| PDF generation      | @react-pdf/renderer (server-side) |
+| Deployment          | Vercel Hobby (free)               |
+| Package manager     | pnpm                              |
