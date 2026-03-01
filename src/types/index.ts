@@ -6,8 +6,7 @@ export const RENTAL_STATUS = {
   CLOSED: "CLOSED",
 } as const;
 
-export type RentalStatus =
-  (typeof RENTAL_STATUS)[keyof typeof RENTAL_STATUS];
+export type RentalStatus = (typeof RENTAL_STATUS)[keyof typeof RENTAL_STATUS];
 
 export const RENTAL_EVENT_TYPE = {
   REQUEST: "REQUEST",

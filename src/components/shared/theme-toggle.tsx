@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { Moon, Monitor, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -23,23 +23,23 @@ function ThemeIcon({ theme }: { theme: string | undefined }) {
   }
 }
 
+function useIsMounted() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+}
+
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsMounted();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon">
-          {mounted ? (
-            <ThemeIcon theme={theme} />
-          ) : (
-            <Sun className="h-4 w-4" />
-          )}
+          {mounted ? <ThemeIcon theme={theme} /> : <Sun className="h-4 w-4" />}
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>

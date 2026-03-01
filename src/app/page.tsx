@@ -54,8 +54,8 @@ export default async function HomePage() {
             Welcome to BerAuto
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Find and rent the perfect car for your needs. Browse our selection of
-            vehicles and submit a rental request in minutes.
+            Find and rent the perfect car for your needs. Browse our selection
+            of vehicles and submit a rental request in minutes.
           </p>
         </section>
 

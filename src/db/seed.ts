@@ -29,7 +29,7 @@ async function seed() {
   const DATABASE_URL = process.env.DATABASE_URL;
   if (!DATABASE_URL) {
     console.error(
-      "DATABASE_URL is not set. Copy .env.example to .env.local and fill in your Neon connection string.",
+      "DATABASE_URL is not set. Copy .env.example to .env.local and fill in your Neon connection string."
     );
     process.exit(1);
   }
@@ -98,17 +98,17 @@ async function seed() {
 
   const admin = insertedUsers.find((u) => u.role === "admin")!;
   const agent = insertedUsers.find((u) => u.role === "agent")!;
-  const regularUser = insertedUsers.find(
-    (u) => u.email === "user@berauto.hu",
-  )!;
+  const regularUser = insertedUsers.find((u) => u.email === "user@berauto.hu")!;
   const janos = insertedUsers.find(
-    (u) => u.email === "janos.kiss@example.com",
+    (u) => u.email === "janos.kiss@example.com"
   )!;
   const maria = insertedUsers.find(
-    (u) => u.email === "maria.nagy@example.com",
+    (u) => u.email === "maria.nagy@example.com"
   )!;
 
-  console.log(`  Created ${insertedUsers.length} users (password: password123)`);
+  console.log(
+    `  Created ${insertedUsers.length} users (password: password123)`
+  );
 
   // ── 3. Insert cars ───────────────────────────────────
 
@@ -388,59 +388,240 @@ async function seed() {
 
   const eventsData: (typeof schema.rentalEvents.$inferInsert)[] = [
     // R1 (CLOSED) — full lifecycle
-    { rentalId: r(0).id, eventType: "REQUEST", actorId: regularUser.id, notes: "Online rental request", timestamp: daysAgo(32) },
-    { rentalId: r(0).id, eventType: "APPROVE", actorId: agent.id, notes: "Documents verified", timestamp: daysAgo(31) },
-    { rentalId: r(0).id, eventType: "HANDOVER", actorId: agent.id, notes: "Keys handed over, mileage: 14,200 km", timestamp: daysAgo(30) },
-    { rentalId: r(0).id, eventType: "RETURN", actorId: agent.id, notes: "Returned in good condition, mileage: 14,850 km", timestamp: daysAgo(25) },
+    {
+      rentalId: r(0).id,
+      eventType: "REQUEST",
+      actorId: regularUser.id,
+      notes: "Online rental request",
+      timestamp: daysAgo(32),
+    },
+    {
+      rentalId: r(0).id,
+      eventType: "APPROVE",
+      actorId: agent.id,
+      notes: "Documents verified",
+      timestamp: daysAgo(31),
+    },
+    {
+      rentalId: r(0).id,
+      eventType: "HANDOVER",
+      actorId: agent.id,
+      notes: "Keys handed over, mileage: 14,200 km",
+      timestamp: daysAgo(30),
+    },
+    {
+      rentalId: r(0).id,
+      eventType: "RETURN",
+      actorId: agent.id,
+      notes: "Returned in good condition, mileage: 14,850 km",
+      timestamp: daysAgo(25),
+    },
 
     // R2 (ACTIVE) — approved and handed over (János)
-    { rentalId: r(1).id, eventType: "REQUEST", actorId: janos.id, notes: "Registered user request", timestamp: daysAgo(5) },
-    { rentalId: r(1).id, eventType: "APPROVE", actorId: agent.id, notes: "Approved for Mercedes C200", timestamp: daysAgo(4) },
-    { rentalId: r(1).id, eventType: "HANDOVER", actorId: agent.id, notes: "Keys handed over, mileage: 18,500 km", timestamp: daysAgo(3) },
+    {
+      rentalId: r(1).id,
+      eventType: "REQUEST",
+      actorId: janos.id,
+      notes: "Registered user request",
+      timestamp: daysAgo(5),
+    },
+    {
+      rentalId: r(1).id,
+      eventType: "APPROVE",
+      actorId: agent.id,
+      notes: "Approved for Mercedes C200",
+      timestamp: daysAgo(4),
+    },
+    {
+      rentalId: r(1).id,
+      eventType: "HANDOVER",
+      actorId: agent.id,
+      notes: "Keys handed over, mileage: 18,500 km",
+      timestamp: daysAgo(3),
+    },
 
     // R3 (PENDING) — just requested
-    { rentalId: r(2).id, eventType: "REQUEST", notes: "Guest rental request — Kovács Péter", timestamp: daysAgo(1) },
+    {
+      rentalId: r(2).id,
+      eventType: "REQUEST",
+      notes: "Guest rental request — Kovács Péter",
+      timestamp: daysAgo(1),
+    },
 
     // R4 (APPROVED) — requested + approved (Mária)
-    { rentalId: r(3).id, eventType: "REQUEST", actorId: maria.id, notes: "Wants Škoda Octavia for a trip", timestamp: daysAgo(3) },
-    { rentalId: r(3).id, eventType: "APPROVE", actorId: agent.id, notes: "Approved, scheduled pickup in 2 days", timestamp: daysAgo(2) },
+    {
+      rentalId: r(3).id,
+      eventType: "REQUEST",
+      actorId: maria.id,
+      notes: "Wants Škoda Octavia for a trip",
+      timestamp: daysAgo(3),
+    },
+    {
+      rentalId: r(3).id,
+      eventType: "APPROVE",
+      actorId: agent.id,
+      notes: "Approved, scheduled pickup in 2 days",
+      timestamp: daysAgo(2),
+    },
 
     // R5 (REJECTED) — requested + rejected
-    { rentalId: r(4).id, eventType: "REQUEST", notes: "Guest request — Nagy Anna", timestamp: daysAgo(12) },
-    { rentalId: r(4).id, eventType: "REJECT", actorId: agent.id, notes: "Incomplete documentation provided", timestamp: daysAgo(11) },
+    {
+      rentalId: r(4).id,
+      eventType: "REQUEST",
+      notes: "Guest request — Nagy Anna",
+      timestamp: daysAgo(12),
+    },
+    {
+      rentalId: r(4).id,
+      eventType: "REJECT",
+      actorId: agent.id,
+      notes: "Incomplete documentation provided",
+      timestamp: daysAgo(11),
+    },
 
     // R6 (ACTIVE) — guest, approved and handed over
-    { rentalId: r(5).id, eventType: "REQUEST", notes: "Guest request — Tóth László", timestamp: daysAgo(4) },
-    { rentalId: r(5).id, eventType: "APPROVE", actorId: agent.id, notes: "Guest docs verified", timestamp: daysAgo(3) },
-    { rentalId: r(5).id, eventType: "HANDOVER", actorId: agent.id, notes: "Suzuki Vitara handed over, mileage: 12,200 km", timestamp: daysAgo(2) },
+    {
+      rentalId: r(5).id,
+      eventType: "REQUEST",
+      notes: "Guest request — Tóth László",
+      timestamp: daysAgo(4),
+    },
+    {
+      rentalId: r(5).id,
+      eventType: "APPROVE",
+      actorId: agent.id,
+      notes: "Guest docs verified",
+      timestamp: daysAgo(3),
+    },
+    {
+      rentalId: r(5).id,
+      eventType: "HANDOVER",
+      actorId: agent.id,
+      notes: "Suzuki Vitara handed over, mileage: 12,200 km",
+      timestamp: daysAgo(2),
+    },
 
     // R7 (CLOSED) — full lifecycle, guest
-    { rentalId: r(6).id, eventType: "REQUEST", notes: "Guest request — Szabó Éva", timestamp: daysAgo(22) },
-    { rentalId: r(6).id, eventType: "APPROVE", actorId: agent.id, notes: "Approved for Opel Astra", timestamp: daysAgo(21) },
-    { rentalId: r(6).id, eventType: "HANDOVER", actorId: agent.id, notes: "Keys handed over, mileage: 53,800 km", timestamp: daysAgo(20) },
-    { rentalId: r(6).id, eventType: "RETURN", actorId: agent.id, notes: "Returned, mileage: 54,300 km. Minor scratch on bumper noted.", timestamp: daysAgo(15) },
+    {
+      rentalId: r(6).id,
+      eventType: "REQUEST",
+      notes: "Guest request — Szabó Éva",
+      timestamp: daysAgo(22),
+    },
+    {
+      rentalId: r(6).id,
+      eventType: "APPROVE",
+      actorId: agent.id,
+      notes: "Approved for Opel Astra",
+      timestamp: daysAgo(21),
+    },
+    {
+      rentalId: r(6).id,
+      eventType: "HANDOVER",
+      actorId: agent.id,
+      notes: "Keys handed over, mileage: 53,800 km",
+      timestamp: daysAgo(20),
+    },
+    {
+      rentalId: r(6).id,
+      eventType: "RETURN",
+      actorId: agent.id,
+      notes: "Returned, mileage: 54,300 km. Minor scratch on bumper noted.",
+      timestamp: daysAgo(15),
+    },
 
     // R8 (PENDING) — just requested
-    { rentalId: r(7).id, eventType: "REQUEST", actorId: regularUser.id, notes: "Wants Audi A4 for a business trip", timestamp: daysAgo(1) },
+    {
+      rentalId: r(7).id,
+      eventType: "REQUEST",
+      actorId: regularUser.id,
+      notes: "Wants Audi A4 for a business trip",
+      timestamp: daysAgo(1),
+    },
 
     // R9 (CLOSED) — full lifecycle (János)
-    { rentalId: r(8).id, eventType: "REQUEST", actorId: janos.id, notes: "Renault Mégane for vacation", timestamp: daysAgo(47) },
-    { rentalId: r(8).id, eventType: "APPROVE", actorId: agent.id, notes: "Approved", timestamp: daysAgo(46) },
-    { rentalId: r(8).id, eventType: "HANDOVER", actorId: agent.id, notes: "Handed over, mileage: 40,200 km", timestamp: daysAgo(45) },
-    { rentalId: r(8).id, eventType: "RETURN", actorId: agent.id, notes: "Returned, mileage: 41,000 km", timestamp: daysAgo(40) },
+    {
+      rentalId: r(8).id,
+      eventType: "REQUEST",
+      actorId: janos.id,
+      notes: "Renault Mégane for vacation",
+      timestamp: daysAgo(47),
+    },
+    {
+      rentalId: r(8).id,
+      eventType: "APPROVE",
+      actorId: agent.id,
+      notes: "Approved",
+      timestamp: daysAgo(46),
+    },
+    {
+      rentalId: r(8).id,
+      eventType: "HANDOVER",
+      actorId: agent.id,
+      notes: "Handed over, mileage: 40,200 km",
+      timestamp: daysAgo(45),
+    },
+    {
+      rentalId: r(8).id,
+      eventType: "RETURN",
+      actorId: agent.id,
+      notes: "Returned, mileage: 41,000 km",
+      timestamp: daysAgo(40),
+    },
 
     // R10 (PENDING) — just requested
-    { rentalId: r(9).id, eventType: "REQUEST", notes: "Guest request — Horváth Gábor", timestamp: new Date() },
+    {
+      rentalId: r(9).id,
+      eventType: "REQUEST",
+      notes: "Guest request — Horváth Gábor",
+      timestamp: new Date(),
+    },
 
     // R11 (CLOSED) — full lifecycle (Mária, older)
-    { rentalId: r(10).id, eventType: "REQUEST", actorId: maria.id, notes: "Wants Corolla for a weekend trip", timestamp: daysAgo(62) },
-    { rentalId: r(10).id, eventType: "APPROVE", actorId: agent.id, notes: "Approved", timestamp: daysAgo(61) },
-    { rentalId: r(10).id, eventType: "HANDOVER", actorId: agent.id, notes: "Handed over, mileage: 13,500 km", timestamp: daysAgo(60) },
-    { rentalId: r(10).id, eventType: "RETURN", actorId: agent.id, notes: "Returned, mileage: 14,100 km", timestamp: daysAgo(55) },
+    {
+      rentalId: r(10).id,
+      eventType: "REQUEST",
+      actorId: maria.id,
+      notes: "Wants Corolla for a weekend trip",
+      timestamp: daysAgo(62),
+    },
+    {
+      rentalId: r(10).id,
+      eventType: "APPROVE",
+      actorId: agent.id,
+      notes: "Approved",
+      timestamp: daysAgo(61),
+    },
+    {
+      rentalId: r(10).id,
+      eventType: "HANDOVER",
+      actorId: agent.id,
+      notes: "Handed over, mileage: 13,500 km",
+      timestamp: daysAgo(60),
+    },
+    {
+      rentalId: r(10).id,
+      eventType: "RETURN",
+      actorId: agent.id,
+      notes: "Returned, mileage: 14,100 km",
+      timestamp: daysAgo(55),
+    },
 
     // R12 (APPROVED) — János wants BMW (requested + approved)
-    { rentalId: r(11).id, eventType: "REQUEST", actorId: janos.id, notes: "BMW 320i for business travel", timestamp: daysAgo(2) },
-    { rentalId: r(11).id, eventType: "APPROVE", actorId: agent.id, notes: "Approved, pickup scheduled", timestamp: daysAgo(1) },
+    {
+      rentalId: r(11).id,
+      eventType: "REQUEST",
+      actorId: janos.id,
+      notes: "BMW 320i for business travel",
+      timestamp: daysAgo(2),
+    },
+    {
+      rentalId: r(11).id,
+      eventType: "APPROVE",
+      actorId: agent.id,
+      notes: "Approved, pickup scheduled",
+      timestamp: daysAgo(1),
+    },
   ];
 
   await db.insert(schema.rentalEvents).values(eventsData);

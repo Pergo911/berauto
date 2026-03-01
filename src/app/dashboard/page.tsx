@@ -14,7 +14,9 @@ export default function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>My Rentals</CardTitle>
-            <CardDescription>Your rental history and active rentals.</CardDescription>
+            <CardDescription>
+              Your rental history and active rentals.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">--</p>

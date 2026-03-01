@@ -94,9 +94,7 @@ export function LoginForm() {
               </FormItem>
             )}
           />
-          {error && (
-            <p className="text-sm text-destructive">{error}</p>
-          )}
+          {error && <p className="text-sm text-destructive">{error}</p>}
           <Button
             type="submit"
             className="w-full"
