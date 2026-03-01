@@ -37,12 +37,12 @@ Copy the example file and fill in your values:
 cp .env.example .env.local
 ```
 
-| Variable                | Description                                             |
-| ----------------------- | ------------------------------------------------------- |
-| `DATABASE_URL`          | Neon **pooled** connection string                       |
-| `DATABASE_URL_UNPOOLED` | Neon **direct** connection string (used by migrations)  |
-| `AUTH_SECRET`           | Random secret — generate with `openssl rand -base64 32` |
-| `AUTH_URL`              | Base URL of the app (e.g. `http://localhost:3000`)      |
+| Variable                | Description                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`          | Neon **pooled** connection string                                                           |
+| `DATABASE_URL_UNPOOLED` | Neon **direct** connection string (used by migrations)                                      |
+| `AUTH_SECRET`           | Random secret — generate with `openssl rand -base64 32`                                     |
+| `AUTH_TRUST_HOST`       | Set to `true` so Auth.js infers the origin from request headers (do **not** set `AUTH_URL`) |
 
 Once the values are set, remove the `SKIP_ENV_VALIDATION=1` line from `.env.local`.
 

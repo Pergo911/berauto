@@ -195,7 +195,12 @@ Sensitive values go in `.env.local` (never committed). Required variables:
 DATABASE_URL=          # Neon connection string (pooled)
 DATABASE_URL_UNPOOLED= # Neon direct connection (for migrations)
 AUTH_SECRET=           # Auth.js secret (generate with: openssl rand -base64 32)
-AUTH_URL=              # e.g. http://localhost:3000 in dev
+AUTH_TRUST_HOST=true   # tells Auth.js to infer the origin from request headers
 ```
+
+> **Do NOT set `AUTH_URL`.** In next-auth v5 the host is inferred from request headers.
+> Setting `AUTH_URL` causes the library to hard-replace every request's origin with
+> that value (`reqWithEnvURL`), which breaks redirects (sign-out, unauthorized, etc.)
+> whenever the app is accessed from a different host or port.
 
 Access env vars only through a validated config module (`src/lib/env.ts` using `@t3-oss/env-nextjs` or `zod`). Never access `process.env` directly in application code.
