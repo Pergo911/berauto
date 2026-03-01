@@ -48,7 +48,7 @@ End-to-end type safety. Shared types between the database layer and UI component
 - Credential-based login (email + password) with bcrypt hashing.
 - Session strategy: **JWT** stored in an HTTP-only cookie (no DB session table needed; keeps things stateless for serverless).
 - Role (`user` | `agent` | `admin`) embedded in the JWT payload.
-- Middleware at `middleware.ts` enforces route-level access before any page renders.
+- Middleware at `proxy.ts` enforces route-level access before any page renders.
 
 ### Validation — Zod
 

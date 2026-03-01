@@ -1,6 +1,6 @@
 # berauto
 
-A fullstack car rental platform supporting the complete rental lifecycle — from request submission through handover to invoicing. Built with Next.js 16 (App Router) and deployed on Vercel.
+A car rental platform supporting the complete rental lifecycle — from request submission through handover to invoicing. Built with Next.js 16 (App Router) and deployed on Vercel.
 
 ## Tech Stack
 
@@ -43,8 +43,6 @@ cp .env.example .env.local
 | `DATABASE_URL_UNPOOLED` | Neon **direct** connection string (used by migrations)                                      |
 | `AUTH_SECRET`           | Random secret — generate with `openssl rand -base64 32`                                     |
 | `AUTH_TRUST_HOST`       | Set to `true` so Auth.js infers the origin from request headers (do **not** set `AUTH_URL`) |
-
-Once the values are set, remove the `SKIP_ENV_VALIDATION=1` line from `.env.local`.
 
 ### 3. Run database migrations
 

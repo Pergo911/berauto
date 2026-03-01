@@ -58,7 +58,8 @@ src/
     api/                 # Route Handlers (explicit REST/webhooks only)
   components/
     ui/                  # shadcn/ui primitives (auto-generated, do not edit manually)
-    shared/              # theme provider and shared UI utilities (nav, breadcrumbs planned)
+    shared/              # navbar, theme provider, theme toggle, sign-out button
+    auth/                # login and register forms
     cars/                # domain components for cars
     rentals/             # domain components for rentals
     invoices/            # domain components for invoices
