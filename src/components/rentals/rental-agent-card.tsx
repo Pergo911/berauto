@@ -42,7 +42,7 @@ export function RentalAgentCard({ rental, action }: RentalAgentCardProps) {
   const isRegistered = rental.userId !== null;
 
   return (
-    <Card>
+    <Card className="border-border/60 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_50%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(240,253,250,0.95))] dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_50%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(17,24,39,0.95))]">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-base">

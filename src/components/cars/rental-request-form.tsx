@@ -70,11 +70,9 @@ export function RentalRequestForm({
 
   if (success) {
     return (
-      <div className="rounded-md border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950">
-        <p className="font-medium text-green-800 dark:text-green-200">
-          Rental request submitted successfully!
-        </p>
-        <p className="mt-1 text-sm text-green-700 dark:text-green-300">
+      <div className="rounded-lg border border-border/60 p-4 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_50%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(240,253,250,0.95))] dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_50%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(17,24,39,0.95))]">
+        <p className="font-medium">Rental request submitted successfully!</p>
+        <p className="mt-1 text-sm text-muted-foreground">
           We will review your request and get back to you soon.
         </p>
         <Button

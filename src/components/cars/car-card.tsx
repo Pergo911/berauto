@@ -3,7 +3,6 @@ import { Calendar, Gauge, CreditCard, Eye } from "lucide-react";
 
 import type { CarDTO } from "@/lib/data/cars";
 import { cn, formatCurrency } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CarStatusBadge } from "@/components/cars/car-status-badge";

@@ -47,11 +47,22 @@ export function StatCard({
   compactTitle = false,
 }: StatCardProps) {
   const card = (
-    <Card className={cn(href && "transition-shadow hover:shadow-md")}>
+    <Card
+      className={cn(
+        // Hero-style gradient background
+        "border-border/60",
+        "bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_50%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(240,253,250,0.95))]",
+        "dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_50%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(17,24,39,0.95))]",
+        href &&
+          "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/30"
+      )}
+    >
       <CardHeader>
         {iconPosition === "inline" ? (
           <CardTitle className="flex items-center gap-2">
-            <Icon className="size-5 text-muted-foreground" />
+            <span className="rounded-lg bg-primary/10 p-1.5 text-primary">
+              <Icon className="size-4" />
+            </span>
             {title}
           </CardTitle>
         ) : (
@@ -59,7 +70,9 @@ export function StatCard({
             <CardTitle className={cn(compactTitle && "text-sm font-medium")}>
               {title}
             </CardTitle>
-            <Icon className="size-4 text-muted-foreground" />
+            <span className="rounded-xl bg-primary/10 p-2 text-primary">
+              <Icon className="size-4" />
+            </span>
           </div>
         )}
         <CardDescription>{description}</CardDescription>

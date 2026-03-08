@@ -55,7 +55,10 @@ export default async function AgentInvoicesPage() {
               const computedAmount = rental.car.dailyRate * days;
 
               return (
-                <Card key={rental.id}>
+                <Card
+                  key={rental.id}
+                  className="border-border/60 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_50%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(240,253,250,0.95))] dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_50%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(17,24,39,0.95))]"
+                >
                   <CardHeader>
                     <CardTitle className="text-base">
                       <Car className="mr-1.5 inline-block size-4 text-muted-foreground" />
