@@ -2,10 +2,15 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { KeyRound, RotateCcw } from "lucide-react";
 
 import { handoverRental, returnRental } from "@/actions/rentals";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  ActionFeedback,
+  type ActionMessage,
+} from "@/components/shared/action-feedback";
 
 export function HandoverReturnActions({
   rentalId,
@@ -17,14 +22,12 @@ export function HandoverReturnActions({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [mileage, setMileage] = useState("");
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
+  const [message, setMessage] = useState<ActionMessage | null>(null);
 
   const isHandover = type === "handover";
   const label = isHandover ? "Record Handover" : "Record Return";
   const action = isHandover ? handoverRental : returnRental;
+  const Icon = isHandover ? KeyRound : RotateCcw;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -72,21 +75,12 @@ export function HandoverReturnActions({
           />
         </div>
         <Button size="sm" type="submit" disabled={isPending}>
+          <Icon className="size-3.5" />
           {isPending ? "Saving…" : label}
         </Button>
       </div>
 
-      {message && (
-        <p
-          className={
-            message.type === "success"
-              ? "text-sm text-green-600 dark:text-green-400"
-              : "text-sm text-destructive"
-          }
-        >
-          {message.text}
-        </p>
-      )}
+      <ActionFeedback message={message} />
     </form>
   );
 }

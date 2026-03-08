@@ -3,13 +3,21 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { format } from "date-fns";
+import { CalendarIcon, Loader2, Send } from "lucide-react";
 
 import type { CreateRentalInput } from "@/lib/validations/rentals";
 import { createRentalSchema } from "@/lib/validations/rentals";
 import { createRentalRequest } from "@/actions/rentals";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Form,
   FormControl,
@@ -89,11 +97,40 @@ export function RentalRequestForm({
           control={form.control}
           name="startDate"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col">
               <FormLabel>Start Date</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
-              </FormControl>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="size-4" />
+                      {field.value
+                        ? format(new Date(field.value + "T00:00:00"), "PPP")
+                        : "Pick a date"}
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={
+                      field.value
+                        ? new Date(field.value + "T00:00:00")
+                        : undefined
+                    }
+                    onSelect={(date) => {
+                      field.onChange(date ? format(date, "yyyy-MM-dd") : "");
+                    }}
+                    disabled={(date) => date < new Date()}
+                  />
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}
@@ -103,11 +140,40 @@ export function RentalRequestForm({
           control={form.control}
           name="endDate"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col">
               <FormLabel>End Date</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
-              </FormControl>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="size-4" />
+                      {field.value
+                        ? format(new Date(field.value + "T00:00:00"), "PPP")
+                        : "Pick a date"}
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={
+                      field.value
+                        ? new Date(field.value + "T00:00:00")
+                        : undefined
+                    }
+                    onSelect={(date) => {
+                      field.onChange(date ? format(date, "yyyy-MM-dd") : "");
+                    }}
+                    disabled={(date) => date < new Date()}
+                  />
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}
@@ -180,7 +246,11 @@ export function RentalRequestForm({
           className="w-full"
           disabled={form.formState.isSubmitting}
         >
-          {form.formState.isSubmitting && <Loader2 className="animate-spin" />}
+          {form.formState.isSubmitting ? (
+            <Loader2 className="animate-spin" />
+          ) : (
+            <Send className="size-4" />
+          )}
           Submit Rental Request
         </Button>
       </form>

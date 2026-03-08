@@ -5,13 +5,8 @@ import { Car, Clock, Loader } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { getUserDashboardStats } from "@/lib/data/dashboard";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { StatCard } from "@/components/shared/stat-card";
+import { PageHeader } from "@/components/shared/page-header";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -22,7 +17,7 @@ export default async function DashboardPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <PageHeader title="Dashboard" />
         <Link href="/dashboard/rentals">
           <Button variant="outline" size="sm">
             View all rentals
@@ -31,47 +26,30 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Car className="size-5 text-muted-foreground" />
-              Total Rentals
-            </CardTitle>
-            <CardDescription>Your complete rental history.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{stats.totalRentals}</p>
-            <p className="text-sm text-muted-foreground">Total rentals</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="size-5 text-muted-foreground" />
-              Active Rentals
-            </CardTitle>
-            <CardDescription>Currently active rentals.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{stats.activeRentals}</p>
-            <p className="text-sm text-muted-foreground">Active now</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Loader className="size-5 text-muted-foreground" />
-              Pending Requests
-            </CardTitle>
-            <CardDescription>Rentals awaiting approval.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{stats.pendingRentals}</p>
-            <p className="text-sm text-muted-foreground">Pending approval</p>
-          </CardContent>
-        </Card>
+        <StatCard
+          title="Total Rentals"
+          description="Your complete rental history."
+          value={stats.totalRentals}
+          icon={Car}
+          iconPosition="inline"
+          subLabel="Total rentals"
+        />
+        <StatCard
+          title="Active Rentals"
+          description="Currently active rentals."
+          value={stats.activeRentals}
+          icon={Clock}
+          iconPosition="inline"
+          subLabel="Active now"
+        />
+        <StatCard
+          title="Pending Requests"
+          description="Rentals awaiting approval."
+          value={stats.pendingRentals}
+          icon={Loader}
+          iconPosition="inline"
+          subLabel="Pending approval"
+        />
       </div>
     </div>
   );

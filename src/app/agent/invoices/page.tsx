@@ -1,3 +1,5 @@
+import { CalendarDays, Car, Receipt } from "lucide-react";
+
 import {
   getInvoices,
   getClosedRentalsWithoutInvoice,
@@ -13,6 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { EmptyState } from "@/components/shared/empty-state";
+import { PageHeader } from "@/components/shared/page-header";
 import { IssueInvoiceButton } from "@/components/invoices/issue-invoice-button";
 
 export default async function AgentInvoicesPage() {
@@ -23,11 +27,12 @@ export default async function AgentInvoicesPage() {
 
   return (
     <div className="space-y-10">
-      <h1 className="text-3xl font-bold">Invoices</h1>
+      <PageHeader title="Invoices" />
 
       {/* Awaiting Invoice section */}
       <section>
         <h2 className="mb-4 text-xl font-semibold">
+          <Receipt className="mr-2 inline-block size-5" />
           Awaiting Invoice
           <span className="ml-2 text-base font-normal text-muted-foreground">
             ({uninvoiced.length})
@@ -35,13 +40,10 @@ export default async function AgentInvoicesPage() {
         </h2>
 
         {uninvoiced.length === 0 ? (
-          <Card>
-            <CardContent className="py-8 text-center">
-              <p className="text-muted-foreground">
-                All closed rentals have been invoiced
-              </p>
-            </CardContent>
-          </Card>
+          <EmptyState
+            variant="card"
+            message="All closed rentals have been invoiced"
+          />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {uninvoiced.map((rental) => {
@@ -56,6 +58,7 @@ export default async function AgentInvoicesPage() {
                 <Card key={rental.id}>
                   <CardHeader>
                     <CardTitle className="text-base">
+                      <Car className="mr-1.5 inline-block size-4 text-muted-foreground" />
                       {rental.car.make} {rental.car.model} ({rental.car.year})
                     </CardTitle>
                     <p className="text-xs text-muted-foreground">
@@ -74,13 +77,19 @@ export default async function AgentInvoicesPage() {
 
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div>
-                        <p className="text-xs text-muted-foreground">Start</p>
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <CalendarDays className="size-3" />
+                          Start
+                        </p>
                         <p className="font-medium">
                           {formatDate(rental.startDate)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground">End</p>
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <CalendarDays className="size-3" />
+                          End
+                        </p>
                         <p className="font-medium">
                           {formatDate(rental.endDate)}
                         </p>
@@ -111,6 +120,7 @@ export default async function AgentInvoicesPage() {
       {/* Issued Invoices section */}
       <section>
         <h2 className="mb-4 text-xl font-semibold">
+          <Receipt className="mr-2 inline-block size-5" />
           Issued Invoices
           <span className="ml-2 text-base font-normal text-muted-foreground">
             ({issuedInvoices.length})
@@ -118,11 +128,7 @@ export default async function AgentInvoicesPage() {
         </h2>
 
         {issuedInvoices.length === 0 ? (
-          <Card>
-            <CardContent className="py-8 text-center">
-              <p className="text-muted-foreground">No invoices issued yet</p>
-            </CardContent>
-          </Card>
+          <EmptyState variant="card" message="No invoices issued yet" />
         ) : (
           <Card>
             <CardContent className="p-0">

@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { RentalStatusBadge } from "@/components/rentals/rental-status-badge";
+import { EmptyState } from "@/components/shared/empty-state";
 
 type RentalTableProps = {
   rentals: RentalDTO[];
@@ -17,11 +18,7 @@ type RentalTableProps = {
 
 export function RentalTable({ rentals, showUser = false }: RentalTableProps) {
   if (rentals.length === 0) {
-    return (
-      <p className="py-8 text-center text-muted-foreground">
-        No rentals found.
-      </p>
-    );
+    return <EmptyState message="No rentals found." />;
   }
 
   return (

@@ -4,6 +4,7 @@ import type { RentalStatus } from "@/types";
 import { RENTAL_STATUS } from "@/types";
 import { auth } from "@/lib/auth";
 import { getRentals } from "@/lib/data/rentals";
+import { PageHeader } from "@/components/shared/page-header";
 import { RentalTable } from "@/components/rentals/rental-table";
 
 type SearchParams = Promise<{ status?: string }>;
@@ -32,7 +33,7 @@ export default async function MyRentalsPage({
   return (
     <div>
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-3xl font-bold">My Rentals</h1>
+        <PageHeader title="My Rentals" />
 
         <div className="flex flex-wrap gap-2">
           <FilterLink href="/dashboard/rentals" active={!statusFilter}>

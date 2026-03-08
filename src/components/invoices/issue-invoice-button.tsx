@@ -2,10 +2,15 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { FileText } from "lucide-react";
 
 import { issueInvoice } from "@/actions/invoices";
 import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import {
+  ActionFeedback,
+  type ActionMessage,
+} from "@/components/shared/action-feedback";
 
 export function IssueInvoiceButton({
   rentalId,
@@ -16,10 +21,7 @@ export function IssueInvoiceButton({
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
+  const [message, setMessage] = useState<ActionMessage | null>(null);
 
   function handleIssue() {
     setMessage(null);
@@ -41,21 +43,12 @@ export function IssueInvoiceButton({
           Amount: {formatCurrency(computedAmount)}
         </span>
         <Button size="sm" onClick={handleIssue} disabled={isPending}>
+          <FileText className="size-3.5" />
           {isPending ? "Issuing…" : "Issue Invoice"}
         </Button>
       </div>
 
-      {message && (
-        <p
-          className={
-            message.type === "success"
-              ? "text-sm text-green-600 dark:text-green-400"
-              : "text-sm text-destructive"
-          }
-        >
-          {message.text}
-        </p>
-      )}
+      <ActionFeedback message={message} />
     </div>
   );
 }

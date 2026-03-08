@@ -1,3 +1,5 @@
+import { Users, Search } from "lucide-react";
+
 import { getUsersByRole, searchUsers } from "@/lib/data/users";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
+import { PageHeader } from "@/components/shared/page-header";
 import { UserSearch } from "@/components/users/user-search";
 
 type SearchParams = Promise<{ q?: string }>;
@@ -45,10 +48,18 @@ export default async function AdminUsersPage({
 
   return (
     <div>
-      <h1 className="mb-6 text-3xl font-bold">User Management</h1>
+      <PageHeader title="User Management" className="mb-6" />
 
       {/* Staff Section */}
-      <h2 className="mb-4 text-xl font-semibold">Staff (Admins & Agents)</h2>
+      <div className="mb-4 flex items-center gap-3">
+        <h2 className="text-xl font-semibold">
+          <Users className="mr-2 inline-block size-5" />
+          Staff (Admins & Agents)
+        </h2>
+        <Badge variant="secondary" className="text-sm">
+          {staffUsers.length} member{staffUsers.length !== 1 ? "s" : ""}
+        </Badge>
+      </div>
       {staffUsers.length === 0 ? (
         <p className="mb-6 text-muted-foreground">No staff users found.</p>
       ) : (
@@ -87,7 +98,10 @@ export default async function AdminUsersPage({
       <Separator className="my-8" />
 
       {/* User Search Section */}
-      <h2 className="mb-4 text-xl font-semibold">Search Users</h2>
+      <h2 className="mb-4 text-xl font-semibold">
+        <Search className="mr-2 inline-block size-5" />
+        Search Users
+      </h2>
       <div className="mb-6">
         <UserSearch />
       </div>

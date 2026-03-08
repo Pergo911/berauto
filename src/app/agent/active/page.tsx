@@ -1,8 +1,7 @@
 import { getRentals } from "@/lib/data/rentals";
-import { formatDate } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { RentalStatusBadge } from "@/components/rentals/rental-status-badge";
+import { EmptyState } from "@/components/shared/empty-state";
+import { PageHeader } from "@/components/shared/page-header";
+import { RentalAgentCard } from "@/components/rentals/rental-agent-card";
 import { HandoverReturnActions } from "@/components/rentals/handover-return-actions";
 
 export default async function AgentActivePage() {
@@ -16,7 +15,7 @@ export default async function AgentActivePage() {
 
   return (
     <div className="space-y-10">
-      <h1 className="text-3xl font-bold">Active Rentals</h1>
+      <PageHeader title="Active Rentals" />
 
       {/* Awaiting Handover section */}
       <section>
@@ -28,20 +27,16 @@ export default async function AgentActivePage() {
         </h2>
 
         {awaitingHandover.length === 0 ? (
-          <Card>
-            <CardContent className="py-8 text-center">
-              <p className="text-muted-foreground">
-                No rentals awaiting handover
-              </p>
-            </CardContent>
-          </Card>
+          <EmptyState variant="card" message="No rentals awaiting handover" />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {awaitingHandover.map((rental) => (
-              <RentalCard
+              <RentalAgentCard
                 key={rental.id}
                 rental={rental}
-                actionType="handover"
+                action={
+                  <HandoverReturnActions rentalId={rental.id} type="handover" />
+                }
               />
             ))}
           </div>
@@ -58,72 +53,21 @@ export default async function AgentActivePage() {
         </h2>
 
         {currentlyActive.length === 0 ? (
-          <Card>
-            <CardContent className="py-8 text-center">
-              <p className="text-muted-foreground">No active rentals</p>
-            </CardContent>
-          </Card>
+          <EmptyState variant="card" message="No active rentals" />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {currentlyActive.map((rental) => (
-              <RentalCard key={rental.id} rental={rental} actionType="return" />
+              <RentalAgentCard
+                key={rental.id}
+                rental={rental}
+                action={
+                  <HandoverReturnActions rentalId={rental.id} type="return" />
+                }
+              />
             ))}
           </div>
         )}
       </section>
     </div>
-  );
-}
-
-function RentalCard({
-  rental,
-  actionType,
-}: {
-  rental: Awaited<ReturnType<typeof getRentals>>[number];
-  actionType: "handover" | "return";
-}) {
-  return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base">
-            {rental.car.make} {rental.car.model} ({rental.car.year})
-          </CardTitle>
-          <RentalStatusBadge status={rental.status} />
-        </div>
-        <p className="text-xs text-muted-foreground">
-          {rental.car.licensePlate}
-        </p>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="space-y-1 text-sm">
-          <p>
-            <span className="font-medium">Customer:</span>{" "}
-            {rental.userName ?? rental.guestName ?? "Unknown"}
-          </p>
-          <p>
-            <span className="font-medium">Email:</span>{" "}
-            {rental.userEmail ?? rental.guestEmail ?? "—"}
-          </p>
-        </div>
-
-        <Separator />
-
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <div>
-            <p className="text-xs text-muted-foreground">Start</p>
-            <p className="font-medium">{formatDate(rental.startDate)}</p>
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground">End</p>
-            <p className="font-medium">{formatDate(rental.endDate)}</p>
-          </div>
-        </div>
-
-        <Separator />
-
-        <HandoverReturnActions rentalId={rental.id} type={actionType} />
-      </CardContent>
-    </Card>
   );
 }

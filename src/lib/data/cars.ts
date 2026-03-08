@@ -45,7 +45,13 @@ function toCarDTO(row: typeof cars.$inferSelect): CarDTO {
 export async function getCars(filters?: {
   search?: string;
   status?: CarStatus;
-  sort?: "price-asc" | "price-desc" | "year-asc" | "year-desc";
+  sort?:
+    | "price-asc"
+    | "price-desc"
+    | "year-asc"
+    | "year-desc"
+    | "mileage-asc"
+    | "mileage-desc";
 }): Promise<CarDTO[]> {
   const conditions = [];
 
@@ -77,6 +83,12 @@ export async function getCars(filters?: {
       break;
     case "year-desc":
       orderBy = desc(cars.year);
+      break;
+    case "mileage-asc":
+      orderBy = asc(cars.mileageKm);
+      break;
+    case "mileage-desc":
+      orderBy = desc(cars.mileageKm);
       break;
     default:
       orderBy = desc(cars.createdAt);

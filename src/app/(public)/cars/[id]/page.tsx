@@ -3,8 +3,7 @@ import { notFound } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { getCarById } from "@/lib/data/cars";
-import { formatCurrency, formatDate, cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,23 +17,7 @@ import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { SignOutButton } from "@/components/shared/sign-out-button";
 import { Navbar } from "@/components/shared/navbar";
 import { RentalRequestForm } from "@/components/cars/rental-request-form";
-
-const statusConfig: Record<string, { label: string; className: string }> = {
-  AVAILABLE: {
-    label: "Available",
-    className:
-      "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-  },
-  MAINTENANCE: {
-    label: "Maintenance",
-    className:
-      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-  },
-  UNAVAILABLE: {
-    label: "Unavailable",
-    className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-  },
-};
+import { CarStatusBadge } from "@/components/cars/car-status-badge";
 
 export default async function CarDetailPage({
   params,
@@ -47,8 +30,6 @@ export default async function CarDetailPage({
   if (!car) {
     notFound();
   }
-
-  const status = statusConfig[car.status];
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -101,9 +82,7 @@ export default async function CarDetailPage({
                   </CardTitle>
                   <CardDescription>{car.year} model</CardDescription>
                 </div>
-                <Badge className={cn("shrink-0", status?.className)}>
-                  {status?.label ?? car.status}
-                </Badge>
+                <CarStatusBadge status={car.status} />
               </div>
             </CardHeader>
             <CardContent className="grid gap-4">
@@ -170,8 +149,10 @@ export default async function CarDetailPage({
                 <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-950">
                   <p className="text-sm text-yellow-800 dark:text-yellow-200">
                     This car is currently{" "}
-                    <span className="font-medium lowercase">
-                      {status?.label ?? car.status}
+                    <span className="font-bold lowercase">
+                      {car.status == "MAINTENANCE"
+                        ? "under maintenance"
+                        : "unavailable"}
                     </span>
                     . Please check back later or browse other available
                     vehicles.

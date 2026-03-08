@@ -1,14 +1,8 @@
-import Link from "next/link";
 import { ClipboardList, CarFront, FileText, CircleCheck } from "lucide-react";
 
 import { getAgentDashboardStats } from "@/lib/data/dashboard";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { StatCard } from "@/components/shared/stat-card";
+import { PageHeader } from "@/components/shared/page-header";
 
 const statCards = [
   {
@@ -46,29 +40,19 @@ export default async function AgentPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-3xl font-bold">Agent Dashboard</h1>
+      <PageHeader title="Agent Dashboard" className="mb-6" />
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((card) => {
-          const Icon = card.icon;
-          return (
-            <Link key={card.key} href={card.href}>
-              <Card className="transition-shadow hover:shadow-md">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium">
-                      {card.title}
-                    </CardTitle>
-                    <Icon className="size-4 text-muted-foreground" />
-                  </div>
-                  <CardDescription>{card.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-3xl font-bold">{stats[card.key]}</p>
-                </CardContent>
-              </Card>
-            </Link>
-          );
-        })}
+        {statCards.map((card) => (
+          <StatCard
+            key={card.key}
+            title={card.title}
+            description={card.description}
+            value={stats[card.key]}
+            icon={card.icon}
+            href={card.href}
+            compactTitle
+          />
+        ))}
       </div>
     </div>
   );

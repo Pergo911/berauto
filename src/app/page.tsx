@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
 
-import type { CarStatus } from "@/types";
 import { auth } from "@/lib/auth";
 import { getCars } from "@/lib/data/cars";
 import { Button } from "@/components/ui/button";
@@ -10,33 +9,46 @@ import { SignOutButton } from "@/components/shared/sign-out-button";
 import { Navbar } from "@/components/shared/navbar";
 import { CarCard } from "@/components/cars/car-card";
 import { CarFilters } from "@/components/cars/car-filters";
+import { EmptyState } from "@/components/shared/empty-state";
+
+type SortOption =
+  | "price-asc"
+  | "price-desc"
+  | "year-asc"
+  | "year-desc"
+  | "mileage-asc"
+  | "mileage-desc";
+
+const VALID_SORTS: SortOption[] = [
+  "price-asc",
+  "price-desc",
+  "year-asc",
+  "year-desc",
+  "mileage-asc",
+  "mileage-desc",
+];
 
 export default async function HomePage({
   searchParams,
 }: {
   searchParams: Promise<{
     search?: string;
-    status?: string;
+    showUnavailable?: string;
     sort?: string;
   }>;
 }) {
   const [session, params] = await Promise.all([auth(), searchParams]);
 
-  const statusFilter =
-    params.status &&
-    ["AVAILABLE", "MAINTENANCE", "UNAVAILABLE"].includes(params.status)
-      ? (params.status as CarStatus)
-      : undefined;
+  const showUnavailable = params.showUnavailable === "1";
 
   const sortFilter =
-    params.sort &&
-    ["price-asc", "price-desc", "year-asc", "year-desc"].includes(params.sort)
-      ? (params.sort as "price-asc" | "price-desc" | "year-asc" | "year-desc")
+    params.sort && VALID_SORTS.includes(params.sort as SortOption)
+      ? (params.sort as SortOption)
       : undefined;
 
   const cars = await getCars({
     search: params.search,
-    status: statusFilter,
+    status: showUnavailable ? undefined : "AVAILABLE",
     sort: sortFilter,
   });
 
@@ -93,9 +105,10 @@ export default async function HomePage({
           </div>
 
           {cars.length === 0 ? (
-            <p className="py-12 text-center text-muted-foreground">
-              No cars found matching your criteria.
-            </p>
+            <EmptyState
+              message="No cars found matching your criteria."
+              className="py-12"
+            />
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {cars.map((car) => (
@@ -111,7 +124,7 @@ export default async function HomePage({
       </main>
 
       <footer className="border-t py-6 text-center text-sm text-muted-foreground">
-        <p>BerAuto Car Rental &copy; {new Date().getFullYear()}</p>
+        <p>BerAuto Car Rental {new Date().getFullYear()}</p>
       </footer>
     </div>
   );

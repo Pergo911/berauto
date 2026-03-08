@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { Pencil, Plus } from "lucide-react";
 
 import type { CarDTO } from "@/lib/data/cars";
 import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -23,24 +23,12 @@ import {
 } from "@/components/ui/dialog";
 import { CarForm } from "@/components/cars/car-form";
 import { DeleteCarButton } from "@/components/cars/delete-car-button";
+import { CarStatusBadge } from "@/components/cars/car-status-badge";
+import { EmptyState } from "@/components/shared/empty-state";
 
 type AdminCarTableProps = {
   cars: CarDTO[];
 };
-
-function statusBadge(status: CarDTO["status"]) {
-  const map = {
-    AVAILABLE: { label: "Available", className: "bg-green-600 text-white" },
-    MAINTENANCE: {
-      label: "Maintenance",
-      className: "bg-yellow-600 text-white",
-    },
-    UNAVAILABLE: { label: "Unavailable", className: "bg-red-600 text-white" },
-  } as const;
-
-  const { label, className } = map[status];
-  return <Badge className={className}>{label}</Badge>;
-}
 
 export function AdminCarTable({ cars }: AdminCarTableProps) {
   const [createOpen, setCreateOpen] = useState(false);
@@ -52,7 +40,10 @@ export function AdminCarTable({ cars }: AdminCarTableProps) {
         <p className="text-sm text-muted-foreground">
           {cars.length} car{cars.length !== 1 ? "s" : ""} in fleet
         </p>
-        <Button onClick={() => setCreateOpen(true)}>Add New Car</Button>
+        <Button onClick={() => setCreateOpen(true)}>
+          <Plus className="size-4" />
+          Add New Car
+        </Button>
       </div>
 
       {/* Create Dialog */}
@@ -90,9 +81,7 @@ export function AdminCarTable({ cars }: AdminCarTableProps) {
 
       {/* Table */}
       {cars.length === 0 ? (
-        <p className="py-8 text-center text-muted-foreground">
-          No cars found. Add your first car to get started.
-        </p>
+        <EmptyState message="No cars found. Add your first car to get started." />
       ) : (
         <Table>
           <TableHeader>
@@ -122,7 +111,9 @@ export function AdminCarTable({ cars }: AdminCarTableProps) {
                   {car.mileageKm.toLocaleString()} km
                 </TableCell>
                 <TableCell>{formatCurrency(car.dailyRate)}</TableCell>
-                <TableCell>{statusBadge(car.status)}</TableCell>
+                <TableCell>
+                  <CarStatusBadge status={car.status} />
+                </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">
                     <Button
@@ -130,6 +121,7 @@ export function AdminCarTable({ cars }: AdminCarTableProps) {
                       size="sm"
                       onClick={() => setEditCar(car)}
                     >
+                      <Pencil className="size-3.5" />
                       Edit
                     </Button>
                     <DeleteCarButton
