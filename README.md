@@ -17,6 +17,31 @@ A car rental platform supporting the complete rental lifecycle — from request 
 | UI              | Tailwind CSS v4 + shadcn/ui                      |
 | Package manager | pnpm                                             |
 
+## Features
+
+### Public
+
+- **Car listing** (`/`) — Browse available cars with make/model/year filters; availability is computed in real time
+- **Car detail** (`/cars/[id]`) — View car specifications and submit a rental request (authenticated users)
+
+### User Dashboard
+
+- **Dashboard** (`/dashboard`) — Overview with rental statistics (total, active, pending requests)
+- **Rental history** (`/dashboard/rentals`) — Filterable list of the user's own rentals with status badges
+
+### Agent Panel
+
+- **Agent dashboard** (`/agent`) — Pending request count, active rental count, invoices awaiting issuance
+- **Request queue** (`/agent/requests`) — Approve or reject pending rental requests; conflicting overlapping requests are shown before approval
+- **Active rentals** (`/agent/active`) — Record vehicle handover (with mileage) and return
+- **Invoice management** (`/agent/invoices`) — Issue invoices for closed rentals; view previously issued invoices
+
+### Admin Panel
+
+- **Admin dashboard** (`/admin`) — Fleet size, total users, and system-wide rental/invoice statistics
+- **Car management** (`/admin/cars`) — Full CRUD for the car fleet; set status to Available, Maintenance, or Unavailable
+- **User management** (`/admin/users`) — View agents and admins; search normal users by name, email, or ID
+
 ## Getting Started
 
 ### Prerequisites
@@ -91,4 +116,16 @@ pnpm db:generate      # generate Drizzle migrations from schema changes
 pnpm db:migrate       # apply pending migrations
 pnpm db:studio        # open Drizzle Studio (visual DB browser)
 pnpm db:seed          # seed database with demo data
+```
+
+## Project Structure
+
+```
+src/
+  app/           # Next.js App Router — pages and layouts
+  actions/       # Server Actions (one file per domain)
+  components/    # React components (ui/, shared/, cars/, rentals/, invoices/, users/)
+  db/            # Drizzle schema, migrations, seed
+  lib/           # Auth config, data queries, validations, utilities
+  types/         # Shared TypeScript types and enums
 ```

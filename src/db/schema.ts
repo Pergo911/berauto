@@ -5,9 +5,9 @@ import {
   text,
   integer,
   numeric,
-  boolean,
   timestamp,
   pgEnum,
+  index,
 } from "drizzle-orm/pg-core";
 
 // ── Enums ──────────────────────────────────────────────
@@ -32,8 +32,8 @@ export const rentalEventTypeEnum = pgEnum("rental_event_type", [
 
 export const carStatusEnum = pgEnum("car_status", [
   "AVAILABLE",
-  "RENTED",
   "MAINTENANCE",
+  "UNAVAILABLE",
 ]);
 
 // ── Users ──────────────────────────────────────────────
@@ -53,72 +53,102 @@ export const users = pgTable("users", {
 
 // ── Cars ───────────────────────────────────────────────
 
-export const cars = pgTable("cars", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  make: varchar("make", { length: 100 }).notNull(),
-  model: varchar("model", { length: 100 }).notNull(),
-  year: integer("year").notNull(),
-  licensePlate: varchar("license_plate", { length: 20 }).notNull().unique(),
-  mileageKm: integer("mileage_km").notNull().default(0),
-  dailyRate: numeric("daily_rate", { precision: 10, scale: 2 }).notNull(),
-  isAvailable: boolean("is_available").notNull().default(true),
-  status: carStatusEnum("status").notNull().default("AVAILABLE"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export const cars = pgTable(
+  "cars",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    make: varchar("make", { length: 100 }).notNull(),
+    model: varchar("model", { length: 100 }).notNull(),
+    year: integer("year").notNull(),
+    licensePlate: varchar("license_plate", { length: 20 }).notNull().unique(),
+    mileageKm: integer("mileage_km").notNull().default(0),
+    dailyRate: numeric("daily_rate", { precision: 10, scale: 2 }).notNull(),
+    status: carStatusEnum("status").notNull().default("AVAILABLE"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [index("cars_status_idx").on(table.status)]
+);
 
 // ── Rentals ────────────────────────────────────────────
 
-export const rentals = pgTable("rentals", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  carId: uuid("car_id")
-    .notNull()
-    .references(() => cars.id),
-  userId: uuid("user_id").references(() => users.id),
-  guestName: varchar("guest_name", { length: 255 }),
-  guestEmail: varchar("guest_email", { length: 255 }),
-  guestPhone: varchar("guest_phone", { length: 50 }),
-  startDate: timestamp("start_date", { withTimezone: true }).notNull(),
-  endDate: timestamp("end_date", { withTimezone: true }).notNull(),
-  status: rentalStatusEnum("status").notNull().default("PENDING"),
-  agentId: uuid("agent_id").references(() => users.id),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export const rentals = pgTable(
+  "rentals",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    carId: uuid("car_id")
+      .notNull()
+      .references(() => cars.id),
+    userId: uuid("user_id").references(() => users.id),
+    guestName: varchar("guest_name", { length: 255 }),
+    guestEmail: varchar("guest_email", { length: 255 }),
+    guestPhone: varchar("guest_phone", { length: 50 }),
+    startDate: timestamp("start_date", { withTimezone: true }).notNull(),
+    endDate: timestamp("end_date", { withTimezone: true }).notNull(),
+    status: rentalStatusEnum("status").notNull().default("PENDING"),
+    agentId: uuid("agent_id").references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("rentals_car_status_idx").on(table.carId, table.status),
+    index("rentals_user_created_idx").on(table.userId, table.createdAt),
+    index("rentals_agent_created_idx").on(table.agentId, table.createdAt),
+    index("rentals_status_created_idx").on(table.status, table.createdAt),
+  ]
+);
 
 // ── Rental Events ──────────────────────────────────────
 
-export const rentalEvents = pgTable("rental_events", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  rentalId: uuid("rental_id")
-    .notNull()
-    .references(() => rentals.id),
-  eventType: rentalEventTypeEnum("event_type").notNull(),
-  actorId: uuid("actor_id").references(() => users.id),
-  notes: text("notes"),
-  timestamp: timestamp("timestamp", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export const rentalEvents = pgTable(
+  "rental_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    rentalId: uuid("rental_id")
+      .notNull()
+      .references(() => rentals.id),
+    eventType: rentalEventTypeEnum("event_type").notNull(),
+    actorId: uuid("actor_id").references(() => users.id),
+    notes: text("notes"),
+    mileageKm: integer("mileage_km"),
+    timestamp: timestamp("timestamp", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("rental_events_rental_timestamp_idx").on(
+      table.rentalId,
+      table.timestamp
+    ),
+  ]
+);
 
 // ── Invoices ───────────────────────────────────────────
 
-export const invoices = pgTable("invoices", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  rentalId: uuid("rental_id")
-    .notNull()
-    .references(() => rentals.id),
-  amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
-  issuedAt: timestamp("issued_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  issuedBy: uuid("issued_by")
-    .notNull()
-    .references(() => users.id),
-  pdfUrl: text("pdf_url"),
-});
+export const invoices = pgTable(
+  "invoices",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    rentalId: uuid("rental_id")
+      .notNull()
+      .references(() => rentals.id)
+      .unique(),
+    amount: numeric("amount", { precision: 10, scale: 2 }).notNull(),
+    issuedAt: timestamp("issued_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    issuedBy: uuid("issued_by")
+      .notNull()
+      .references(() => users.id),
+    pdfUrl: text("pdf_url"),
+  },
+  (table) => [index("invoices_issued_at_idx").on(table.issuedAt)]
+);

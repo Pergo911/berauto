@@ -1,20 +1,44 @@
+import { Suspense } from "react";
 import Link from "next/link";
 
+import type { CarStatus } from "@/types";
 import { auth } from "@/lib/auth";
+import { getCars } from "@/lib/data/cars";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { SignOutButton } from "@/components/shared/sign-out-button";
 import { Navbar } from "@/components/shared/navbar";
+import { CarCard } from "@/components/cars/car-card";
+import { CarFilters } from "@/components/cars/car-filters";
 
-export default async function HomePage() {
-  const session = await auth();
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    search?: string;
+    status?: string;
+    sort?: string;
+  }>;
+}) {
+  const [session, params] = await Promise.all([auth(), searchParams]);
+
+  const statusFilter =
+    params.status &&
+    ["AVAILABLE", "MAINTENANCE", "UNAVAILABLE"].includes(params.status)
+      ? (params.status as CarStatus)
+      : undefined;
+
+  const sortFilter =
+    params.sort &&
+    ["price-asc", "price-desc", "year-asc", "year-desc"].includes(params.sort)
+      ? (params.sort as "price-asc" | "price-desc" | "year-asc" | "year-desc")
+      : undefined;
+
+  const cars = await getCars({
+    search: params.search,
+    status: statusFilter,
+    sort: sortFilter,
+  });
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -61,29 +85,28 @@ export default async function HomePage() {
 
         <section>
           <h2 className="mb-6 text-2xl font-semibold">Available Cars</h2>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Placeholder cards */}
-            {[1, 2, 3].map((i) => (
-              <Card key={i}>
-                <CardHeader>
-                  <CardTitle>Car Placeholder {i}</CardTitle>
-                  <CardDescription>
-                    This will show real car data once connected to the database.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    Daily rate: -- Ft/day
-                  </p>
-                  <Link href={`/cars/${i}`}>
-                    <Button className="mt-4 w-full" variant="outline">
-                      View Details
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
+
+          <div className="mb-8">
+            <Suspense fallback={null}>
+              <CarFilters />
+            </Suspense>
           </div>
+
+          {cars.length === 0 ? (
+            <p className="py-12 text-center text-muted-foreground">
+              No cars found matching your criteria.
+            </p>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {cars.map((car) => (
+                <CarCard
+                  key={car.id}
+                  car={car}
+                  bookable={car.status === "AVAILABLE"}
+                />
+              ))}
+            </div>
+          )}
         </section>
       </main>
 
