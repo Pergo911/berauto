@@ -231,7 +231,7 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
   }
 
   return (
-    <header className="border-b">
+    <header className="sticky top-0 z-50 border-b bg-background/40 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Left: Logo + Panel Switcher */}
         <div className="flex items-center gap-1">
