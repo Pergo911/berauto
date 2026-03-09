@@ -1,8 +1,8 @@
 "use client";
 
-import { useSyncExternalStore, useTransition } from "react";
+import { useSyncExternalStore, useTransition, useState, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -167,14 +167,23 @@ function PanelSwitcher({
   panel: Panel;
   panels: PanelOption[];
 }) {
+  const [open, setOpen] = useState(false);
+  const openedAt = useRef<number>(0);
+  const router = useRouter();
+
+  function handleOpenChange(next: boolean) {
+    setOpen(next);
+    if (next) openedAt.current = Date.now();
+  }
+
   if (panels.length === 0) return null;
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          size="sm"
+          size="default"
           className="gap-1 text-muted-foreground"
         >
           <LockOpen className="size-3.5" />
@@ -186,10 +195,16 @@ function PanelSwitcher({
         {panels.map((p) => (
           <DropdownMenuItem
             key={p.value}
-            asChild
             className={cn(panel === p.value && "bg-accent")}
+            onSelect={(e) => {
+              if (Date.now() - openedAt.current < 300) {
+                e.preventDefault();
+                return;
+              }
+              router.push(p.href);
+            }}
           >
-            <Link href={p.href}>{p.label}</Link>
+            {p.label}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
