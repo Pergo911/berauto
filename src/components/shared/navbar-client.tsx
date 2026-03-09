@@ -14,14 +14,13 @@ import {
   Globe,
   Home,
   LayoutDashboard,
-  LockOpen,
   LogIn,
   LogOut,
   Moon,
   Monitor,
   Sun,
   User,
-  Users,
+  ShieldUser,
 } from "lucide-react";
 
 import type { UserRole } from "@/types";
@@ -92,7 +91,7 @@ const PANEL_ROUTES: Record<Panel, NavRoute[]> = {
     { label: "Home", href: "/", icon: Home },
     { label: "Overview", href: "/admin", icon: BarChart3 },
     { label: "Cars", href: "/admin/cars", icon: Car },
-    { label: "Users", href: "/admin/users", icon: Users },
+    { label: "Users", href: "/admin/users", icon: ShieldUser },
   ],
 };
 
@@ -160,6 +159,18 @@ function ThemeSwitcher() {
   );
 }
 
+function PanelModeIcon({
+  panel,
+  className,
+}: {
+  panel: Panel;
+  className?: string;
+}) {
+  if (panel === "admin") return <ShieldUser className={className} />;
+  if (panel === "agent") return <ClipboardList className={className} />;
+  return <User className={className} />;
+}
+
 function PanelSwitcher({
   panel,
   panels,
@@ -186,7 +197,7 @@ function PanelSwitcher({
           size="default"
           className="gap-1 text-muted-foreground"
         >
-          <LockOpen className="size-3.5" />
+          <PanelModeIcon panel={panel} className="size-3.5" />
           {PANEL_LABELS[panel]}
           <ChevronDown className="size-3" />
         </Button>
@@ -204,12 +215,21 @@ function PanelSwitcher({
               router.push(p.href);
             }}
           >
+            <PanelModeIcon panel={p.value} className="size-4" />
             {p.label}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
+}
+
+// ---------- Helpers ----------
+
+function RoleIcon({ role, className }: { role: UserRole; className?: string }) {
+  if (role === "admin") return <ShieldUser className={className} />;
+  if (role === "agent") return <ClipboardList className={className} />;
+  return <User className={className} />;
 }
 
 // ---------- Main Component ----------
@@ -241,6 +261,8 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
           {showPanelSwitcher && (
             <>
               <span className="mx-1 text-lg text-muted-foreground/40">/</span>
+              {/* user is non-null here: showPanelSwitcher is only true when panels.length > 1,
+                  which requires user to be defined (panels = user ? getAvailablePanels(...) : []) */}
               <PanelSwitcher panel={panel} panels={panels} />
             </>
           )}
@@ -261,14 +283,15 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2">
-                  <User className="size-4" />
+                  <RoleIcon role={user.role} className="size-4" />
                   <span className="hidden sm:inline">{user.name}</span>
                   <ChevronDown className="size-3" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 {/* User info */}
-                <DropdownMenuLabel className="font-normal">
+                <DropdownMenuLabel className="font-normal flex gap-2">
+                  <RoleIcon role={user.role} className="size-4" />
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">
                       {user.name}
