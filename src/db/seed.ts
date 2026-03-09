@@ -122,7 +122,6 @@ async function seed() {
       licensePlate: "ABC-123",
       mileageKm: 15_000,
       dailyRate: "8500.00",
-      isAvailable: true,
       status: "AVAILABLE",
     },
     {
@@ -132,7 +131,6 @@ async function seed() {
       licensePlate: "DEF-456",
       mileageKm: 8_000,
       dailyRate: "12000.00",
-      isAvailable: true,
       status: "AVAILABLE",
     },
     {
@@ -142,7 +140,6 @@ async function seed() {
       licensePlate: "GHI-789",
       mileageKm: 32_000,
       dailyRate: "18000.00",
-      isAvailable: true,
       status: "AVAILABLE",
     },
     {
@@ -152,7 +149,6 @@ async function seed() {
       licensePlate: "JKL-012",
       mileageKm: 5_200,
       dailyRate: "22000.00",
-      isAvailable: true,
       status: "AVAILABLE",
     },
     {
@@ -162,8 +158,7 @@ async function seed() {
       licensePlate: "MNO-345",
       mileageKm: 18_700,
       dailyRate: "25000.00",
-      isAvailable: false,
-      status: "RENTED",
+      status: "AVAILABLE",
     },
     {
       make: "Opel",
@@ -172,7 +167,6 @@ async function seed() {
       licensePlate: "PQR-678",
       mileageKm: 54_300,
       dailyRate: "7000.00",
-      isAvailable: true,
       status: "AVAILABLE",
     },
     {
@@ -182,7 +176,6 @@ async function seed() {
       licensePlate: "STU-901",
       mileageKm: 1_200,
       dailyRate: "14000.00",
-      isAvailable: true,
       status: "AVAILABLE",
     },
     {
@@ -192,7 +185,6 @@ async function seed() {
       licensePlate: "VWX-234",
       mileageKm: 78_600,
       dailyRate: "6500.00",
-      isAvailable: false,
       status: "MAINTENANCE",
     },
     {
@@ -202,8 +194,7 @@ async function seed() {
       licensePlate: "YZA-567",
       mileageKm: 41_000,
       dailyRate: "9000.00",
-      isAvailable: true,
-      status: "AVAILABLE",
+      status: "UNAVAILABLE",
     },
     {
       make: "Suzuki",
@@ -212,8 +203,7 @@ async function seed() {
       licensePlate: "BCD-890",
       mileageKm: 12_400,
       dailyRate: "11000.00",
-      isAvailable: false,
-      status: "RENTED",
+      status: "AVAILABLE",
     },
   ];
 
@@ -407,6 +397,7 @@ async function seed() {
       eventType: "HANDOVER",
       actorId: agent.id,
       notes: "Keys handed over, mileage: 14,200 km",
+      mileageKm: 14200,
       timestamp: daysAgo(30),
     },
     {
@@ -414,6 +405,7 @@ async function seed() {
       eventType: "RETURN",
       actorId: agent.id,
       notes: "Returned in good condition, mileage: 14,850 km",
+      mileageKm: 14850,
       timestamp: daysAgo(25),
     },
 
@@ -437,6 +429,7 @@ async function seed() {
       eventType: "HANDOVER",
       actorId: agent.id,
       notes: "Keys handed over, mileage: 18,500 km",
+      mileageKm: 18500,
       timestamp: daysAgo(3),
     },
 
@@ -498,6 +491,7 @@ async function seed() {
       eventType: "HANDOVER",
       actorId: agent.id,
       notes: "Suzuki Vitara handed over, mileage: 12,200 km",
+      mileageKm: 12200,
       timestamp: daysAgo(2),
     },
 
@@ -520,6 +514,7 @@ async function seed() {
       eventType: "HANDOVER",
       actorId: agent.id,
       notes: "Keys handed over, mileage: 53,800 km",
+      mileageKm: 53800,
       timestamp: daysAgo(20),
     },
     {
@@ -527,6 +522,7 @@ async function seed() {
       eventType: "RETURN",
       actorId: agent.id,
       notes: "Returned, mileage: 54,300 km. Minor scratch on bumper noted.",
+      mileageKm: 54300,
       timestamp: daysAgo(15),
     },
 
@@ -559,6 +555,7 @@ async function seed() {
       eventType: "HANDOVER",
       actorId: agent.id,
       notes: "Handed over, mileage: 40,200 km",
+      mileageKm: 40200,
       timestamp: daysAgo(45),
     },
     {
@@ -566,6 +563,7 @@ async function seed() {
       eventType: "RETURN",
       actorId: agent.id,
       notes: "Returned, mileage: 41,000 km",
+      mileageKm: 41000,
       timestamp: daysAgo(40),
     },
 
@@ -597,6 +595,7 @@ async function seed() {
       eventType: "HANDOVER",
       actorId: agent.id,
       notes: "Handed over, mileage: 13,500 km",
+      mileageKm: 13500,
       timestamp: daysAgo(60),
     },
     {
@@ -604,6 +603,7 @@ async function seed() {
       eventType: "RETURN",
       actorId: agent.id,
       notes: "Returned, mileage: 14,100 km",
+      mileageKm: 14100,
       timestamp: daysAgo(55),
     },
 

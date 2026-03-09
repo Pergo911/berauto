@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { registerSchema, type RegisterInput } from "@/lib/validations/auth";
 import { registerUser } from "@/actions/auth";
@@ -23,7 +23,6 @@ import { SocialButtons } from "@/components/auth/social-buttons";
 
 export function RegisterForm() {
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -36,13 +35,11 @@ export function RegisterForm() {
   });
 
   async function onSubmit(values: RegisterInput) {
-    setError(null);
-
     try {
       const result = await registerUser(values);
 
       if (!result.success) {
-        setError(result.error);
+        toast.error(result.error);
         return;
       }
 
@@ -62,7 +59,7 @@ export function RegisterForm() {
       router.push("/dashboard");
       router.refresh();
     } catch {
-      setError("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   }
 
@@ -141,7 +138,6 @@ export function RegisterForm() {
               </FormItem>
             )}
           />
-          {error && <p className="text-sm text-destructive">{error}</p>}
           <Button
             type="submit"
             className="w-full"

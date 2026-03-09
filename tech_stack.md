@@ -1,4 +1,4 @@
-# BérAutó — Architecture & Tech Stack Proposal
+# BérAutó — Architecture & Tech Stack
 
 ## Overview
 
@@ -100,41 +100,41 @@ users
 
 cars
   id, make, model, year, license_plate, mileage_km,
-  daily_rate, is_available, status, created_at
+  daily_rate, status,                     ← AVAILABLE | MAINTENANCE | UNAVAILABLE
+  created_at, updated_at
 
 rentals
-  id, car_id → cars, user_id → users (nullable for guest),
-  guest_name, guest_email, guest_phone,   ← for non-registered users
+  id, car_id → cars, user_id → users,
   start_date, end_date, status,           ← PENDING | APPROVED | REJECTED | ACTIVE | CLOSED
   agent_id → users (nullable),
   created_at, updated_at
 
 rental_events
   id, rental_id → rentals, event_type,   ← REQUEST | APPROVE | REJECT | HANDOVER | RETURN
-  actor_id → users, notes, timestamp
+  actor_id → users, notes, mileage_km (nullable, used for HANDOVER/RETURN), timestamp
 
 invoices
-  id, rental_id → rentals, amount, issued_at, issued_by → users, pdf_url
+  id, rental_id → rentals (unique),       ← one invoice per rental
+  amount, issued_at, issued_by → users, pdf_url
 ```
 
 ---
 
 ## Application Routes & Role Guards
 
-| Path                           | Accessible by                       |
-| ------------------------------ | ----------------------------------- |
-| `/`                            | Everyone (car listing)              |
-| `/cars/[id]`                   | Everyone (car detail + rental form) |
-| `/auth/login` `/auth/register` | Unauthenticated                     |
-| `/dashboard`                   | Authenticated users                 |
-| `/dashboard/rentals`           | Users (own history)                 |
-| `/agent`                       | Agent, Admin                        |
-| `/agent/requests`              | Agent, Admin (approve/reject queue) |
-| `/agent/active`                | Agent, Admin (active rentals)       |
-| `/agent/invoices`              | Agent, Admin                        |
-| `/admin`                       | Admin only                          |
-| `/admin/cars`                  | Admin only                          |
-| `/admin/users`                 | Admin only                          |
+| Path                 | Accessible by                                |
+| -------------------- | -------------------------------------------- |
+| `/`                  | Everyone (car listing)                       |
+| `/cars/[id]`         | Everyone (car detail + rental form)          |
+| `/login` `/register` | Unauthenticated                              |
+| `/dashboard`         | Authenticated users (stats + rental history) |
+| `/agent`             | Agent, Admin                                 |
+| `/agent/requests`    | Agent, Admin (approve/reject queue)          |
+| `/agent/active`      | Agent, Admin (active rentals)                |
+| `/agent/invoices`    | Agent, Admin                                 |
+| `/admin`             | Admin only                                   |
+| `/admin/cars`        | Admin only                                   |
+| `/admin/users`       | Admin only                                   |
 
 ---
 
@@ -159,6 +159,15 @@ Prisma's Rust query engine binary adds ~50–100ms cold-start latency on Vercel 
 ### Why JWT sessions instead of database sessions?
 
 Avoids an extra DB round-trip on every request. The role and user ID in the JWT are sufficient for all access-control decisions. Token invalidation is handled by a short expiry (e.g., 24 h) combined with a re-login flow.
+
+---
+
+## Data Layer
+
+- **Query functions** live in `src/lib/data/` and return page-ready DTOs. They are called from Server Components to fetch data for rendering.
+- **Server Actions** in `src/actions/` handle all mutations. Every action validates input with Zod, checks the session, enforces role requirements, and returns a discriminated success/error union.
+- **Availability is computed at query time**, not stored. A car is bookable only if `status === 'AVAILABLE'` AND no overlapping APPROVED or ACTIVE rental exists for the requested date range.
+- **URL search params** drive filtering and pagination on list pages (car listing, rental history, agent queues). Server Components read `searchParams` directly — no client-side state management needed.
 
 ---
 

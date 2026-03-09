@@ -1,4 +1,426 @@
 "use server";
 
-// Placeholder for rental-related server actions
-// TODO: Implement rental lifecycle operations
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+
+import { db } from "@/db";
+import { cars, rentalEvents, rentals } from "@/db/schema";
+import { auth } from "@/lib/auth";
+import { isCarBookable, getConflictingPendingRentals } from "@/lib/data/cars";
+import {
+  createRentalSchema,
+  idSchema,
+  mileageSchema,
+  rejectReasonSchema,
+} from "@/lib/validations/rentals";
+
+type ActionResult<T> =
+  | { success: true; data: T }
+  | { success: false; error: string };
+
+// ── 1. Create Rental Request ───────────────────────────
+
+export async function createRentalRequest(
+  input: unknown
+): Promise<ActionResult<{ id: string }>> {
+  const parsed = createRentalSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, error: "Invalid input" };
+  }
+
+  const session = await auth();
+
+  const { carId, startDate, endDate, guestName, guestEmail, guestPhone } =
+    parsed.data;
+
+  // If not logged in, require guest fields
+  if (!session?.user) {
+    if (!guestName || !guestEmail || !guestPhone) {
+      return {
+        success: false,
+        error:
+          "Guest name, email, and phone are required for non-registered users",
+      };
+    }
+  }
+
+  const [rental] = await db
+    .insert(rentals)
+    .values({
+      carId,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+      status: "PENDING",
+      // Attach userId if logged in, otherwise use guest fields
+      userId: session?.user ? session.user.id : null,
+      guestName: session?.user ? null : (guestName ?? null),
+      guestEmail: session?.user ? null : (guestEmail ?? null),
+      guestPhone: session?.user ? null : (guestPhone ?? null),
+    })
+    .returning({ id: rentals.id });
+
+  await db.insert(rentalEvents).values({
+    rentalId: rental.id,
+    eventType: "REQUEST",
+    actorId: session?.user ? session.user.id : null,
+  });
+
+  revalidatePath("/");
+  revalidatePath("/agent/requests");
+
+  return { success: true, data: { id: rental.id } };
+}
+
+// ── 2. Get Approval Conflicts ──────────────────────────
+
+export async function getApprovalConflicts(rentalId: string): Promise<
+  ActionResult<{
+    conflicts: Array<{
+      id: string;
+      startDate: Date;
+      endDate: Date;
+      guestName: string | null;
+      userId: string | null;
+    }>;
+  }>
+> {
+  const idParsed = idSchema.safeParse(rentalId);
+  if (!idParsed.success) {
+    return { success: false, error: "Invalid ID" };
+  }
+
+  const session = await auth();
+  if (
+    !session ||
+    (session.user.role !== "agent" && session.user.role !== "admin")
+  ) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const [rental] = await db
+    .select()
+    .from(rentals)
+    .where(eq(rentals.id, rentalId))
+    .limit(1);
+
+  if (!rental) {
+    return { success: false, error: "Rental not found" };
+  }
+
+  if (rental.status !== "PENDING") {
+    return { success: false, error: "Rental is not pending" };
+  }
+
+  const conflicting = await getConflictingPendingRentals(
+    rental.carId,
+    rental.startDate,
+    rental.endDate,
+    rentalId
+  );
+
+  const conflicts = conflicting.map((c) => ({
+    id: c.id,
+    startDate: c.startDate,
+    endDate: c.endDate,
+    guestName: c.guestName,
+    userId: c.userId,
+  }));
+
+  return { success: true, data: { conflicts } };
+}
+
+// ── 3. Approve Rental ──────────────────────────────────
+
+export async function approveRental(
+  rentalId: string,
+  autoRejectConflicts?: boolean
+): Promise<ActionResult<{ id: string }>> {
+  const idParsed = idSchema.safeParse(rentalId);
+  if (!idParsed.success) {
+    return { success: false, error: "Invalid ID" };
+  }
+
+  const session = await auth();
+  if (
+    !session ||
+    (session.user.role !== "agent" && session.user.role !== "admin")
+  ) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const [rental] = await db
+    .select()
+    .from(rentals)
+    .where(eq(rentals.id, rentalId))
+    .limit(1);
+
+  if (!rental) {
+    return { success: false, error: "Rental not found" };
+  }
+
+  if (rental.status !== "PENDING") {
+    return { success: false, error: "Rental is not pending" };
+  }
+
+  const bookable = await isCarBookable(
+    rental.carId,
+    rental.startDate,
+    rental.endDate
+  );
+
+  if (!bookable) {
+    return {
+      success: false,
+      error: "Car is not available for the requested dates",
+    };
+  }
+
+  // Approve the rental
+  // Note: neon-http driver does not support traditional transactions,
+  // so we run statements sequentially. This is acceptable for this use case
+  // because the prior bookability check guards against conflicts.
+  const now = new Date();
+
+  await db
+    .update(rentals)
+    .set({
+      status: "APPROVED",
+      agentId: session.user.id,
+      updatedAt: now,
+    })
+    .where(eq(rentals.id, rentalId));
+
+  await db.insert(rentalEvents).values({
+    rentalId,
+    eventType: "APPROVE",
+    actorId: session.user.id,
+  });
+
+  // Auto-reject conflicting PENDING rentals
+  if (autoRejectConflicts) {
+    const conflicts = await getConflictingPendingRentals(
+      rental.carId,
+      rental.startDate,
+      rental.endDate,
+      rentalId
+    );
+
+    for (const conflict of conflicts) {
+      await db
+        .update(rentals)
+        .set({
+          status: "REJECTED",
+          agentId: session.user.id,
+          updatedAt: now,
+        })
+        .where(eq(rentals.id, conflict.id));
+
+      await db.insert(rentalEvents).values({
+        rentalId: conflict.id,
+        eventType: "REJECT",
+        actorId: session.user.id,
+        notes: "Auto-rejected: conflicting rental approved",
+      });
+    }
+  }
+
+  revalidatePath("/");
+  revalidatePath("/agent/requests");
+  revalidatePath("/agent/active");
+  revalidatePath("/dashboard/rentals");
+
+  return { success: true, data: { id: rentalId } };
+}
+
+// ── 4. Reject Rental ───────────────────────────────────
+
+export async function rejectRental(
+  rentalId: string,
+  input: unknown
+): Promise<ActionResult<{ id: string }>> {
+  const idParsed = idSchema.safeParse(rentalId);
+  if (!idParsed.success) {
+    return { success: false, error: "Invalid ID" };
+  }
+
+  const parsed = rejectReasonSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, error: "Invalid input" };
+  }
+
+  const session = await auth();
+  if (
+    !session ||
+    (session.user.role !== "agent" && session.user.role !== "admin")
+  ) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const [rental] = await db
+    .select()
+    .from(rentals)
+    .where(eq(rentals.id, rentalId))
+    .limit(1);
+
+  if (!rental) {
+    return { success: false, error: "Rental not found" };
+  }
+
+  if (rental.status !== "PENDING") {
+    return { success: false, error: "Rental is not pending" };
+  }
+
+  await db
+    .update(rentals)
+    .set({
+      status: "REJECTED",
+      agentId: session.user.id,
+      updatedAt: new Date(),
+    })
+    .where(eq(rentals.id, rentalId));
+
+  await db.insert(rentalEvents).values({
+    rentalId,
+    eventType: "REJECT",
+    actorId: session.user.id,
+    notes: parsed.data.reason,
+  });
+
+  revalidatePath("/");
+  revalidatePath("/agent/requests");
+  revalidatePath("/dashboard/rentals");
+
+  return { success: true, data: { id: rentalId } };
+}
+
+// ── 5. Handover Rental ─────────────────────────────────
+
+export async function handoverRental(
+  rentalId: string,
+  input: unknown
+): Promise<ActionResult<{ id: string }>> {
+  const idParsed = idSchema.safeParse(rentalId);
+  if (!idParsed.success) {
+    return { success: false, error: "Invalid ID" };
+  }
+
+  const parsed = mileageSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, error: "Invalid input" };
+  }
+
+  const session = await auth();
+  if (
+    !session ||
+    (session.user.role !== "agent" && session.user.role !== "admin")
+  ) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const [rental] = await db
+    .select()
+    .from(rentals)
+    .where(eq(rentals.id, rentalId))
+    .limit(1);
+
+  if (!rental) {
+    return { success: false, error: "Rental not found" };
+  }
+
+  if (rental.status !== "APPROVED") {
+    return { success: false, error: "Rental is not approved" };
+  }
+
+  await db
+    .update(rentals)
+    .set({
+      status: "ACTIVE",
+      updatedAt: new Date(),
+    })
+    .where(eq(rentals.id, rentalId));
+
+  await db.insert(rentalEvents).values({
+    rentalId,
+    eventType: "HANDOVER",
+    actorId: session.user.id,
+    mileageKm: parsed.data.mileageKm,
+  });
+
+  revalidatePath("/");
+  revalidatePath("/agent/requests");
+  revalidatePath("/agent/active");
+  revalidatePath("/dashboard/rentals");
+
+  return { success: true, data: { id: rentalId } };
+}
+
+// ── 6. Return Rental ───────────────────────────────────
+
+export async function returnRental(
+  rentalId: string,
+  input: unknown
+): Promise<ActionResult<{ id: string }>> {
+  const idParsed = idSchema.safeParse(rentalId);
+  if (!idParsed.success) {
+    return { success: false, error: "Invalid ID" };
+  }
+
+  const parsed = mileageSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, error: "Invalid input" };
+  }
+
+  const session = await auth();
+  if (
+    !session ||
+    (session.user.role !== "agent" && session.user.role !== "admin")
+  ) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const [rental] = await db
+    .select()
+    .from(rentals)
+    .where(eq(rentals.id, rentalId))
+    .limit(1);
+
+  if (!rental) {
+    return { success: false, error: "Rental not found" };
+  }
+
+  if (rental.status !== "ACTIVE") {
+    return { success: false, error: "Rental is not active" };
+  }
+
+  await db
+    .update(rentals)
+    .set({
+      status: "CLOSED",
+      updatedAt: new Date(),
+    })
+    .where(eq(rentals.id, rentalId));
+
+  await db.insert(rentalEvents).values({
+    rentalId,
+    eventType: "RETURN",
+    actorId: session.user.id,
+    mileageKm: parsed.data.mileageKm,
+  });
+
+  // Update car mileage to the return reading
+  await db
+    .update(cars)
+    .set({
+      mileageKm: parsed.data.mileageKm,
+      updatedAt: new Date(),
+    })
+    .where(eq(cars.id, rental.carId));
+
+  revalidatePath("/");
+  revalidatePath("/agent/active");
+  revalidatePath("/agent/invoices");
+  revalidatePath("/dashboard/rentals");
+  revalidatePath("/admin/cars");
+
+  return { success: true, data: { id: rentalId } };
+}

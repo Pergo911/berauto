@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,6 @@ import { SocialButtons } from "@/components/auth/social-buttons";
 
 export function LoginForm() {
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -33,8 +32,6 @@ export function LoginForm() {
   });
 
   async function onSubmit(values: LoginInput) {
-    setError(null);
-
     try {
       const result = await signIn("credentials", {
         email: values.email,
@@ -43,14 +40,14 @@ export function LoginForm() {
       });
 
       if (result?.error) {
-        setError("Invalid email or password");
+        toast.error("Invalid email or password");
         return;
       }
 
       router.push("/dashboard");
       router.refresh();
     } catch {
-      setError("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   }
 
@@ -94,7 +91,6 @@ export function LoginForm() {
               </FormItem>
             )}
           />
-          {error && <p className="text-sm text-destructive">{error}</p>}
           <Button
             type="submit"
             className="w-full"

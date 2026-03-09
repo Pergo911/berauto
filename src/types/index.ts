@@ -29,8 +29,8 @@ export type UserRole = (typeof USER_ROLE)[keyof typeof USER_ROLE];
 
 export const CAR_STATUS = {
   AVAILABLE: "AVAILABLE",
-  RENTED: "RENTED",
   MAINTENANCE: "MAINTENANCE",
+  UNAVAILABLE: "UNAVAILABLE",
 } as const;
 
 export type CarStatus = (typeof CAR_STATUS)[keyof typeof CAR_STATUS];

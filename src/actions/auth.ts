@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { users } from "@/db/schema";
+import { signOut } from "@/lib/auth";
 import { registerSchema } from "@/lib/validations/auth";
 
 type ActionResult<T> =
@@ -40,4 +41,8 @@ export async function registerUser(
     .returning({ id: users.id });
 
   return { success: true, data: { id: user.id } };
+}
+
+export async function signOutAction() {
+  await signOut({ redirectTo: "/login" });
 }
