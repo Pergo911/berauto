@@ -2,11 +2,8 @@
 
 import { useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Filter } from "lucide-react";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
