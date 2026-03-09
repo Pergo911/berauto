@@ -3,14 +3,11 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { KeyRound, RotateCcw } from "lucide-react";
+import { toast } from "sonner";
 
 import { handoverRental, returnRental } from "@/actions/rentals";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  ActionFeedback,
-  type ActionMessage,
-} from "@/components/shared/action-feedback";
 
 export function HandoverReturnActions({
   rentalId,
@@ -22,7 +19,6 @@ export function HandoverReturnActions({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [mileage, setMileage] = useState("");
-  const [message, setMessage] = useState<ActionMessage | null>(null);
 
   const isHandover = type === "handover";
   const label = isHandover ? "Record Handover" : "Record Return";
@@ -34,28 +30,24 @@ export function HandoverReturnActions({
 
     const mileageKm = Number(mileage);
     if (!mileage || isNaN(mileageKm) || mileageKm < 0) {
-      setMessage({ type: "error", text: "Please enter a valid mileage" });
+      toast.error("Please enter a valid mileage");
       return;
     }
 
-    setMessage(null);
     startTransition(async () => {
       const result = await action(rentalId, { mileageKm });
       if (result.success) {
-        setMessage({
-          type: "success",
-          text: isHandover ? "Handover recorded" : "Return recorded",
-        });
+        toast.success(isHandover ? "Handover recorded" : "Return recorded");
         setMileage("");
         router.refresh();
       } else {
-        setMessage({ type: "error", text: result.error });
+        toast.error(result.error);
       }
     });
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2">
+    <form onSubmit={handleSubmit}>
       <div className="flex items-end gap-2">
         <div className="flex-1">
           <label
@@ -79,8 +71,6 @@ export function HandoverReturnActions({
           {isPending ? "Saving…" : label}
         </Button>
       </div>
-
-      <ActionFeedback message={message} />
     </form>
   );
 }

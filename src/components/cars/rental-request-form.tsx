@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2, Send } from "lucide-react";
+import { toast } from "sonner";
 
 import type { CreateRentalInput } from "@/lib/validations/rentals";
 import { createRentalSchema } from "@/lib/validations/rentals";
@@ -36,9 +36,6 @@ export function RentalRequestForm({
   carId,
   isLoggedIn,
 }: RentalRequestFormProps) {
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-
   const form = useForm<CreateRentalInput>({
     resolver: zodResolver(createRentalSchema),
     defaultValues: {
@@ -54,36 +51,15 @@ export function RentalRequestForm({
   });
 
   async function onSubmit(values: CreateRentalInput) {
-    setError(null);
-    setSuccess(false);
-
     const result = await createRentalRequest(values);
 
     if (!result.success) {
-      setError(result.error);
+      toast.error(result.error);
       return;
     }
 
-    setSuccess(true);
+    toast.success("Rental request submitted successfully!");
     form.reset();
-  }
-
-  if (success) {
-    return (
-      <div className="rounded-lg border border-border/60 p-4 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_50%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(240,253,250,0.95))] dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_50%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(17,24,39,0.95))]">
-        <p className="font-medium">Rental request submitted successfully!</p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          We will review your request and get back to you soon.
-        </p>
-        <Button
-          variant="outline"
-          className="mt-3"
-          onClick={() => setSuccess(false)}
-        >
-          Submit Another Request
-        </Button>
-      </div>
-    );
   }
 
   return (
@@ -236,8 +212,6 @@ export function RentalRequestForm({
             />
           </>
         )}
-
-        {error && <p className="text-sm text-destructive">{error}</p>}
 
         <Button
           type="submit"

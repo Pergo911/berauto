@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Check, X } from "lucide-react";
+import { toast } from "sonner";
 
 import { approveRental, rejectRental } from "@/actions/rentals";
 import { Button } from "@/components/ui/button";
@@ -17,10 +18,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  ActionFeedback,
-  type ActionMessage,
-} from "@/components/shared/action-feedback";
 
 export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
   const router = useRouter();
@@ -28,18 +25,16 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
   const [approveOpen, setApproveOpen] = useState(false);
   const [rejectOpen, setRejectOpen] = useState(false);
   const [reason, setReason] = useState("");
-  const [message, setMessage] = useState<ActionMessage | null>(null);
 
   function handleApprove() {
-    setMessage(null);
     startTransition(async () => {
       const result = await approveRental(rentalId, true);
       if (result.success) {
-        setMessage({ type: "success", text: "Rental approved" });
+        toast.success("Rental approved");
         setApproveOpen(false);
         router.refresh();
       } else {
-        setMessage({ type: "error", text: result.error });
+        toast.error(result.error);
         setApproveOpen(false);
       }
     });
@@ -47,45 +42,42 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
 
   function handleReject() {
     if (!reason.trim()) {
-      setMessage({ type: "error", text: "Please provide a rejection reason" });
+      toast.error("Please provide a rejection reason");
       return;
     }
-    setMessage(null);
     startTransition(async () => {
       const result = await rejectRental(rentalId, { reason: reason.trim() });
       if (result.success) {
-        setMessage({ type: "success", text: "Rental rejected" });
+        toast.success("Rental rejected");
         setRejectOpen(false);
         setReason("");
         router.refresh();
       } else {
-        setMessage({ type: "error", text: result.error });
+        toast.error(result.error);
         setRejectOpen(false);
       }
     });
   }
 
   return (
-    <div className="space-y-2">
-      <div className="flex gap-2">
-        <Button
-          size="sm"
-          onClick={() => setApproveOpen(true)}
-          disabled={isPending}
-        >
-          <Check className="size-4" />
-          {isPending ? "Processing…" : "Approve"}
-        </Button>
-        <Button
-          size="sm"
-          variant="destructive"
-          onClick={() => setRejectOpen(true)}
-          disabled={isPending}
-        >
-          <X className="size-4" />
-          Reject
-        </Button>
-      </div>
+    <div className="flex gap-2">
+      <Button
+        size="sm"
+        onClick={() => setApproveOpen(true)}
+        disabled={isPending}
+      >
+        <Check className="size-4" />
+        {isPending ? "Processing…" : "Approve"}
+      </Button>
+      <Button
+        size="sm"
+        variant="destructive"
+        onClick={() => setRejectOpen(true)}
+        disabled={isPending}
+      >
+        <X className="size-4" />
+        Reject
+      </Button>
 
       {/* Approve Confirmation */}
       <AlertDialog open={approveOpen} onOpenChange={setApproveOpen}>
@@ -142,8 +134,6 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      <ActionFeedback message={message} />
     </div>
   );
 }

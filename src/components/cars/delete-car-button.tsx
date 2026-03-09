@@ -3,6 +3,7 @@
 import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { deleteCar } from "@/actions/cars";
 import { Button } from "@/components/ui/button";
@@ -27,17 +28,15 @@ export function DeleteCarButton({ carId, carName }: DeleteCarButtonProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   function handleDelete() {
-    setError(null);
     startTransition(async () => {
       const result = await deleteCar(carId);
       if (result.success) {
         setOpen(false);
         router.refresh();
       } else {
-        setError(result.error);
+        toast.error(result.error);
       }
     });
   }
@@ -58,7 +57,6 @@ export function DeleteCarButton({ carId, carName }: DeleteCarButtonProps) {
             action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        {error && <p className="text-sm text-destructive">{error}</p>}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
           <AlertDialogAction

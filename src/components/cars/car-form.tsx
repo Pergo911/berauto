@@ -1,10 +1,11 @@
 "use client";
 
-import { useTransition, useState } from "react";
+import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Resolver } from "react-hook-form";
+import { toast } from "sonner";
 
 import type { CarDTO } from "@/lib/data/cars";
 import { createCarSchema, type CreateCarInput } from "@/lib/validations/cars";
@@ -35,8 +36,6 @@ type CarFormProps = {
 export function CarForm({ car, onSuccess }: CarFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   const form = useForm<CreateCarInput>({
     resolver: zodResolver(createCarSchema) as Resolver<CreateCarInput>,
@@ -52,22 +51,19 @@ export function CarForm({ car, onSuccess }: CarFormProps) {
   });
 
   function onSubmit(data: CreateCarInput) {
-    setError(null);
-    setSuccess(null);
-
     startTransition(async () => {
       const result = car
         ? await updateCar(car.id, data)
         : await createCar(data);
 
       if (result.success) {
-        setSuccess(
+        toast.success(
           car ? "Car updated successfully." : "Car created successfully."
         );
         router.refresh();
         onSuccess?.();
       } else {
-        setError(result.error);
+        toast.error(result.error);
       }
     });
   }
@@ -184,9 +180,6 @@ export function CarForm({ car, onSuccess }: CarFormProps) {
             </FormItem>
           )}
         />
-
-        {error && <p className="text-sm text-destructive">{error}</p>}
-        {success && <p className="text-sm text-green-600">{success}</p>}
 
         <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
           {isPending
