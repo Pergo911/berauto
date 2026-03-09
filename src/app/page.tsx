@@ -15,8 +15,6 @@ import { CarCard } from "@/components/cars/car-card";
 import { CarFilters } from "@/components/cars/car-filters";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Navbar } from "@/components/shared/navbar";
-import { SignOutButton } from "@/components/shared/sign-out-button";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 type SortOption =
   | "price-asc"
@@ -88,35 +86,7 @@ export default async function HomePage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar
-        brand={
-          <Link href="/" className="text-xl font-bold">
-            BerAuto
-          </Link>
-        }
-      >
-        <ThemeToggle />
-        {session?.user ? (
-          <>
-            <Link href="/dashboard">
-              <Button variant="ghost">Dashboard</Button>
-            </Link>
-            <span className="text-sm text-muted-foreground">
-              {session.user.name}
-            </span>
-            <SignOutButton />
-          </>
-        ) : (
-          <>
-            <Link href="/login">
-              <Button variant="ghost">Login</Button>
-            </Link>
-            <Link href="/register">
-              <Button>Register</Button>
-            </Link>
-          </>
-        )}
-      </Navbar>
+      <Navbar />
 
       <main className="container mx-auto flex-1 px-4 py-8">
         <section className="relative mb-12 overflow-hidden rounded-[2rem] border border-border/60 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.14),_transparent_34%),linear-gradient(135deg,_rgba(255,255,255,0.96),_rgba(240,253,250,0.92))] px-6 py-8 shadow-sm sm:px-8 sm:py-10 lg:px-12 lg:py-12 dark:bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.22),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.18),_transparent_32%),linear-gradient(135deg,_rgba(15,23,42,0.96),_rgba(17,24,39,0.92))]">

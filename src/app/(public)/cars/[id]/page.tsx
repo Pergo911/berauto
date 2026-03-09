@@ -13,8 +13,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
-import { SignOutButton } from "@/components/shared/sign-out-button";
 import { Navbar } from "@/components/shared/navbar";
 import { RentalRequestForm } from "@/components/cars/rental-request-form";
 import { CarStatusBadge } from "@/components/cars/car-status-badge";
@@ -33,35 +31,7 @@ export default async function CarDetailPage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar
-        brand={
-          <Link href="/" className="text-xl font-bold">
-            BerAuto
-          </Link>
-        }
-      >
-        <ThemeToggle />
-        {session?.user ? (
-          <>
-            <Link href="/dashboard">
-              <Button variant="ghost">Dashboard</Button>
-            </Link>
-            <span className="text-sm text-muted-foreground">
-              {session.user.name}
-            </span>
-            <SignOutButton />
-          </>
-        ) : (
-          <>
-            <Link href="/login">
-              <Button variant="ghost">Login</Button>
-            </Link>
-            <Link href="/register">
-              <Button>Register</Button>
-            </Link>
-          </>
-        )}
-      </Navbar>
+      <Navbar />
 
       <main className="container mx-auto flex-1 px-4 py-8">
         <Link
