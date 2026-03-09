@@ -49,8 +49,8 @@ export function AdminCarFilters({ defaults }: AdminCarFiltersProps) {
   );
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <div className="grid gap-2">
+    <div className="flex gap-4 flex-wrap items-end">
+      <div className="grid gap-2 flex-1 min-w-50">
         <Label htmlFor="search">Search</Label>
         <Input
           id="search"
@@ -100,13 +100,6 @@ export function AdminCarFilters({ defaults }: AdminCarFiltersProps) {
             <SelectItem value="year-desc">Year: Newest first</SelectItem>
           </SelectContent>
         </Select>
-      </div>
-
-      <div className="flex items-end">
-        <Button onClick={() => updateParams({ search, status, sort })}>
-          <Filter className="size-4" />
-          Filter
-        </Button>
       </div>
     </div>
   );
