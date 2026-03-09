@@ -106,9 +106,7 @@ async function seed() {
     (u) => u.email === "maria.nagy@example.com"
   )!;
 
-  console.log(
-    `  Created ${insertedUsers.length} users (password: password123)`
-  );
+  console.log(`  Created ${insertedUsers.length} users`);
 
   // ── 3. Insert cars ───────────────────────────────────
 

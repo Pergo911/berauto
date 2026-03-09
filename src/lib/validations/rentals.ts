@@ -15,9 +15,17 @@ export const createRentalSchema = z
     startDate: z.iso.date("Invalid start date"),
     endDate: z.iso.date("Invalid end date"),
     // Guest fields (for non-registered users)
-    guestName: z.string().min(2).optional(),
+    guestName: z
+      .string()
+      .min(2)
+      .max(255, "Guest name cannot exceed 255 characters")
+      .optional(),
     guestEmail: z.email().optional(),
-    guestPhone: z.string().min(5).optional(),
+    guestPhone: z
+      .string()
+      .min(5)
+      .max(30, "Phone number cannot exceed 30 characters")
+      .optional(),
   })
   .refine((data) => data.startDate < data.endDate, {
     message: "End date must be after start date",
@@ -42,7 +50,10 @@ export const mileageSchema = z.object({
 export type MileageInput = z.infer<typeof mileageSchema>;
 
 export const rejectReasonSchema = z.object({
-  reason: z.string().min(1, "Reason is required"),
+  reason: z
+    .string()
+    .min(1, "Reason is required")
+    .max(1000, "Reason cannot exceed 1000 characters"),
 });
 
 export type RejectReasonInput = z.infer<typeof rejectReasonSchema>;

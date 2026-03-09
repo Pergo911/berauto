@@ -8,14 +8,23 @@ export const carStatusEnum = z.enum([
 export type CarStatusEnum = z.infer<typeof carStatusEnum>;
 
 export const createCarSchema = z.object({
-  make: z.string().min(1, "Make is required"),
-  model: z.string().min(1, "Model is required"),
+  make: z
+    .string()
+    .min(1, "Make is required")
+    .max(100, "Make cannot exceed 100 characters"),
+  model: z
+    .string()
+    .min(1, "Model is required")
+    .max(100, "Model cannot exceed 100 characters"),
   year: z.coerce
     .number()
     .int()
     .min(1900)
     .max(new Date().getFullYear() + 1),
-  licensePlate: z.string().min(1, "License plate is required"),
+  licensePlate: z
+    .string()
+    .min(1, "License plate is required")
+    .max(20, "License plate cannot exceed 20 characters"),
   mileageKm: z.coerce.number().int().min(0).default(0),
   dailyRate: z.coerce.number().positive("Daily rate must be positive"),
   status: carStatusEnum.default("AVAILABLE"),
