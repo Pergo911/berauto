@@ -122,20 +122,19 @@ invoices
 
 ## Application Routes & Role Guards
 
-| Path                 | Accessible by                       |
-| -------------------- | ----------------------------------- |
-| `/`                  | Everyone (car listing)              |
-| `/cars/[id]`         | Everyone (car detail + rental form) |
-| `/login` `/register` | Unauthenticated                     |
-| `/dashboard`         | Authenticated users                 |
-| `/dashboard/rentals` | Users (own history)                 |
-| `/agent`             | Agent, Admin                        |
-| `/agent/requests`    | Agent, Admin (approve/reject queue) |
-| `/agent/active`      | Agent, Admin (active rentals)       |
-| `/agent/invoices`    | Agent, Admin                        |
-| `/admin`             | Admin only                          |
-| `/admin/cars`        | Admin only                          |
-| `/admin/users`       | Admin only                          |
+| Path                 | Accessible by                                |
+| -------------------- | -------------------------------------------- |
+| `/`                  | Everyone (car listing)                       |
+| `/cars/[id]`         | Everyone (car detail + rental form)          |
+| `/login` `/register` | Unauthenticated                              |
+| `/dashboard`         | Authenticated users (stats + rental history) |
+| `/agent`             | Agent, Admin                                 |
+| `/agent/requests`    | Agent, Admin (approve/reject queue)          |
+| `/agent/active`      | Agent, Admin (active rentals)                |
+| `/agent/invoices`    | Agent, Admin                                 |
+| `/admin`             | Admin only                                   |
+| `/admin/cars`        | Admin only                                   |
+| `/admin/users`       | Admin only                                   |
 
 ---
 

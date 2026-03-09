@@ -27,7 +27,7 @@ export default async function AgentActivePage() {
         </h2>
 
         {awaitingHandover.length === 0 ? (
-          <EmptyState variant="card" message="No rentals awaiting handover" />
+          <EmptyState variant="plain" message="No rentals awaiting handover" />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {awaitingHandover.map((rental) => (
@@ -53,7 +53,7 @@ export default async function AgentActivePage() {
         </h2>
 
         {currentlyActive.length === 0 ? (
-          <EmptyState variant="card" message="No active rentals" />
+          <EmptyState variant="plain" message="No active rentals" />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {currentlyActive.map((rental) => (

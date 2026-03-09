@@ -15,7 +15,7 @@ export default async function AgentRequestsPage() {
       <PageHeader title="Rental Requests" className="mb-6" />
 
       {pendingRentals.length === 0 ? (
-        <EmptyState variant="card" message="No pending requests" />
+        <EmptyState variant="plain" message="No pending requests" />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {pendingRentals.map((rental) => (

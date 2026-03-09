@@ -41,7 +41,7 @@ export default async function AgentInvoicesPage() {
 
         {uninvoiced.length === 0 ? (
           <EmptyState
-            variant="card"
+            variant="plain"
             message="All closed rentals have been invoiced"
           />
         ) : (
@@ -131,37 +131,32 @@ export default async function AgentInvoicesPage() {
         </h2>
 
         {issuedInvoices.length === 0 ? (
-          <EmptyState variant="card" message="No invoices issued yet" />
+          <EmptyState variant="plain" message="No invoices issued yet" />
         ) : (
-          <Card>
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Car</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Issued Date</TableHead>
-                    <TableHead>Issued By</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {issuedInvoices.map((invoice) => (
-                    <TableRow key={invoice.id}>
-                      <TableCell>
-                        {invoice.car.make} {invoice.car.model} (
-                        {invoice.car.year})
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {formatCurrency(invoice.amount)}
-                      </TableCell>
-                      <TableCell>{formatDate(invoice.issuedAt)}</TableCell>
-                      <TableCell>{invoice.issuerName ?? "—"}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Car</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead>Issued Date</TableHead>
+                <TableHead>Issued By</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {issuedInvoices.map((invoice) => (
+                <TableRow key={invoice.id}>
+                  <TableCell>
+                    {invoice.car.make} {invoice.car.model} ({invoice.car.year})
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {formatCurrency(invoice.amount)}
+                  </TableCell>
+                  <TableCell>{formatDate(invoice.issuedAt)}</TableCell>
+                  <TableCell>{invoice.issuerName ?? "—"}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         )}
       </section>
     </div>

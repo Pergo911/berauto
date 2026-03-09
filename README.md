@@ -26,8 +26,7 @@ A car rental platform supporting the complete rental lifecycle — from request 
 
 ### User Dashboard
 
-- **Dashboard** (`/dashboard`) — Overview with rental statistics (total, active, pending requests)
-- **Rental history** (`/dashboard/rentals`) — Filterable list of the user's own rentals with status badges
+- **Dashboard** (`/dashboard`) — Overview with rental statistics (total, active, pending requests) and a filterable list of the user's own rentals with status badges
 
 ### Agent Panel
 

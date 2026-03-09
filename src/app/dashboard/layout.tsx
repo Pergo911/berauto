@@ -27,11 +27,6 @@ export default async function DashboardLayout({
             Dashboard
           </Button>
         </Link>
-        <Link href="/dashboard/rentals">
-          <Button variant="ghost" size="sm">
-            My Rentals
-          </Button>
-        </Link>
         <ThemeToggle />
         {session?.user && (
           <span className="text-sm text-muted-foreground">

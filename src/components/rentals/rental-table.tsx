@@ -22,7 +22,7 @@ export function RentalTable({ rentals, showUser = false }: RentalTableProps) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border">
+    <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
