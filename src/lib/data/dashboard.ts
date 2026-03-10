@@ -15,7 +15,6 @@ export type AgentDashboardStats = {
   pendingRentals: number;
   activeRentals: number;
   closedRentalsWithoutInvoice: number;
-  availableCars: number;
 };
 
 export type AdminDashboardStats = {
@@ -51,21 +50,13 @@ export async function getUserDashboardStats(
 
 /** Counts relevant to the agent dashboard. */
 export async function getAgentDashboardStats(): Promise<AgentDashboardStats> {
-  const [[rentalCounts], [carCounts], [uninvoiced]] = await Promise.all([
+  const [[rentalCounts], [uninvoiced]] = await Promise.all([
     db
       .select({
         pendingRentals: sql<number>`count(*) filter (where ${rentals.status} = 'PENDING')::int`,
         activeRentals: sql<number>`count(*) filter (where ${rentals.status} = 'ACTIVE')::int`,
       })
       .from(rentals),
-
-    db
-      .select({
-        availableCars: sql<number>`count(*) filter (where ${cars.status} = 'AVAILABLE' and not exists (
-          select 1 from "rentals" where "rentals"."car_id" = "cars"."id" and "rentals"."status" in ('ACTIVE', 'APPROVED')
-        ))::int`,
-      })
-      .from(cars),
 
     db
       .select({
@@ -80,7 +71,6 @@ export async function getAgentDashboardStats(): Promise<AgentDashboardStats> {
     pendingRentals: rentalCounts.pendingRentals,
     activeRentals: rentalCounts.activeRentals,
     closedRentalsWithoutInvoice: uninvoiced.count,
-    availableCars: carCounts.availableCars,
   };
 }
 

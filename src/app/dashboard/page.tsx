@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Car, Clock, Loader } from "lucide-react";
 
@@ -6,6 +7,7 @@ import { RENTAL_STATUS } from "@/types";
 import { auth } from "@/lib/auth";
 import { getUserDashboardStats } from "@/lib/data/dashboard";
 import { getRentals } from "@/lib/data/rentals";
+import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/shared/stat-card";
 import { PageHeader } from "@/components/shared/page-header";
 import { FilterStrip } from "@/components/rentals/filter-strip";
@@ -36,8 +38,19 @@ export default async function DashboardPage({
 
   return (
     <div>
-      <div className="mb-6">
-        <PageHeader title="Dashboard" />
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <PageHeader title="Dashboard" />
+          <p className="mt-1 text-muted-foreground">
+            Welcome back, {session.user.name}
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/#available-cars">
+            <Car className="mr-2 h-4 w-4" />
+            Rent a Car
+          </Link>
+        </Button>
       </div>
 
       <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -46,24 +59,21 @@ export default async function DashboardPage({
           description="Your complete rental history."
           value={stats.totalRentals}
           icon={Car}
-          iconPosition="inline"
-          subLabel="Total rentals"
+          compact
         />
         <StatCard
           title="Active Rentals"
           description="Currently active rentals."
           value={stats.activeRentals}
           icon={Clock}
-          iconPosition="inline"
-          subLabel="Active now"
+          compact
         />
         <StatCard
           title="Pending Requests"
           description="Rentals awaiting approval."
           value={stats.pendingRentals}
           icon={Loader}
-          iconPosition="inline"
-          subLabel="Pending approval"
+          compact
         />
       </div>
 
