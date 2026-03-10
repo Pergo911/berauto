@@ -63,14 +63,17 @@ src/
     cars/                # domain components for cars
     rentals/             # domain components for rentals
     invoices/            # domain components for invoices
+    users/               # domain components for users (e.g. user-search)
   db/
     schema.ts            # Drizzle table definitions (single source of truth)
     index.ts             # Neon + Drizzle client singleton
     migrations/          # auto-generated migration SQL files
   lib/
     auth.ts              # Auth.js config and helpers
+    data/                # Query functions returning page-ready DTOs (one file per domain)
     validations/         # Zod schemas (one file per domain)
     utils.ts             # generic utility functions (cn(), formatDate(), etc.)
+    env.ts               # validated environment variables (@t3-oss/env-nextjs)
   actions/               # Server Actions (one file per domain: cars.ts, rentals.ts…)
   types/                 # shared TypeScript types and enums
   proxy.ts               # Auth.js route protection middleware (Next.js middleware entry point)
@@ -104,7 +107,7 @@ src/
 ### Imports
 
 - Use absolute imports via the `@/` alias (maps to `src/`). Never use `../../../` chains.
-- Import order (enforced by ESLint `import/order`):
+- Import order (not enforced by ESLint but preferred):
   1. Node built-ins
   2. External packages
   3. Internal `@/` imports (grouped by: types → db → lib → actions → components)
@@ -132,7 +135,7 @@ import { RentalCard } from "@/components/rentals/rental-card";
 - Use `cn()` from `@/lib/utils` (a `clsx` + `tailwind-merge` wrapper) for conditional class composition.
 - Never write inline `style={{}}` — use Tailwind utility classes.
 - shadcn/ui components live in `src/components/ui/`. Do not modify them directly; compose them.
-- The project uses **Tailwind CSS v4**. Design tokens and the color palette are configured via `@theme` directives in `src/app/globals.css` — no `tailwind.config.ts` exists. Add new tokens there, not inline.
+- The project uses **Tailwind CSS v4**. Design tokens and the color palette are configured via `@theme inline` directives in `src/app/globals.css` — no `tailwind.config.ts` exists. Add new tokens there, not inline.
 
 ### Responsive Design
 
