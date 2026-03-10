@@ -61,7 +61,9 @@ export async function getAgentDashboardStats(): Promise<AgentDashboardStats> {
 
     db
       .select({
-        availableCars: sql<number>`count(*) filter (where ${cars.status} = 'AVAILABLE')::int`,
+        availableCars: sql<number>`count(*) filter (where ${cars.status} = 'AVAILABLE' and not exists (
+          select 1 from "rentals" where "rentals"."car_id" = "cars"."id" and "rentals"."status" in ('ACTIVE', 'APPROVED')
+        ))::int`,
       })
       .from(cars),
 
@@ -89,7 +91,9 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
       db
         .select({
           totalCars: sql<number>`count(*)::int`,
-          availableCars: sql<number>`count(*) filter (where ${cars.status} = 'AVAILABLE')::int`,
+          availableCars: sql<number>`count(*) filter (where ${cars.status} = 'AVAILABLE' and not exists (
+            select 1 from "rentals" where "rentals"."car_id" = "cars"."id" and "rentals"."status" in ('ACTIVE', 'APPROVED')
+          ))::int`,
           maintenanceCars: sql<number>`count(*) filter (where ${cars.status} = 'MAINTENANCE')::int`,
         })
         .from(cars),

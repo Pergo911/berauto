@@ -23,7 +23,10 @@ import {
 } from "@/components/ui/dialog";
 import { CarForm } from "@/components/cars/car-form";
 import { DeleteCarButton } from "@/components/cars/delete-car-button";
-import { CarStatusBadge } from "@/components/cars/car-status-badge";
+import {
+  CarInUseBadge,
+  CarStatusBadge,
+} from "@/components/cars/car-status-badge";
 import { EmptyState } from "@/components/shared/empty-state";
 
 type AdminCarTableProps = {
@@ -112,7 +115,10 @@ export function AdminCarTable({ cars }: AdminCarTableProps) {
                 </TableCell>
                 <TableCell>{formatCurrency(car.dailyRate)}</TableCell>
                 <TableCell>
-                  <CarStatusBadge status={car.status} />
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <CarStatusBadge status={car.status} />
+                    {car.inUse && <CarInUseBadge />}
+                  </div>
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">
