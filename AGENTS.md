@@ -50,12 +50,22 @@ All four must pass on `pnpm build`. Fix lint/type errors before marking a task d
 ```
 src/
   app/                   # Next.js App Router pages and layouts
-    (auth)/              # login, register pages (unauthenticated route group)
-    (public)/            # public pages (car listing, car detail)
-    dashboard/           # authenticated user area
-    agent/               # agent-only area
-    admin/               # admin-only area
-    api/                 # Route Handlers (explicit REST/webhooks only)
+    page.tsx             # → / (home / car listing, public)
+    (auth)/              # unauthenticated route group
+      login/             #   → /login
+      register/          #   → /register
+    (public)/            # public route group
+      cars/[id]/         #   → /cars/[id] (car detail)
+    dashboard/           # authenticated user area → /dashboard
+    agent/               # agent-only area → /agent
+      active/            #   → /agent/active (active rentals)
+      invoices/          #   → /agent/invoices
+      requests/          #   → /agent/requests (rental requests)
+    admin/               # admin-only area → /admin
+      cars/              #   → /admin/cars
+      users/             #   → /admin/users
+    api/                 # Route Handlers
+      auth/[...nextauth]/ #  → /api/auth/* (Auth.js)
   components/
     ui/                  # shadcn/ui primitives (auto-generated, do not edit manually)
     shared/              # navbar, theme provider, theme toggle, sign-out button

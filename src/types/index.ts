@@ -4,6 +4,7 @@ export const RENTAL_STATUS = {
   REJECTED: "REJECTED",
   ACTIVE: "ACTIVE",
   CLOSED: "CLOSED",
+  CLOSED_INVOICED: "CLOSED_INVOICED",
 } as const;
 
 export type RentalStatus = (typeof RENTAL_STATUS)[keyof typeof RENTAL_STATUS];

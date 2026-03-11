@@ -106,7 +106,7 @@ cars
 rentals
   id, car_id → cars, user_id → users (nullable, null for guest rentals),
   guest_name, guest_email, guest_phone (nullable, used when user_id is null),
-  start_date, end_date, status,           ← PENDING | APPROVED | REJECTED | ACTIVE | CLOSED
+  start_date, end_date, status,           ← PENDING | APPROVED | REJECTED | ACTIVE | CLOSED | CLOSED_INVOICED
   agent_id → users (nullable),
   created_at, updated_at
 

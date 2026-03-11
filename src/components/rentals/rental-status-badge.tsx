@@ -35,6 +35,12 @@ const statusConfig: Record<
   },
   [RENTAL_STATUS.CLOSED]: {
     label: "Closed",
+    variant: "outline",
+    className:
+      "border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-400",
+  },
+  [RENTAL_STATUS.CLOSED_INVOICED]: {
+    label: "Closed – Invoiced",
     variant: "secondary",
   },
 };

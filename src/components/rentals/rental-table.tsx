@@ -51,6 +51,7 @@ import { DataTablePagination } from "@/components/shared/data-table-pagination";
 type RentalTableProps = {
   rentals: RentalDTO[];
   showUser?: boolean;
+  hideStatusFilter?: boolean;
 };
 
 const COLUMN_LABELS: Record<string, string> = {
@@ -145,9 +146,14 @@ const RENTAL_STATUSES: { value: RentalStatus; label: string }[] = [
   { value: "REJECTED", label: "Rejected" },
   { value: "ACTIVE", label: "Active" },
   { value: "CLOSED", label: "Closed" },
+  { value: "CLOSED_INVOICED", label: "Closed – Invoiced" },
 ];
 
-export function RentalTable({ rentals, showUser = false }: RentalTableProps) {
+export function RentalTable({
+  rentals,
+  showUser = false,
+  hideStatusFilter = false,
+}: RentalTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -203,26 +209,28 @@ export function RentalTable({ rentals, showUser = false }: RentalTableProps) {
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
-        <Select
-          value={statusFilterValue || "all"}
-          onValueChange={(value) =>
-            table
-              .getColumn("status")
-              ?.setFilterValue(value === "all" ? undefined : value)
-          }
-        >
-          <SelectTrigger className="w-[160px]">
-            <SelectValue placeholder="All statuses" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
-            {RENTAL_STATUSES.map((s) => (
-              <SelectItem key={s.value} value={s.value}>
-                {s.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {!hideStatusFilter && (
+          <Select
+            value={statusFilterValue || "all"}
+            onValueChange={(value) =>
+              table
+                .getColumn("status")
+                ?.setFilterValue(value === "all" ? undefined : value)
+            }
+          >
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="All statuses" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All statuses</SelectItem>
+              {RENTAL_STATUSES.map((s) => (
+                <SelectItem key={s.value} value={s.value}>
+                  {s.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
 
         <div className="ml-auto">
           <DropdownMenu>

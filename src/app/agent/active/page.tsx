@@ -3,12 +3,13 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { RentalAgentCard } from "@/components/rentals/rental-agent-card";
 import { HandoverReturnActions } from "@/components/rentals/handover-return-actions";
+import { RentalTable } from "@/components/rentals/rental-table";
 
 export default async function AgentActivePage() {
-  const rentals = await getRentals({
-    status: ["APPROVED", "ACTIVE"],
-    sort: "oldest",
-  });
+  const [rentals, pastRentals] = await Promise.all([
+    getRentals({ status: ["APPROVED", "ACTIVE"], sort: "oldest" }),
+    getRentals({ status: ["CLOSED", "CLOSED_INVOICED"], sort: "newest" }),
+  ]);
 
   const awaitingHandover = rentals.filter((r) => r.status === "APPROVED");
   const currentlyActive = rentals.filter((r) => r.status === "ACTIVE");
@@ -67,6 +68,17 @@ export default async function AgentActivePage() {
             ))}
           </div>
         )}
+      </section>
+
+      {/* Past Rentals section */}
+      <section>
+        <h2 className="mb-4 text-xl font-semibold">
+          Past Rentals
+          <span className="ml-2 text-base font-normal text-muted-foreground">
+            ({pastRentals.length})
+          </span>
+        </h2>
+        <RentalTable rentals={pastRentals} showUser hideStatusFilter />
       </section>
     </div>
   );
