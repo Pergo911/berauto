@@ -7,17 +7,10 @@ import {
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { IssueInvoiceButton } from "@/components/invoices/issue-invoice-button";
+import { InvoicesTable } from "@/components/invoices/invoices-table";
 
 export default async function AgentInvoicesPage() {
   const [uninvoiced, issuedInvoices] = await Promise.all([
@@ -144,34 +137,7 @@ export default async function AgentInvoicesPage() {
           </span>
         </h2>
 
-        {issuedInvoices.length === 0 ? (
-          <EmptyState variant="plain" message="No invoices issued yet" />
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Car</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Issued Date</TableHead>
-                <TableHead>Issued By</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {issuedInvoices.map((invoice) => (
-                <TableRow key={invoice.id}>
-                  <TableCell>
-                    {invoice.car.make} {invoice.car.model} ({invoice.car.year})
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {formatCurrency(invoice.amount)}
-                  </TableCell>
-                  <TableCell>{formatDate(invoice.issuedAt)}</TableCell>
-                  <TableCell>{invoice.issuerName ?? "—"}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
+        <InvoicesTable invoices={issuedInvoices} />
       </section>
     </div>
   );
