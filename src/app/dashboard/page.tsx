@@ -41,7 +41,7 @@ export default async function DashboardPage({
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <PageHeader title="Dashboard" />
-          <p className="mt-1 text-muted-foreground">
+          <p className="text-sm font-medium uppercase tracking-[0.22em] text-primary">
             Welcome back, {session.user.name}
           </p>
         </div>

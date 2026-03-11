@@ -1,4 +1,4 @@
-import { CalendarDays, Car, Receipt } from "lucide-react";
+import { CalendarDays, Car, Receipt, User } from "lucide-react";
 
 import {
   getInvoices,
@@ -70,10 +70,24 @@ export default async function AgentInvoicesPage() {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="space-y-1 text-sm">
-                      <p>
-                        <span className="font-medium">Customer:</span>{" "}
-                        {rental.guestName ?? "Registered user"}
+                      <p className="flex flex-wrap items-center gap-2">
+                        <User className="size-4 text-muted-foreground" />
+                        {rental.guestName ? (
+                          <>
+                            {rental.guestName}
+                            <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+                              Guest
+                            </span>
+                          </>
+                        ) : (
+                          (rental.userName ?? "—")
+                        )}
                       </p>
+                      {(rental.guestEmail ?? rental.userEmail) && (
+                        <p className="text-xs text-muted-foreground">
+                          {rental.guestEmail ?? rental.userEmail}
+                        </p>
+                      )}
                     </div>
 
                     <Separator />
