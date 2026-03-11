@@ -35,7 +35,7 @@ export function CarFilters() {
       }
 
       const qs = params.toString();
-      router.push(pathname + (qs ? `?${qs}` : ""));
+      router.replace(pathname + (qs ? `?${qs}` : ""), { scroll: false });
     },
     [router, pathname, searchParams]
   );
@@ -49,7 +49,7 @@ export function CarFilters() {
         params.delete("showUnavailable");
       }
       const qs = params.toString();
-      router.push(pathname + (qs ? `?${qs}` : ""));
+      router.replace(pathname + (qs ? `?${qs}` : ""), { scroll: false });
     },
     [router, pathname, searchParams]
   );

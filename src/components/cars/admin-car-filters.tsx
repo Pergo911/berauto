@@ -40,7 +40,7 @@ export function AdminCarFilters({ defaults }: AdminCarFiltersProps) {
         }
       }
       const qs = params.toString();
-      router.push(pathname + (qs ? `?${qs}` : ""));
+      router.replace(pathname + (qs ? `?${qs}` : ""), { scroll: false });
     },
     [router, pathname, searchParams]
   );

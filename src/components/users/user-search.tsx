@@ -20,7 +20,7 @@ export function UserSearch() {
       } else {
         params.delete("q");
       }
-      router.push(`${pathname}?${params.toString()}`);
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     }, 400);
 
     return () => clearTimeout(timeout);
