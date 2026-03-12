@@ -99,6 +99,7 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState("");
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: invoices,
     columns,

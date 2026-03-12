@@ -167,6 +167,7 @@ export function AdminCarTable({ cars }: AdminCarTableProps) {
   // setEditCar is stable (from useState), so this memo runs only once
   const columns = useMemo(() => getColumns(setEditCar), []);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: cars,
     columns,
