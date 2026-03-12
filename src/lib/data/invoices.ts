@@ -146,7 +146,7 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
     .leftJoin(invoices, eq(rentals.id, invoices.rentalId))
     .leftJoin(users, eq(rentals.userId, users.id))
     .where(and(eq(rentals.status, "CLOSED"), isNull(invoices.id)))
-    .orderBy(desc(rentals.updatedAt));
+    .orderBy(desc(rentals.createdAt));
 
   return rows.map((r) => ({
     id: r.rental.id,

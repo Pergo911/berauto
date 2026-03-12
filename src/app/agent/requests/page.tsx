@@ -7,7 +7,7 @@ import { RentalTable } from "@/components/rentals/rental-table";
 
 export default async function AgentRequestsPage() {
   const [pendingRentals, pastRentals] = await Promise.all([
-    getRentals({ status: "PENDING", sort: "oldest" }),
+    getRentals({ status: "PENDING", sort: "newest" }),
     getRentals({ status: "REJECTED", sort: "newest" }),
   ]);
 
