@@ -36,7 +36,11 @@ export default async function AgentActivePage() {
                 key={rental.id}
                 rental={rental}
                 action={
-                  <HandoverReturnActions rentalId={rental.id} type="handover" />
+                  <HandoverReturnActions
+                    rentalId={rental.id}
+                    type="handover"
+                    lastMileageKm={rental.lastMileageKm}
+                  />
                 }
               />
             ))}
@@ -62,7 +66,11 @@ export default async function AgentActivePage() {
                 key={rental.id}
                 rental={rental}
                 action={
-                  <HandoverReturnActions rentalId={rental.id} type="return" />
+                  <HandoverReturnActions
+                    rentalId={rental.id}
+                    type="return"
+                    lastMileageKm={rental.lastMileageKm}
+                  />
                 }
               />
             ))}

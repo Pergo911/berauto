@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { KeyRound, RotateCcw } from "lucide-react";
+import { Gauge, KeyRound, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 
 import { handoverRental, returnRental } from "@/actions/rentals";
@@ -12,9 +12,11 @@ import { Input } from "@/components/ui/input";
 export function HandoverReturnActions({
   rentalId,
   type,
+  lastMileageKm,
 }: {
   rentalId: string;
   type: "handover" | "return";
+  lastMileageKm?: number | null;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -52,10 +54,19 @@ export function HandoverReturnActions({
         <div className="flex-1">
           <label
             htmlFor={`mileage-${rentalId}`}
-            className="mb-1 block text-xs font-medium text-muted-foreground"
+            className="mb-1 block text-xs font-medium text-muted-foreground flex items-center gap-1"
           >
+            <Gauge className="size-3.5" />
             Mileage (km)
           </label>
+          {lastMileageKm != null && (
+            <p className="mb-2 text-xs text-muted-foreground">
+              Last recorded:{" "}
+              <span className="font-medium text-foreground">
+                {lastMileageKm.toLocaleString()} km
+              </span>
+            </p>
+          )}
           <Input
             id={`mileage-${rentalId}`}
             type="number"
