@@ -38,3 +38,18 @@ export function CarStatusBadge({ status }: { status: CarStatus }) {
     </Badge>
   );
 }
+
+/** Badge shown when a car has an ongoing ACTIVE or APPROVED rental. */
+export function CarInUseBadge({ className }: { className?: string }) {
+  return (
+    <Badge
+      variant="outline"
+      className={cn(
+        "border-blue-500/50 bg-blue-500/10 text-blue-700 dark:text-blue-400",
+        className
+      )}
+    >
+      In use
+    </Badge>
+  );
+}

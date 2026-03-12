@@ -1,36 +1,11 @@
 import type { ReactNode } from "react";
-import { User, UserRoundX, CalendarDays, Car } from "lucide-react";
+import { CalendarDays, Car, User } from "lucide-react";
 
 import type { RentalDTO } from "@/lib/data/rentals";
 import { formatDate } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { RentalStatusBadge } from "@/components/rentals/rental-status-badge";
-
-function CustomerTypeBadge({ isRegistered }: { isRegistered: boolean }) {
-  if (isRegistered) {
-    return (
-      <Badge
-        variant="outline"
-        className="border-blue-500/50 bg-blue-500/10 text-blue-700 dark:text-blue-400"
-      >
-        <User className="mr-1 size-3" />
-        Registered
-      </Badge>
-    );
-  }
-
-  return (
-    <Badge
-      variant="outline"
-      className="border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-400"
-    >
-      <UserRoundX className="mr-1 size-3" />
-      Guest
-    </Badge>
-  );
-}
 
 type RentalAgentCardProps = {
   rental: RentalDTO;
@@ -39,7 +14,7 @@ type RentalAgentCardProps = {
 };
 
 export function RentalAgentCard({ rental, action }: RentalAgentCardProps) {
-  const isRegistered = rental.userId !== null;
+  const email = rental.userEmail ?? rental.guestEmail;
 
   return (
     <Card className="border-border/60 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_50%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(240,253,250,0.95))] dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_50%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(17,24,39,0.95))]">
@@ -57,15 +32,20 @@ export function RentalAgentCard({ rental, action }: RentalAgentCardProps) {
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="space-y-1 text-sm">
-          <div className="flex items-center gap-2">
-            <span className="font-medium">Customer:</span>
-            <span>{rental.userName ?? rental.guestName ?? "Unknown"}</span>
-            <CustomerTypeBadge isRegistered={isRegistered} />
-          </div>
-          <p>
-            <span className="font-medium">Email:</span>{" "}
-            {rental.userEmail ?? rental.guestEmail ?? "—"}
+          <p className="flex flex-wrap items-center gap-2">
+            <User className="size-4 text-muted-foreground" />
+            {rental.guestName ? (
+              <>
+                {rental.guestName}
+                <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+                  Guest
+                </span>
+              </>
+            ) : (
+              (rental.userName ?? "—")
+            )}
           </p>
+          {email && <p className="text-xs text-muted-foreground">{email}</p>}
         </div>
 
         <Separator />

@@ -6,6 +6,7 @@ export const rentalStatusEnum = z.enum([
   "REJECTED",
   "ACTIVE",
   "CLOSED",
+  "CLOSED_INVOICED",
 ]);
 export type RentalStatusEnum = z.infer<typeof rentalStatusEnum>;
 

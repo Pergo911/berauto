@@ -45,6 +45,8 @@ export type ClosedRentalWithoutInvoiceDTO = {
     dailyRate: number;
   };
   userId: string | null;
+  userName: string | null;
+  userEmail: string | null;
   guestName: string | null;
   guestEmail: string | null;
   startDate: Date;
@@ -136,12 +138,15 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
       carLicensePlate: cars.licensePlate,
       carDailyRate: cars.dailyRate,
       invoiceId: invoices.id,
+      userName: users.name,
+      userEmail: users.email,
     })
     .from(rentals)
     .innerJoin(cars, eq(rentals.carId, cars.id))
     .leftJoin(invoices, eq(rentals.id, invoices.rentalId))
+    .leftJoin(users, eq(rentals.userId, users.id))
     .where(and(eq(rentals.status, "CLOSED"), isNull(invoices.id)))
-    .orderBy(desc(rentals.updatedAt));
+    .orderBy(desc(rentals.createdAt));
 
   return rows.map((r) => ({
     id: r.rental.id,
@@ -154,6 +159,8 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
       dailyRate: Number(r.carDailyRate),
     },
     userId: r.rental.userId,
+    userName: r.userName ?? null,
+    userEmail: r.userEmail ?? null,
     guestName: r.rental.guestName,
     guestEmail: r.rental.guestEmail,
     startDate: r.rental.startDate,

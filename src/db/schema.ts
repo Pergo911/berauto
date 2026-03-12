@@ -20,6 +20,7 @@ export const rentalStatusEnum = pgEnum("rental_status", [
   "REJECTED",
   "ACTIVE",
   "CLOSED",
+  "CLOSED_INVOICED",
 ]);
 
 export const rentalEventTypeEnum = pgEnum("rental_event_type", [

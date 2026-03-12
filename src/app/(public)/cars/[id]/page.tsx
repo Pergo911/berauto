@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { getCarById } from "@/lib/data/cars";
+import { getBookedIntervals, getCarById } from "@/lib/data/cars";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Navbar } from "@/components/shared/navbar";
 import { RentalRequestForm } from "@/components/cars/rental-request-form";
-import { CarStatusBadge } from "@/components/cars/car-status-badge";
+import {
+  CarInUseBadge,
+  CarStatusBadge,
+} from "@/components/cars/car-status-badge";
 
 export default async function CarDetailPage({
   params,
@@ -24,10 +27,13 @@ export default async function CarDetailPage({
 }) {
   const { id } = await params;
   const [car, session] = await Promise.all([getCarById(id), auth()]);
+  const bookedIntervals = car ? await getBookedIntervals(car.id) : [];
 
   if (!car) {
     notFound();
   }
+
+  const isAvailable = car.status === "AVAILABLE" && !car.inUse;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -52,7 +58,11 @@ export default async function CarDetailPage({
                   </CardTitle>
                   <CardDescription>{car.year} model</CardDescription>
                 </div>
-                <CarStatusBadge status={car.status} />
+                {car.inUse ? (
+                  <CarInUseBadge />
+                ) : (
+                  <CarStatusBadge status={car.status} />
+                )}
               </div>
             </CardHeader>
             <CardContent className="grid gap-4">
@@ -104,25 +114,29 @@ export default async function CarDetailPage({
             <CardHeader>
               <CardTitle>Rental Request</CardTitle>
               <CardDescription>
-                {car.status === "AVAILABLE"
+                {isAvailable
                   ? "Submit a rental request for this vehicle."
                   : "This vehicle is currently not available for rental."}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {car.status === "AVAILABLE" ? (
+              {isAvailable ? (
                 <RentalRequestForm
                   carId={car.id}
+                  dailyRate={car.dailyRate}
                   isLoggedIn={!!session?.user}
+                  bookedIntervals={bookedIntervals}
                 />
               ) : (
                 <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-950">
                   <p className="text-sm text-yellow-800 dark:text-yellow-200">
                     This car is currently{" "}
-                    <span className="font-bold lowercase">
-                      {car.status == "MAINTENANCE"
-                        ? "under maintenance"
-                        : "unavailable"}
+                    <span className="font-bold">
+                      {car.inUse
+                        ? "in use"
+                        : car.status === "MAINTENANCE"
+                          ? "under maintenance"
+                          : "unavailable"}
                     </span>
                     . Please check back later or browse other available
                     vehicles.

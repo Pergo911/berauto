@@ -221,13 +221,13 @@ async function seed() {
   console.log("  Inserting rentals…");
 
   const rentalsData: (typeof schema.rentals.$inferInsert)[] = [
-    // R1 — CLOSED: registered user, completed in the past
+    // R1 — CLOSED_INVOICED: registered user, completed + invoiced
     {
       carId: carByPlate("ABC-123").id,
       userId: regularUser.id,
       startDate: daysAgo(30),
       endDate: daysAgo(25),
-      status: "CLOSED",
+      status: "CLOSED_INVOICED",
       agentId: agent.id,
       createdAt: daysAgo(32),
       updatedAt: daysAgo(25),
@@ -292,7 +292,7 @@ async function seed() {
       createdAt: daysAgo(4),
       updatedAt: daysAgo(2),
     },
-    // R7 — CLOSED: past guest rental on Opel Astra
+    // R7 — CLOSED_INVOICED: past guest rental on Opel Astra, invoiced
     {
       carId: carByPlate("PQR-678").id,
       guestName: "Szabó Éva",
@@ -300,7 +300,7 @@ async function seed() {
       guestPhone: "+36 30 777 8888",
       startDate: daysAgo(20),
       endDate: daysAgo(15),
-      status: "CLOSED",
+      status: "CLOSED_INVOICED",
       agentId: agent.id,
       createdAt: daysAgo(22),
       updatedAt: daysAgo(15),
@@ -315,13 +315,13 @@ async function seed() {
       createdAt: daysAgo(1),
       updatedAt: daysAgo(1),
     },
-    // R9 — CLOSED: older rental on Renault by János
+    // R9 — CLOSED_INVOICED: older rental on Renault by János, invoiced
     {
       carId: carByPlate("YZA-567").id,
       userId: janos.id,
       startDate: daysAgo(45),
       endDate: daysAgo(40),
-      status: "CLOSED",
+      status: "CLOSED_INVOICED",
       agentId: agent.id,
       createdAt: daysAgo(47),
       updatedAt: daysAgo(40),
@@ -338,16 +338,40 @@ async function seed() {
       createdAt: new Date(),
       updatedAt: new Date(),
     },
-    // R11 — CLOSED: Mária rented Corolla previously
+    // R11 — CLOSED_INVOICED: Mária rented Corolla previously, invoiced
     {
       carId: carByPlate("ABC-123").id,
       userId: maria.id,
       startDate: daysAgo(60),
       endDate: daysAgo(55),
-      status: "CLOSED",
+      status: "CLOSED_INVOICED",
       agentId: agent.id,
       createdAt: daysAgo(62),
       updatedAt: daysAgo(55),
+    },
+    // R13 — CLOSED: Demo User, VW Golf, awaiting invoice
+    {
+      carId: carByPlate("DEF-456").id,
+      userId: regularUser.id,
+      startDate: daysAgo(14),
+      endDate: daysAgo(11),
+      status: "CLOSED",
+      agentId: agent.id,
+      createdAt: daysAgo(16),
+      updatedAt: daysAgo(11),
+    },
+    // R14 — CLOSED: guest, BMW 320i, awaiting invoice
+    {
+      carId: carByPlate("GHI-789").id,
+      guestName: "Fekete Norbert",
+      guestEmail: "fekete.norbert@example.com",
+      guestPhone: "+36 30 123 9999",
+      startDate: daysAgo(8),
+      endDate: daysAgo(4),
+      status: "CLOSED",
+      agentId: agent.id,
+      createdAt: daysAgo(10),
+      updatedAt: daysAgo(4),
     },
     // R12 — APPROVED: János wants BMW next week
     {
@@ -620,6 +644,69 @@ async function seed() {
       notes: "Approved, pickup scheduled",
       timestamp: daysAgo(1),
     },
+
+    // R13 (CLOSED) — Demo User, VW Golf, full lifecycle, no invoice yet
+    {
+      rentalId: r(12).id,
+      eventType: "REQUEST",
+      actorId: regularUser.id,
+      notes: "VW Golf for a short trip",
+      timestamp: daysAgo(16),
+    },
+    {
+      rentalId: r(12).id,
+      eventType: "APPROVE",
+      actorId: agent.id,
+      notes: "Approved",
+      timestamp: daysAgo(15),
+    },
+    {
+      rentalId: r(12).id,
+      eventType: "HANDOVER",
+      actorId: agent.id,
+      notes: "Handed over, mileage: 7,800 km",
+      mileageKm: 7800,
+      timestamp: daysAgo(14),
+    },
+    {
+      rentalId: r(12).id,
+      eventType: "RETURN",
+      actorId: agent.id,
+      notes: "Returned in good condition, mileage: 8,150 km",
+      mileageKm: 8150,
+      timestamp: daysAgo(11),
+    },
+
+    // R14 (CLOSED) — guest, BMW, full lifecycle, no invoice yet
+    {
+      rentalId: r(13).id,
+      eventType: "REQUEST",
+      notes: "Guest request — Fekete Norbert",
+      timestamp: daysAgo(10),
+    },
+    {
+      rentalId: r(13).id,
+      eventType: "APPROVE",
+      actorId: agent.id,
+      notes: "Approved for BMW 320i",
+      timestamp: daysAgo(9),
+    },
+    {
+      rentalId: r(13).id,
+      eventType: "HANDOVER",
+      actorId: agent.id,
+      notes: "Handed over, mileage: 31,800 km",
+      mileageKm: 31800,
+      timestamp: daysAgo(8),
+    },
+    {
+      rentalId: r(13).id,
+      eventType: "RETURN",
+      actorId: agent.id,
+      notes: "Returned, mileage: 32,150 km",
+      mileageKm: 32150,
+      timestamp: daysAgo(4),
+    },
   ];
 
   await db.insert(schema.rentalEvents).values(eventsData);
@@ -671,7 +758,9 @@ async function seed() {
   console.log(`   ${insertedCars.length} cars`);
   console.log(`   ${insertedRentals.length} rentals`);
   console.log(`   ${eventsData.length} rental events`);
-  console.log(`   ${invoicesData.length} invoices`);
+  console.log(
+    `   ${invoicesData.length} invoices (rentals R1, R7, R9, R11 → CLOSED_INVOICED)`
+  );
 }
 
 seed().catch((err) => {

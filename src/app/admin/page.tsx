@@ -94,6 +94,7 @@ export default async function AdminPage() {
             value={card.value}
             icon={card.icon}
             valueSize="2xl"
+            compact
           />
         ))}
       </div>

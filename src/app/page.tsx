@@ -230,7 +230,7 @@ export default async function HomePage({
                 <CarCard
                   key={car.id}
                   car={car}
-                  bookable={car.status === "AVAILABLE"}
+                  bookable={car.status === "AVAILABLE" && !car.inUse}
                 />
               ))}
             </div>

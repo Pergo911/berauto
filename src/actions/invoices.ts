@@ -80,7 +80,14 @@ export async function issueInvoice(
     })
     .returning({ id: invoices.id });
 
+  await db
+    .update(rentals)
+    .set({ status: "CLOSED_INVOICED", updatedAt: new Date() })
+    .where(eq(rentals.id, rentalId));
+
   revalidatePath("/agent/invoices");
+  revalidatePath("/agent/active");
+  revalidatePath("/agent");
   revalidatePath("/dashboard/rentals");
 
   return { success: true, data: { id: invoice.id } };

@@ -1,10 +1,10 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq, gt, lt, ne } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
-import { cars, rentalEvents, rentals } from "@/db/schema";
+import { cars, rentalEvents, rentals, users } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { isCarBookable, getConflictingPendingRentals } from "@/lib/data/cars";
 import {
@@ -79,8 +79,7 @@ export async function getApprovalConflicts(rentalId: string): Promise<
       id: string;
       startDate: Date;
       endDate: Date;
-      guestName: string | null;
-      userId: string | null;
+      renterName: string | null;
     }>;
   }>
 > {
@@ -111,19 +110,31 @@ export async function getApprovalConflicts(rentalId: string): Promise<
     return { success: false, error: "Rental is not pending" };
   }
 
-  const conflicting = await getConflictingPendingRentals(
-    rental.carId,
-    rental.startDate,
-    rental.endDate,
-    rentalId
-  );
+  const conflicting = await db
+    .select({
+      id: rentals.id,
+      startDate: rentals.startDate,
+      endDate: rentals.endDate,
+      guestName: rentals.guestName,
+      userName: users.name,
+    })
+    .from(rentals)
+    .leftJoin(users, eq(rentals.userId, users.id))
+    .where(
+      and(
+        eq(rentals.carId, rental.carId),
+        eq(rentals.status, "PENDING"),
+        ne(rentals.id, rentalId),
+        lt(rentals.startDate, rental.endDate),
+        gt(rentals.endDate, rental.startDate)
+      )
+    );
 
   const conflicts = conflicting.map((c) => ({
     id: c.id,
     startDate: c.startDate,
     endDate: c.endDate,
-    guestName: c.guestName,
-    userId: c.userId,
+    renterName: c.guestName ?? c.userName ?? null,
   }));
 
   return { success: true, data: { conflicts } };
@@ -219,7 +230,8 @@ export async function approveRental(
         rentalId: conflict.id,
         eventType: "REJECT",
         actorId: session.user.id,
-        notes: "Auto-rejected: conflicting rental approved",
+        notes:
+          "Sorry, this request was automatically rejected because another rental was approved for the same dates.",
       });
     }
   }

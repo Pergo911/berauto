@@ -35,6 +35,8 @@ export type RentalDTO = {
   agentName: string | null;
   createdAt: Date;
   updatedAt: Date;
+  /** Most recent mileage reading: latest rental-event mileage, falling back to the car's stored mileage. */
+  lastMileageKm: number | null;
 };
 
 export type RentalEventDTO = {
@@ -56,6 +58,8 @@ type RentalRow = {
   carModel: string | null;
   carYear: number | null;
   carLicensePlate: string | null;
+  carMileageKm: number;
+  lastEventMileageKm: number | null;
   userName: string | null;
   userEmail: string | null;
   agentName: string | null;
@@ -84,6 +88,7 @@ function toRentalDTO(row: RentalRow): RentalDTO {
     agentName: row.agentName,
     createdAt: row.rental.createdAt,
     updatedAt: row.rental.updatedAt,
+    lastMileageKm: row.lastEventMileageKm ?? row.carMileageKm,
   };
 }
 
@@ -122,6 +127,14 @@ export async function getRentals(filters?: {
       carModel: cars.model,
       carYear: cars.year,
       carLicensePlate: cars.licensePlate,
+      carMileageKm: cars.mileageKm,
+      lastEventMileageKm: sql<number | null>`(
+        SELECT mileage_km FROM rental_events
+        WHERE rental_id = ${rentals.id}
+          AND mileage_km IS NOT NULL
+        ORDER BY "timestamp" DESC
+        LIMIT 1
+      )`,
       userName: userRef.name,
       userEmail: userRef.email,
       agentName: agentRef.name,
@@ -145,6 +158,14 @@ export async function getRentalById(id: string): Promise<RentalDTO | null> {
       carModel: cars.model,
       carYear: cars.year,
       carLicensePlate: cars.licensePlate,
+      carMileageKm: cars.mileageKm,
+      lastEventMileageKm: sql<number | null>`(
+        SELECT mileage_km FROM rental_events
+        WHERE rental_id = ${rentals.id}
+          AND mileage_km IS NOT NULL
+        ORDER BY "timestamp" DESC
+        LIMIT 1
+      )`,
       userName: userRef.name,
       userEmail: userRef.email,
       agentName: agentRef.name,

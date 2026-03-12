@@ -3,6 +3,7 @@ import {
   asc,
   desc,
   eq,
+  getTableColumns,
   gt,
   ilike,
   inArray,
@@ -27,12 +28,25 @@ export type CarDTO = {
   mileageKm: number;
   dailyRate: number;
   status: CarStatus;
+  /** True when at least one ACTIVE or APPROVED rental exists for this car. */
+  inUse: boolean;
   createdAt: Date;
   updatedAt: Date;
 };
 
-/** Convert a raw `cars` row to a page-ready DTO (numeric → number). */
-function toCarDTO(row: typeof cars.$inferSelect): CarDTO {
+/**
+ * Correlated EXISTS subquery that resolves to TRUE when the car has any
+ * ACTIVE or APPROVED rental.  Must be used in a SELECT alongside
+ * `getTableColumns(cars)` so that `cars.id` resolves to the outer row.
+ */
+const inUseExpr = sql<boolean>`exists (
+  select 1 from "rentals"
+  where ${rentals.carId} = ${cars.id}
+    and ${rentals.status} in ('APPROVED', 'ACTIVE')
+)`;
+
+/** Convert a raw query result row to a page-ready DTO (numeric → number). */
+function toCarDTO(row: typeof cars.$inferSelect & { inUse: boolean }): CarDTO {
   return {
     ...row,
     dailyRate: Number(row.dailyRate),
@@ -95,7 +109,7 @@ export async function getCars(filters?: {
   }
 
   const rows = await db
-    .select()
+    .select({ ...getTableColumns(cars), inUse: inUseExpr })
     .from(cars)
     .where(conditions.length > 0 ? and(...conditions) : undefined)
     .orderBy(orderBy);
@@ -105,7 +119,11 @@ export async function getCars(filters?: {
 
 /** Get a single car by ID, or `null` if not found. */
 export async function getCarById(id: string): Promise<CarDTO | null> {
-  const [row] = await db.select().from(cars).where(eq(cars.id, id)).limit(1);
+  const [row] = await db
+    .select({ ...getTableColumns(cars), inUse: inUseExpr })
+    .from(cars)
+    .where(eq(cars.id, id))
+    .limit(1);
   return row ? toCarDTO(row) : null;
 }
 
@@ -140,6 +158,29 @@ export async function isCarBookable(
     .where(and(...overlapConditions));
 
   return result.count === 0;
+}
+
+/**
+ * Return the start/end dates of all APPROVED and ACTIVE rentals for a car.
+ * Used by the booking form to visually disable unavailable date ranges.
+ */
+export async function getBookedIntervals(
+  carId: string
+): Promise<{ start: Date; end: Date }[]> {
+  const rows = await db
+    .select({
+      startDate: rentals.startDate,
+      endDate: rentals.endDate,
+    })
+    .from(rentals)
+    .where(
+      and(
+        eq(rentals.carId, carId),
+        inArray(rentals.status, ["APPROVED", "ACTIVE"])
+      )
+    );
+
+  return rows.map((row) => ({ start: row.startDate, end: row.endDate }));
 }
 
 /**

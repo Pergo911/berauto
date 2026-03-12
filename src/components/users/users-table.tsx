@@ -15,9 +15,10 @@ import {
 } from "@tanstack/react-table";
 import { Settings2 } from "lucide-react";
 
-import type { RentalDTO } from "@/lib/data/rentals";
-import type { RentalStatus } from "@/types";
+import type { UserDTO } from "@/lib/data/users";
+import type { UserRole } from "@/types";
 import { formatDate } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -43,127 +44,98 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { RentalStatusBadge } from "@/components/rentals/rental-status-badge";
 import { EmptyState } from "@/components/shared/empty-state";
 import { DataTableColumnHeader } from "@/components/shared/data-table-column-header";
 import { DataTablePagination } from "@/components/shared/data-table-pagination";
 
-type RentalTableProps = {
-  rentals: RentalDTO[];
-  showUser?: boolean;
-  hideStatusFilter?: boolean;
+type UsersTableProps = {
+  users: UserDTO[];
+  /** When true, the role Select filter is shown */
+  showRoleFilter?: boolean;
 };
 
 const COLUMN_LABELS: Record<string, string> = {
-  car: "Car",
-  customer: "Customer",
-  dates: "Dates",
-  startDate: "Start Date",
-  endDate: "End Date",
-  status: "Status",
+  name: "Name",
+  email: "Email",
+  role: "Role",
+  phone: "Phone",
+  address: "Address",
   createdAt: "Created",
 };
 
-function getColumns(showUser: boolean): ColumnDef<RentalDTO>[] {
-  const cols: ColumnDef<RentalDTO>[] = [
-    {
-      id: "car",
-      accessorFn: (row) =>
-        `${row.car.make} ${row.car.model} ${row.car.licensePlate}`,
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Car" />
-      ),
-      cell: ({ row }) => (
-        <span className="font-medium">
-          {row.original.car.make} {row.original.car.model}
-        </span>
-      ),
-    },
-  ];
+const ROLE_BADGE_CLASSES: Record<UserRole, string> = {
+  admin: "bg-red-600 text-white",
+  agent: "bg-blue-600 text-white",
+  user: "bg-gray-600 text-white",
+};
 
-  if (showUser) {
-    cols.push({
-      id: "customer",
-      accessorFn: (row) => row.userName ?? row.guestName ?? row.userEmail ?? "",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Customer" />
-      ),
-      cell: ({ row }) => (
-        <span>
-          {row.original.userName ?? row.original.guestName ?? "Unknown"}
-        </span>
-      ),
-    });
-  }
-
-  cols.push(
-    {
-      id: "startDate",
-      accessorFn: (row) => row.startDate,
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Start Date" />
-      ),
-      cell: ({ row }) => formatDate(row.original.startDate),
-      sortingFn: "datetime",
-    },
-    {
-      id: "endDate",
-      accessorFn: (row) => row.endDate,
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="End Date" />
-      ),
-      cell: ({ row }) => formatDate(row.original.endDate),
-      sortingFn: "datetime",
-    },
-    {
-      accessorKey: "status",
-      header: "Status",
-      cell: ({ row }) => <RentalStatusBadge status={row.original.status} />,
-      filterFn: "equals",
-      enableSorting: false,
-    },
-    {
-      id: "createdAt",
-      accessorFn: (row) => row.createdAt,
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Created" />
-      ),
-      cell: ({ row }) => (
-        <span className="text-muted-foreground">
-          {formatDate(row.original.createdAt)}
-        </span>
-      ),
-      sortingFn: "datetime",
-    }
-  );
-
-  return cols;
-}
-
-const RENTAL_STATUSES: { value: RentalStatus; label: string }[] = [
-  { value: "PENDING", label: "Pending" },
-  { value: "APPROVED", label: "Approved" },
-  { value: "REJECTED", label: "Rejected" },
-  { value: "ACTIVE", label: "Active" },
-  { value: "CLOSED", label: "Closed" },
-  { value: "CLOSED_INVOICED", label: "Closed – Invoiced" },
+const USER_ROLES: { value: UserRole; label: string }[] = [
+  { value: "admin", label: "Admin" },
+  { value: "agent", label: "Agent" },
+  { value: "user", label: "User" },
 ];
 
-export function RentalTable({
-  rentals,
-  showUser = false,
-  hideStatusFilter = false,
-}: RentalTableProps) {
+const columns: ColumnDef<UserDTO>[] = [
+  {
+    id: "name",
+    accessorFn: (row) => row.name,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Name" />
+    ),
+    cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "role",
+    header: "Role",
+    cell: ({ row }) => {
+      const role = row.original.role;
+      return (
+        <Badge className={ROLE_BADGE_CLASSES[role] ?? ""}>
+          {role.charAt(0).toUpperCase() + role.slice(1)}
+        </Badge>
+      );
+    },
+    filterFn: "equals",
+    enableSorting: false,
+  },
+  {
+    accessorKey: "phone",
+    header: "Phone",
+    cell: ({ row }) => row.original.phone ?? "—",
+  },
+  {
+    accessorKey: "address",
+    header: "Address",
+    cell: ({ row }) => row.original.address ?? "—",
+  },
+  {
+    id: "createdAt",
+    accessorFn: (row) => row.createdAt,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Created" />
+    ),
+    cell: ({ row }) => (
+      <span className="text-muted-foreground">
+        {formatDate(row.original.createdAt)}
+      </span>
+    ),
+    sortingFn: "datetime",
+  },
+];
+
+export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState("");
 
-  const columns = getColumns(showUser);
-
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
-    data: rentals,
+    data: users,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -178,13 +150,10 @@ export function RentalTable({
         .toLowerCase()
         .trim();
       if (!search) return true;
-      const { make, model } = row.original.car;
-      const customer = row.original.userName ?? row.original.guestName ?? "";
+      const { name, email } = row.original;
       return (
-        make.toLowerCase().includes(search) ||
-        model.toLowerCase().includes(search) ||
-        `${make} ${model}`.toLowerCase().includes(search) ||
-        customer.toLowerCase().includes(search)
+        name.toLowerCase().includes(search) ||
+        email.toLowerCase().includes(search)
       );
     },
     state: {
@@ -195,38 +164,36 @@ export function RentalTable({
     },
   });
 
-  const statusFilterValue =
-    (table.getColumn("status")?.getFilterValue() as string | undefined) ?? "";
+  const roleFilterValue =
+    (table.getColumn("role")?.getFilterValue() as string | undefined) ?? "";
 
   return (
     <div>
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 py-4">
         <Input
-          placeholder={
-            showUser ? "Search by car or customer…" : "Search by car…"
-          }
+          placeholder="Search by name or email…"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
-        {!hideStatusFilter && (
+        {showRoleFilter && (
           <Select
-            value={statusFilterValue || "all"}
+            value={roleFilterValue || "all"}
             onValueChange={(value) =>
               table
-                .getColumn("status")
+                .getColumn("role")
                 ?.setFilterValue(value === "all" ? undefined : value)
             }
           >
-            <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="All statuses" />
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="All roles" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              {RENTAL_STATUSES.map((s) => (
-                <SelectItem key={s.value} value={s.value}>
-                  {s.label}
+              <SelectItem value="all">All roles</SelectItem>
+              {USER_ROLES.map((r) => (
+                <SelectItem key={r.value} value={r.value}>
+                  {r.label}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -267,8 +234,8 @@ export function RentalTable({
       </div>
 
       {/* Table */}
-      {rentals.length === 0 ? (
-        <EmptyState message="No rentals found." />
+      {users.length === 0 ? (
+        <EmptyState message="No users found." />
       ) : (
         <>
           <div className="overflow-hidden rounded-md border">

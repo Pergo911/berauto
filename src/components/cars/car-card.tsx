@@ -5,7 +5,10 @@ import type { CarDTO } from "@/lib/data/cars";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CarStatusBadge } from "@/components/cars/car-status-badge";
+import {
+  CarInUseBadge,
+  CarStatusBadge,
+} from "@/components/cars/car-status-badge";
 
 type CarCardProps = {
   car: CarDTO;
@@ -21,7 +24,12 @@ export function CarCard({ car, bookable }: CarCardProps) {
           <CardTitle className="text-lg">
             {car.make} {car.model}
           </CardTitle>
-          {unavailable && <CarStatusBadge status={car.status} />}
+          {unavailable &&
+            (car.inUse ? (
+              <CarInUseBadge />
+            ) : (
+              <CarStatusBadge status={car.status} />
+            ))}
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col gap-4">
