@@ -4,6 +4,7 @@ import { getUsersByRole } from "@/lib/data/users";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { PageHeader } from "@/components/shared/page-header";
+import { BackLink } from "@/components/shared/back-link";
 import { UsersTable } from "@/components/users/users-table";
 
 export default async function AdminUsersPage() {
@@ -17,6 +18,7 @@ export default async function AdminUsersPage() {
 
   return (
     <div>
+      <BackLink href="/admin" label="Back to Dashboard" />
       <PageHeader title="User Management" className="mb-6" />
 
       {/* Staff Section */}

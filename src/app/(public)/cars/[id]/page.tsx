@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Navbar } from "@/components/shared/navbar";
+import { BackLink } from "@/components/shared/back-link";
 import { RentalRequestForm } from "@/components/cars/rental-request-form";
 import {
   CarInUseBadge,
@@ -40,12 +41,7 @@ export default async function CarDetailPage({
       <Navbar />
 
       <main className="container mx-auto flex-1 px-4 py-8">
-        <Link
-          href="/"
-          className="mb-6 inline-block text-sm text-muted-foreground hover:underline"
-        >
-          &larr; Back to all cars
-        </Link>
+        <BackLink href="/" label="Back to all cars" />
 
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Car Details */}

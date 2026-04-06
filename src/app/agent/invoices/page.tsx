@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
+import { BackLink } from "@/components/shared/back-link";
 import { IssueInvoiceButton } from "@/components/invoices/issue-invoice-button";
 import { InvoicesTable } from "@/components/invoices/invoices-table";
 
@@ -20,6 +21,7 @@ export default async function AgentInvoicesPage() {
 
   return (
     <div className="space-y-10">
+      <BackLink href="/agent" label="Back to Dashboard" />
       <PageHeader title="Invoices" />
 
       {/* Awaiting Invoice section */}
