@@ -7,12 +7,16 @@ import { db } from "@/db";
 import { cars, rentalEvents, rentals, users } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { isCarBookable, getConflictingPendingRentals } from "@/lib/data/cars";
+import { getRentalEvents, getRentalById } from "@/lib/data/rentals";
+import { getUserById } from "@/lib/data/users";
 import {
   createRentalSchema,
   idSchema,
   mileageWithNotesSchema,
   rejectReasonSchema,
 } from "@/lib/validations/rentals";
+
+import type { RentalEventDTO } from "@/lib/data/rentals";
 
 type ActionResult<T> =
   | { success: true; data: T }
@@ -452,4 +456,66 @@ export async function returnRental(
   revalidatePath("/admin/cars");
 
   return { success: true, data: { id: rentalId } };
+}
+
+// ── 7. Get Rental Details (for detail dialog) ─────────
+
+export async function getRentalDetails(
+  rentalId: string
+): Promise<
+  ActionResult<{
+    events: RentalEventDTO[];
+    agentContact: {
+      name: string;
+      email: string;
+      phone: string | null;
+    } | null;
+    customerPhone: string | null;
+  }>
+> {
+  const idParsed = idSchema.safeParse(rentalId);
+  if (!idParsed.success) {
+    return { success: false, error: "Invalid ID" };
+  }
+
+  const session = await auth();
+  if (!session?.user) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const rental = await getRentalById(rentalId);
+  if (!rental) {
+    return { success: false, error: "Rental not found" };
+  }
+
+  const events = await getRentalEvents(rentalId);
+
+  let agentContact: {
+    name: string;
+    email: string;
+    phone: string | null;
+  } | null = null;
+  if (rental.agentId) {
+    const agent = await getUserById(rental.agentId);
+    if (agent) {
+      agentContact = {
+        name: agent.name,
+        email: agent.email,
+        phone: agent.phone,
+      };
+    }
+  }
+
+  let customerPhone: string | null = null;
+  if (rental.userId) {
+    const customer = await getUserById(rental.userId);
+    if (customer) {
+      customerPhone = customer.phone;
+    }
+  }
+
+  return {
+    success: true,
+    data: { events, agentContact, customerPhone },
+  };
 }

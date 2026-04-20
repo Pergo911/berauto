@@ -21,6 +21,7 @@ export type RentalDTO = {
     model: string;
     year: number;
     licensePlate: string;
+    dailyRate: number;
   };
   userId: string | null;
   userName: string | null;
@@ -60,6 +61,7 @@ type RentalRow = {
   carModel: string | null;
   carYear: number | null;
   carLicensePlate: string | null;
+  carDailyRate: string | null;
   carMileageKm: number;
   lastEventMileageKm: number | null;
   requestNotes: string | null;
@@ -77,6 +79,7 @@ function toRentalDTO(row: RentalRow): RentalDTO {
       model: row.carModel ?? "",
       year: row.carYear ?? 0,
       licensePlate: row.carLicensePlate ?? "",
+      dailyRate: Number(row.carDailyRate ?? 0),
     },
     userId: row.rental.userId,
     userName: row.userName,
@@ -131,6 +134,7 @@ export async function getRentals(filters?: {
       carModel: cars.model,
       carYear: cars.year,
       carLicensePlate: cars.licensePlate,
+      carDailyRate: cars.dailyRate,
       carMileageKm: cars.mileageKm,
       lastEventMileageKm: sql<number | null>`(
         SELECT mileage_km FROM rental_events
@@ -168,6 +172,7 @@ export async function getRentalById(id: string): Promise<RentalDTO | null> {
       carModel: cars.model,
       carYear: cars.year,
       carLicensePlate: cars.licensePlate,
+      carDailyRate: cars.dailyRate,
       carMileageKm: cars.mileageKm,
       lastEventMileageKm: sql<number | null>`(
         SELECT mileage_km FROM rental_events

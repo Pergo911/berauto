@@ -88,7 +88,7 @@ export default async function AgentActivePage() {
             ({pastRentals.length})
           </span>
         </h2>
-        <RentalTable rentals={pastRentals} showUser hideStatusFilter />
+        <RentalTable rentals={pastRentals} showUser hideStatusFilter variant="agent" />
       </section>
     </div>
   );

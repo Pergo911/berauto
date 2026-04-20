@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Settings2 } from "lucide-react";
+import { Eye, Settings2 } from "lucide-react";
 
 import type { RentalDTO } from "@/lib/data/rentals";
 import type { RentalStatus } from "@/types";
@@ -44,6 +44,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { RentalStatusBadge } from "@/components/rentals/rental-status-badge";
+import { RentalDetailDialog } from "@/components/rentals/rental-detail-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
 import { DataTableColumnHeader } from "@/components/shared/data-table-column-header";
 import { DataTablePagination } from "@/components/shared/data-table-pagination";
@@ -52,6 +53,8 @@ type RentalTableProps = {
   rentals: RentalDTO[];
   showUser?: boolean;
   hideStatusFilter?: boolean;
+  /** "user" = dashboard view, "agent" = agent/admin view */
+  variant?: "user" | "agent";
 };
 
 const COLUMN_LABELS: Record<string, string> = {
@@ -134,6 +137,17 @@ function getColumns(showUser: boolean): ColumnDef<RentalDTO>[] {
         </span>
       ),
       sortingFn: "datetime",
+    },
+    {
+      id: "detail",
+      header: () => null,
+      cell: () => (
+        <span className="flex items-center justify-end opacity-0 transition-opacity group-hover/row:opacity-100">
+          <Eye className="size-4 text-muted-foreground" />
+        </span>
+      ),
+      enableSorting: false,
+      enableHiding: false,
     }
   );
 
@@ -153,11 +167,13 @@ export function RentalTable({
   rentals,
   showUser = false,
   hideStatusFilter = false,
+  variant = "user",
 }: RentalTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState("");
+  const [selectedRental, setSelectedRental] = useState<RentalDTO | null>(null);
 
   const columns = getColumns(showUser);
 
@@ -292,7 +308,11 @@ export function RentalTable({
               <TableBody>
                 {table.getRowModel().rows.length > 0 ? (
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id}>
+                    <TableRow
+                      key={row.id}
+                      className="group/row cursor-pointer"
+                      onClick={() => setSelectedRental(row.original)}
+                    >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
                           {flexRender(
@@ -322,6 +342,17 @@ export function RentalTable({
             <DataTablePagination table={table} />
           </div>
         </>
+      )}
+
+      {selectedRental && (
+        <RentalDetailDialog
+          rental={selectedRental}
+          open={!!selectedRental}
+          onOpenChange={(open) => {
+            if (!open) setSelectedRental(null);
+          }}
+          variant={variant}
+        />
       )}
     </div>
   );

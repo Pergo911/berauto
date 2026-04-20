@@ -6,8 +6,11 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { cars, rentals } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { getRentals } from "@/lib/data/rentals";
 import { createCarSchema, updateCarSchema } from "@/lib/validations/cars";
 import { idSchema } from "@/lib/validations/rentals";
+
+import type { RentalDTO } from "@/lib/data/rentals";
 
 type ActionResult<T> =
   | { success: true; data: T }
@@ -138,4 +141,23 @@ export async function deleteCar(
   revalidatePath("/admin/cars");
 
   return { success: true, data: { id: car.id } };
+}
+
+// ── Get Car Rental History (for detail dialog) ─────────
+
+export async function getCarRentalHistory(
+  carId: string
+): Promise<ActionResult<RentalDTO[]>> {
+  const idParsed = idSchema.safeParse(carId);
+  if (!idParsed.success) {
+    return { success: false, error: "Invalid ID" };
+  }
+
+  const session = await auth();
+  if (!session || session.user.role !== "admin") {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const rentalList = await getRentals({ carId, sort: "newest" });
+  return { success: true, data: rentalList };
 }

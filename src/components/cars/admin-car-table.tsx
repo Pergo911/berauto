@@ -14,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Pencil, Plus, Settings2 } from "lucide-react";
+import { Eye, Plus, Settings2 } from "lucide-react";
 
 import type { CarDTO } from "@/lib/data/cars";
 import { formatCurrency } from "@/lib/utils";
@@ -51,11 +51,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CarForm } from "@/components/cars/car-form";
-import { DeleteCarButton } from "@/components/cars/delete-car-button";
 import {
   CarInUseBadge,
   CarStatusBadge,
 } from "@/components/cars/car-status-badge";
+import { CarDetailDialog } from "@/components/cars/car-detail-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
 import { DataTableColumnHeader } from "@/components/shared/data-table-column-header";
 import { DataTablePagination } from "@/components/shared/data-table-pagination";
@@ -81,7 +81,7 @@ const carGlobalFilterFn: FilterFn<CarDTO> = (_row, _columnId, filterValue) => {
 carGlobalFilterFn.autoRemove = (val: unknown) =>
   !val || String(val).trim() === "";
 
-function getColumns(onEdit: (car: CarDTO) => void): ColumnDef<CarDTO>[] {
+function getColumns(): ColumnDef<CarDTO>[] {
   return [
     {
       id: "makeModel",
@@ -132,40 +132,29 @@ function getColumns(onEdit: (car: CarDTO) => void): ColumnDef<CarDTO>[] {
       enableSorting: false,
     },
     {
-      id: "actions",
-      enableHiding: false,
-      enableSorting: false,
-      cell: ({ row }) => (
-        <div className="flex items-center justify-end gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onEdit(row.original)}
-          >
-            <Pencil className="size-3.5" />
-            Edit
-          </Button>
-          <DeleteCarButton
-            carId={row.original.id}
-            carName={`${row.original.make} ${row.original.model}`}
-          />
-        </div>
+      id: "detail",
+      header: () => null,
+      cell: () => (
+        <span className="flex items-center justify-end opacity-0 transition-opacity group-hover/row:opacity-100">
+          <Eye className="size-4 text-muted-foreground" />
+        </span>
       ),
+      enableSorting: false,
+      enableHiding: false,
     },
   ];
 }
 
 export function AdminCarTable({ cars }: AdminCarTableProps) {
   const [createOpen, setCreateOpen] = useState(false);
-  const [editCar, setEditCar] = useState<CarDTO | null>(null);
+  const [selectedCar, setSelectedCar] = useState<CarDTO | null>(null);
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState("");
 
-  // setEditCar is stable (from useState), so this memo runs only once
-  const columns = useMemo(() => getColumns(setEditCar), []);
+  const columns = useMemo(() => getColumns(), []);
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -218,25 +207,16 @@ export function AdminCarTable({ cars }: AdminCarTableProps) {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Dialog */}
-      <Dialog
-        open={editCar !== null}
-        onOpenChange={(open) => {
-          if (!open) setEditCar(null);
-        }}
-      >
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Edit Car</DialogTitle>
-            <DialogDescription>
-              Update the details for {editCar?.make} {editCar?.model}.
-            </DialogDescription>
-          </DialogHeader>
-          {editCar && (
-            <CarForm car={editCar} onSuccess={() => setEditCar(null)} />
-          )}
-        </DialogContent>
-      </Dialog>
+      {/* Detail Dialog */}
+      {selectedCar && (
+        <CarDetailDialog
+          car={selectedCar}
+          open={!!selectedCar}
+          onOpenChange={(open) => {
+            if (!open) setSelectedCar(null);
+          }}
+        />
+      )}
 
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 py-4">
@@ -329,7 +309,11 @@ export function AdminCarTable({ cars }: AdminCarTableProps) {
               <TableBody>
                 {table.getRowModel().rows.length > 0 ? (
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id}>
+                    <TableRow
+                      key={row.id}
+                      className="group/row cursor-pointer"
+                      onClick={() => setSelectedCar(row.original)}
+                    >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
                           {flexRender(
