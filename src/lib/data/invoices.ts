@@ -1,4 +1,4 @@
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, isNull, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 import type { RentalStatus } from "@/types";
@@ -53,6 +53,8 @@ export type ClosedRentalWithoutInvoiceDTO = {
   endDate: Date;
   status: RentalStatus;
   createdAt: Date;
+  /** Notes from the RETURN event, if any. */
+  returnNotes: string | null;
 };
 
 // ── Queries ────────────────────────────────────────────
@@ -140,6 +142,12 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
       invoiceId: invoices.id,
       userName: users.name,
       userEmail: users.email,
+      returnNotes: sql<string | null>`(
+        SELECT notes FROM rental_events
+        WHERE rental_id = ${rentals.id}
+          AND event_type = 'RETURN'
+        LIMIT 1
+      )`,
     })
     .from(rentals)
     .innerJoin(cars, eq(rentals.carId, cars.id))
@@ -167,5 +175,6 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
     endDate: r.rental.endDate,
     status: r.rental.status,
     createdAt: r.rental.createdAt,
+    returnNotes: r.returnNotes,
   }));
 }

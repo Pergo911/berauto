@@ -20,6 +20,7 @@ import { createRentalRequest } from "@/actions/rentals";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -67,6 +68,7 @@ export function RentalRequestForm({
       carId,
       startDate: "",
       endDate: "",
+      notes: "",
       ...(!isLoggedIn && {
         guestName: "",
         guestEmail: "",
@@ -379,6 +381,25 @@ export function RentalRequestForm({
             />
           </>
         )}
+
+        <FormField
+          control={form.control}
+          name="notes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Notes</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Any special requests or notes for the agent… (optional)"
+                  className="min-h-[80px] resize-none"
+                  {...field}
+                  value={field.value ?? ""}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <Button
           type="submit"

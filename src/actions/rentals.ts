@@ -10,7 +10,7 @@ import { isCarBookable, getConflictingPendingRentals } from "@/lib/data/cars";
 import {
   createRentalSchema,
   idSchema,
-  mileageSchema,
+  mileageWithNotesSchema,
   rejectReasonSchema,
 } from "@/lib/validations/rentals";
 
@@ -30,8 +30,15 @@ export async function createRentalRequest(
 
   const session = await auth();
 
-  const { carId, startDate, endDate, guestName, guestEmail, guestPhone } =
-    parsed.data;
+  const {
+    carId,
+    startDate,
+    endDate,
+    notes,
+    guestName,
+    guestEmail,
+    guestPhone,
+  } = parsed.data;
 
   // If not logged in, require guest fields
   if (!session?.user) {
@@ -63,6 +70,7 @@ export async function createRentalRequest(
     rentalId: rental.id,
     eventType: "REQUEST",
     actorId: session?.user ? session.user.id : null,
+    notes: notes ?? null,
   });
 
   revalidatePath("/");
@@ -144,7 +152,11 @@ export async function getApprovalConflicts(rentalId: string): Promise<
 
 export async function approveRental(
   rentalId: string,
-  autoRejectConflicts?: boolean
+  options?: {
+    autoRejectConflicts?: boolean;
+    notes?: string;
+    conflictNotes?: Record<string, string>;
+  }
 ): Promise<ActionResult<{ id: string }>> {
   const idParsed = idSchema.safeParse(rentalId);
   if (!idParsed.success) {
@@ -205,10 +217,11 @@ export async function approveRental(
     rentalId,
     eventType: "APPROVE",
     actorId: session.user.id,
+    notes: options?.notes ?? null,
   });
 
   // Auto-reject conflicting PENDING rentals
-  if (autoRejectConflicts) {
+  if (options?.autoRejectConflicts) {
     const conflicts = await getConflictingPendingRentals(
       rental.carId,
       rental.startDate,
@@ -226,12 +239,14 @@ export async function approveRental(
         })
         .where(eq(rentals.id, conflict.id));
 
+      const defaultConflictNote =
+        "Sorry, this request was automatically rejected because another rental was approved for the same dates.";
       await db.insert(rentalEvents).values({
         rentalId: conflict.id,
         eventType: "REJECT",
         actorId: session.user.id,
         notes:
-          "Sorry, this request was automatically rejected because another rental was approved for the same dates.",
+          options?.conflictNotes?.[conflict.id]?.trim() || defaultConflictNote,
       });
     }
   }
@@ -316,7 +331,7 @@ export async function handoverRental(
     return { success: false, error: "Invalid ID" };
   }
 
-  const parsed = mileageSchema.safeParse(input);
+  const parsed = mileageWithNotesSchema.safeParse(input);
   if (!parsed.success) {
     return { success: false, error: "Invalid input" };
   }
@@ -356,6 +371,7 @@ export async function handoverRental(
     eventType: "HANDOVER",
     actorId: session.user.id,
     mileageKm: parsed.data.mileageKm,
+    notes: parsed.data.notes ?? null,
   });
 
   revalidatePath("/");
@@ -377,7 +393,7 @@ export async function returnRental(
     return { success: false, error: "Invalid ID" };
   }
 
-  const parsed = mileageSchema.safeParse(input);
+  const parsed = mileageWithNotesSchema.safeParse(input);
   if (!parsed.success) {
     return { success: false, error: "Invalid input" };
   }
@@ -417,6 +433,7 @@ export async function returnRental(
     eventType: "RETURN",
     actorId: session.user.id,
     mileageKm: parsed.data.mileageKm,
+    notes: parsed.data.notes ?? null,
   });
 
   // Update car mileage to the return reading

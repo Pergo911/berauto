@@ -12,6 +12,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { BackLink } from "@/components/shared/back-link";
 import { IssueInvoiceButton } from "@/components/invoices/issue-invoice-button";
 import { InvoicesTable } from "@/components/invoices/invoices-table";
+import { NoteDisplay } from "@/components/rentals/note-display";
 
 export default async function AgentInvoicesPage() {
   const [uninvoiced, issuedInvoices] = await Promise.all([
@@ -114,6 +115,13 @@ export default async function AgentInvoicesPage() {
                         {formatCurrency(rental.car.dailyRate)}/day
                       </p>
                     </div>
+
+                    <Separator />
+
+                    <NoteDisplay
+                      notes={rental.returnNotes}
+                      label="Return Notes"
+                    />
 
                     <Separator />
 

@@ -24,6 +24,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { formatDate } from "@/lib/utils";
 
+const DEFAULT_CONFLICT_NOTE =
+  "Sorry, this request was automatically rejected because another rental was approved for the same dates.";
+
 type ConflictItem = {
   id: string;
   startDate: Date;
@@ -36,22 +39,38 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
   const [isPending, startTransition] = useTransition();
   const [approveOpen, setApproveOpen] = useState(false);
   const [rejectOpen, setRejectOpen] = useState(false);
+  const [approveNotes, setApproveNotes] = useState("");
   const [reason, setReason] = useState("");
   const [conflicts, setConflicts] = useState<ConflictItem[] | null>(null);
   const [conflictsLoading, setConflictsLoading] = useState(false);
+  // Per-conflict rejection notes keyed by conflict rental ID
+  const [conflictNotes, setConflictNotes] = useState<Record<string, string>>(
+    {}
+  );
 
   // Open the approve dialog and immediately begin fetching conflicts.
   async function handleApproveOpen() {
     setConflictsLoading(true);
     setApproveOpen(true);
     const result = await getApprovalConflicts(rentalId);
-    setConflicts(result.success ? result.data.conflicts : []);
+    const fetchedConflicts = result.success ? result.data.conflicts : [];
+    setConflicts(fetchedConflicts);
+    // Pre-populate conflict notes with the default message
+    const initial: Record<string, string> = {};
+    for (const c of fetchedConflicts) {
+      initial[c.id] = DEFAULT_CONFLICT_NOTE;
+    }
+    setConflictNotes(initial);
     setConflictsLoading(false);
   }
 
   function handleApprove() {
     startTransition(async () => {
-      const result = await approveRental(rentalId, true);
+      const result = await approveRental(rentalId, {
+        autoRejectConflicts: true,
+        notes: approveNotes.trim() || undefined,
+        conflictNotes,
+      });
       if (result.success) {
         toast.success("Rental approved");
         setApproveOpen(false);
@@ -112,10 +131,12 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
           if (!open) {
             setConflicts(null);
             setConflictsLoading(false);
+            setApproveNotes("");
+            setConflictNotes({});
           }
         }}
       >
-        <AlertDialogContent>
+        <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
           <AlertDialogHeader>
             <AlertDialogTitle>Approve Rental Request</AlertDialogTitle>
             <AlertDialogDescription>
@@ -133,28 +154,59 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
             </div>
           )}
 
-          {!conflictsLoading && conflictCount > 0 && conflicts && (
-            <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3">
-              <div className="mb-2 flex items-center gap-2 text-sm font-medium text-destructive">
-                <AlertTriangle className="size-4" />
-                Requests that will be rejected
+          {!conflictsLoading && (
+            <>
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium">
+                  Reason{" "}
+                  <span className="font-normal text-muted-foreground">
+                    (optional)
+                  </span>
+                </label>
+                <Textarea
+                  placeholder="Add a note for the approval…"
+                  value={approveNotes}
+                  onChange={(e) => setApproveNotes(e.target.value)}
+                  className="min-h-[80px]"
+                  disabled={isPending}
+                />
               </div>
-              <ul className="space-y-1">
-                {conflicts.map((conflict) => (
-                  <li
-                    key={conflict.id}
-                    className="text-sm text-muted-foreground"
-                  >
-                    <span className="font-medium text-foreground">
-                      {conflict.renterName ?? "Unknown"}
-                    </span>
-                    {" · "}
-                    {formatDate(conflict.startDate)} –{" "}
-                    {formatDate(conflict.endDate)}
-                  </li>
-                ))}
-              </ul>
-            </div>
+
+              {conflictCount > 0 && conflicts && (
+                <div className="space-y-3 rounded-md border border-destructive/30 bg-destructive/10 p-3">
+                  <div className="flex items-center gap-2 text-sm font-medium text-destructive">
+                    <AlertTriangle className="size-4" />
+                    Requests that will be rejected
+                  </div>
+                  <ul className="space-y-3">
+                    {conflicts.map((conflict) => (
+                      <li key={conflict.id} className="space-y-1.5">
+                        <p className="text-sm text-muted-foreground">
+                          <span className="font-medium text-foreground">
+                            {conflict.renterName ?? "Unknown"}
+                          </span>
+                          {" · "}
+                          {formatDate(conflict.startDate)} –{" "}
+                          {formatDate(conflict.endDate)}
+                        </p>
+                        <Textarea
+                          placeholder="Rejection message…"
+                          value={conflictNotes[conflict.id] ?? ""}
+                          onChange={(e) =>
+                            setConflictNotes((prev) => ({
+                              ...prev,
+                              [conflict.id]: e.target.value,
+                            }))
+                          }
+                          className="min-h-[60px] text-xs"
+                          disabled={isPending}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </>
           )}
 
           <AlertDialogFooter>

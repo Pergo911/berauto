@@ -6,6 +6,7 @@ import { formatDate } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { RentalStatusBadge } from "@/components/rentals/rental-status-badge";
+import { NoteDisplay } from "@/components/rentals/note-display";
 
 type RentalAgentCardProps = {
   rental: RentalDTO;
@@ -66,6 +67,10 @@ export function RentalAgentCard({ rental, action }: RentalAgentCardProps) {
             <p className="font-medium">{formatDate(rental.endDate)}</p>
           </div>
         </div>
+
+        <Separator />
+
+        <NoteDisplay notes={rental.requestNotes} />
 
         <Separator />
 

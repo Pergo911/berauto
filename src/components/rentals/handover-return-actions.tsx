@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { handoverRental, returnRental } from "@/actions/rentals";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export function HandoverReturnActions({
   rentalId,
@@ -21,6 +22,7 @@ export function HandoverReturnActions({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [mileage, setMileage] = useState("");
+  const [note, setNote] = useState("");
 
   const isHandover = type === "handover";
   const label = isHandover ? "Record Handover" : "Record Return";
@@ -37,10 +39,14 @@ export function HandoverReturnActions({
     }
 
     startTransition(async () => {
-      const result = await action(rentalId, { mileageKm });
+      const result = await action(rentalId, {
+        mileageKm,
+        notes: note.trim() || undefined,
+      });
       if (result.success) {
         toast.success(isHandover ? "Handover recorded" : "Return recorded");
         setMileage("");
+        setNote("");
         router.refresh();
       } else {
         toast.error(result.error);
@@ -49,12 +55,12 @@ export function HandoverReturnActions({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-3">
       <div className="flex items-end gap-2">
         <div className="flex-1">
           <label
             htmlFor={`mileage-${rentalId}`}
-            className="mb-1 block text-xs font-medium text-muted-foreground flex items-center gap-1"
+            className="mb-1 flex items-center gap-1 text-xs font-medium text-muted-foreground"
           >
             <Gauge className="size-3.5" />
             Mileage (km)
@@ -81,6 +87,23 @@ export function HandoverReturnActions({
           <Icon className="size-3.5" />
           {isPending ? "Saving…" : label}
         </Button>
+      </div>
+
+      <div>
+        <label
+          htmlFor={`note-${rentalId}`}
+          className="mb-1 block text-xs font-medium text-muted-foreground"
+        >
+          Note <span className="font-normal">(optional)</span>
+        </label>
+        <Textarea
+          id={`note-${rentalId}`}
+          placeholder="Any observations or remarks…"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          className="min-h-[60px] resize-none text-sm"
+          disabled={isPending}
+        />
       </div>
     </form>
   );
