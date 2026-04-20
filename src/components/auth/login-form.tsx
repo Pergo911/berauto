@@ -3,11 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
+import { USER_ROLE } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -44,7 +45,16 @@ export function LoginForm() {
         return;
       }
 
-      router.push("/dashboard");
+      const session = await getSession();
+      const role = session?.user?.role;
+
+      if (role === USER_ROLE.ADMIN) {
+        router.push("/admin");
+      } else if (role === USER_ROLE.AGENT) {
+        router.push("/agent");
+      } else {
+        router.push("/dashboard");
+      }
       router.refresh();
     } catch {
       toast.error("Something went wrong. Please try again.");
