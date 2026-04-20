@@ -14,7 +14,7 @@ import { toast } from "sonner";
 
 import type { CarDTO } from "@/lib/data/cars";
 import type { RentalDTO } from "@/lib/data/rentals";
-import { formatDate, formatCurrency, cn } from "@/lib/utils";
+import { formatDate, formatCurrency } from "@/lib/utils";
 import { deleteCar, getCarRentalHistory } from "@/actions/cars";
 import {
   Dialog,
@@ -100,25 +100,27 @@ export function CarDetailDialog({
   onOpenChange,
 }: CarDetailDialogProps) {
   const router = useRouter();
-  const [rentalHistory, setRentalHistory] = useState<RentalDTO[] | null>(null);
-  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [rentalHistory, setRentalHistory] = useState<{
+    carId: string;
+    data: RentalDTO[];
+  } | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [isDeleting, startDeleteTransition] = useTransition();
 
-  useEffect(() => {
-    if (!open) {
-      setRentalHistory(null);
-      return;
-    }
+  const loadingHistory = open && rentalHistory?.carId !== car.id;
 
-    setLoadingHistory(true);
-    getCarRentalHistory(car.id)
-      .then((result) => {
-        if (result.success) {
-          setRentalHistory(result.data);
-        }
-      })
-      .finally(() => setLoadingHistory(false));
+  useEffect(() => {
+    if (!open) return;
+
+    let active = true;
+    getCarRentalHistory(car.id).then((result) => {
+      if (active && result.success) {
+        setRentalHistory({ carId: car.id, data: result.data });
+      }
+    });
+    return () => {
+      active = false;
+    };
   }, [open, car.id]);
 
   function handleDelete() {
@@ -159,9 +161,9 @@ export function CarDetailDialog({
             </TabsTrigger>
             <TabsTrigger value="history" className="flex-1">
               Rental History
-              {rentalHistory && (
+              {rentalHistory?.carId === car.id && (
                 <Badge variant="secondary" className="ml-1.5 text-xs">
-                  {rentalHistory.length}
+                  {rentalHistory.data.length}
                 </Badge>
               )}
             </TabsTrigger>
@@ -233,9 +235,9 @@ export function CarDetailDialog({
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="size-5 animate-spin text-muted-foreground" />
               </div>
-            ) : rentalHistory && rentalHistory.length > 0 ? (
+            ) : rentalHistory?.data && rentalHistory.data.length > 0 ? (
               <div className="max-h-96 space-y-2 overflow-y-auto pr-1">
-                {rentalHistory.map((rental) => (
+                {rentalHistory.data.map((rental) => (
                   <RentalHistoryItem key={rental.id} rental={rental} />
                 ))}
               </div>

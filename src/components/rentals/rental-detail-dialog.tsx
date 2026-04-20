@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 
 import type { RentalDTO, RentalEventDTO } from "@/lib/data/rentals";
-import type { RentalEventType } from "@/types";
 import { formatDate, formatDateTime, formatCurrency, cn } from "@/lib/utils";
 import { getRentalDetails } from "@/actions/rentals";
 import {
@@ -227,23 +226,25 @@ export function RentalDetailDialog({
   onOpenChange,
   variant,
 }: RentalDetailDialogProps) {
-  const [details, setDetails] = useState<DetailData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [detailsState, setDetailsState] = useState<{
+    rentalId: string;
+    data: DetailData;
+  } | null>(null);
+  const details = detailsState?.rentalId === rental.id ? detailsState.data : null;
+  const loading = open && detailsState?.rentalId !== rental.id;
 
   useEffect(() => {
-    if (!open) {
-      setDetails(null);
-      return;
-    }
+    if (!open) return;
 
-    setLoading(true);
-    getRentalDetails(rental.id)
-      .then((result) => {
-        if (result.success) {
-          setDetails(result.data);
-        }
-      })
-      .finally(() => setLoading(false));
+    let active = true;
+    getRentalDetails(rental.id).then((result) => {
+      if (active && result.success) {
+        setDetailsState({ rentalId: rental.id, data: result.data });
+      }
+    });
+    return () => {
+      active = false;
+    };
   }, [open, rental.id]);
 
   const days = calculateDays(rental.startDate, rental.endDate);
