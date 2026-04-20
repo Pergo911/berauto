@@ -31,7 +31,7 @@ export default async function AdminUsersPage() {
           {staffUsers.length} member{staffUsers.length !== 1 ? "s" : ""}
         </Badge>
       </div>
-      <UsersTable users={staffUsers} showRoleFilter />
+      <UsersTable users={staffUsers} />
 
       <Separator className="my-8" />
 
