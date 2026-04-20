@@ -7,6 +7,7 @@ import {
   gt,
   ilike,
   inArray,
+  isNull,
   lt,
   ne,
   or,
@@ -66,8 +67,13 @@ export async function getCars(filters?: {
     | "year-desc"
     | "mileage-asc"
     | "mileage-desc";
+  includeDeleted?: boolean;
 }): Promise<CarDTO[]> {
   const conditions = [];
+
+  if (!filters?.includeDeleted) {
+    conditions.push(isNull(cars.deletedAt));
+  }
 
   if (filters?.status) {
     conditions.push(eq(cars.status, filters.status));
@@ -117,12 +123,19 @@ export async function getCars(filters?: {
   return rows.map(toCarDTO);
 }
 
-/** Get a single car by ID, or `null` if not found. */
-export async function getCarById(id: string): Promise<CarDTO | null> {
+/** Get a single car by ID, or `null` if not found. Excludes soft-deleted cars unless specified. */
+export async function getCarById(
+  id: string,
+  opts?: { includeDeleted?: boolean }
+): Promise<CarDTO | null> {
+  const conditions = [eq(cars.id, id)];
+  if (!opts?.includeDeleted) {
+    conditions.push(isNull(cars.deletedAt));
+  }
   const [row] = await db
     .select({ ...getTableColumns(cars), inUse: inUseExpr })
     .from(cars)
-    .where(eq(cars.id, id))
+    .where(and(...conditions))
     .limit(1);
   return row ? toCarDTO(row) : null;
 }

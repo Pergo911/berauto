@@ -129,7 +129,8 @@ export async function deleteCar(
   }
 
   const [car] = await db
-    .delete(cars)
+    .update(cars)
+    .set({ deletedAt: new Date(), updatedAt: new Date() })
     .where(eq(cars.id, id))
     .returning({ id: cars.id });
 

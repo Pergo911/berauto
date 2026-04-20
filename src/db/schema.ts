@@ -71,6 +71,7 @@ export const cars = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (table) => [index("cars_status_idx").on(table.status)]
 );
