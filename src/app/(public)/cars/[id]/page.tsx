@@ -35,7 +35,7 @@ export default async function CarDetailPage({
     notFound();
   }
 
-  const isAvailable = car.status === "AVAILABLE" && !car.inUse;
+  const isAvailable = car.status === "AVAILABLE";
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -137,11 +137,9 @@ export default async function CarDetailPage({
                   <p className="text-sm text-yellow-800 dark:text-yellow-200">
                     This car is currently{" "}
                     <span className="font-bold">
-                      {car.inUse
-                        ? "in use"
-                        : car.status === "MAINTENANCE"
-                          ? "under maintenance"
-                          : "unavailable"}
+                      {car.status === "MAINTENANCE"
+                        ? "under maintenance"
+                        : "unavailable"}
                     </span>
                     . Please check back later or browse other available
                     vehicles.
