@@ -50,25 +50,35 @@ All four must pass on `pnpm build`. Fix lint/type errors before marking a task d
 ```
 src/
   app/                   # Next.js App Router pages and layouts
+    layout.tsx           # root document/layout wrapper
+    globals.css          # global styles and Tailwind v4 tokens
+    not-found.tsx        # shared 404 page
+    favicon.ico          # site favicon
     page.tsx             # → / (home / car listing, public)
     (auth)/              # unauthenticated route group
+      layout.tsx         # auth-only shell
       login/             #   → /login
       register/          #   → /register
     (public)/            # public route group
+      layout.tsx         # public shell
       cars/[id]/         #   → /cars/[id] (car detail)
     dashboard/           # authenticated user area → /dashboard
+      layout.tsx         # dashboard shell
     agent/               # agent-only area → /agent
+      layout.tsx         # agent shell
       active/            #   → /agent/active (active rentals)
       invoices/          #   → /agent/invoices
       requests/          #   → /agent/requests (rental requests)
     admin/               # admin-only area → /admin
+      layout.tsx         # admin shell
+      page.tsx           #   → /admin (admin overview)
       cars/              #   → /admin/cars
       users/             #   → /admin/users
     api/                 # Route Handlers
       auth/[...nextauth]/ #  → /api/auth/* (Auth.js)
   components/
     ui/                  # shadcn/ui primitives (auto-generated, do not edit manually)
-    shared/              # navbar, theme provider, theme toggle, sign-out button
+    shared/              # navbar, navbar-client, page-header, stat-card, empty-state, back-link, theme provider, theme toggle, sign-out button, action-feedback, data-table helpers
     auth/                # login and register forms
     cars/                # domain components for cars
     rentals/             # domain components for rentals
@@ -80,7 +90,7 @@ src/
     migrations/          # auto-generated migration SQL files
   lib/
     auth.ts              # Auth.js config and helpers
-    data/                # Query functions returning page-ready DTOs (one file per domain)
+    data/                # Query functions returning page-ready DTOs (one file per domain, plus dashboard.ts)
     validations/         # Zod schemas (one file per domain)
     utils.ts             # generic utility functions (cn(), formatDate(), etc.)
     env.ts               # validated environment variables (@t3-oss/env-nextjs)
@@ -162,7 +172,8 @@ import { RentalCard } from "@/components/rentals/rental-card";
 ## Server Actions
 
 - One file per domain in `src/actions/` (e.g., `rentals.ts`, `cars.ts`, `invoices.ts`).
-- Every action must: (1) validate input with Zod, (2) check session/role, (3) perform DB operation.
+- Every server action that accepts user input should validate it with Zod; protected mutations must also call `auth()` and enforce the minimum required session/role before any write.
+- Public or non-mutating actions may omit authorization and database access when those concerns do not apply.
 - Return a discriminated union `{ success: true; data: T } | { success: false; error: string }`.
 - Never throw from a Server Action that is called directly from a form — return the error union instead.
 
