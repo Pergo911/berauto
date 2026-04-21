@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { BackLink } from "@/components/shared/back-link";
+import { BrandLogo } from "@/components/cars/brand-logo";
 import { IssueInvoiceButton } from "@/components/invoices/issue-invoice-button";
 import { InvoicesTable } from "@/components/invoices/invoices-table";
 import { NoteDisplay } from "@/components/rentals/note-display";
@@ -56,8 +57,17 @@ export default async function AgentInvoicesPage() {
                   className="border-border/60 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_50%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(240,253,250,0.95))] dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_50%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(17,24,39,0.95))]"
                 >
                   <CardHeader>
-                    <CardTitle className="text-base">
-                      <Car className="mr-1.5 inline-block size-4 text-muted-foreground" />
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      {rental.car.brandLogoPath ? (
+                        <BrandLogo
+                          logoPath={rental.car.brandLogoPath}
+                          brandName={rental.car.make}
+                          size={20}
+                          className="shrink-0"
+                        />
+                      ) : (
+                        <Car className="size-4 shrink-0 text-muted-foreground" />
+                      )}
                       {rental.car.make} {rental.car.model} ({rental.car.year})
                     </CardTitle>
                     <p className="text-xs text-muted-foreground">

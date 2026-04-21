@@ -18,6 +18,7 @@ import { Eye, Settings2 } from "lucide-react";
 import type { RentalDTO } from "@/lib/data/rentals";
 import type { RentalStatus } from "@/types";
 import { formatDate } from "@/lib/utils";
+import { BrandLogo } from "@/components/cars/brand-logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -77,9 +78,15 @@ function getColumns(showUser: boolean): ColumnDef<RentalDTO>[] {
         <DataTableColumnHeader column={column} title="Car" />
       ),
       cell: ({ row }) => (
-        <span className="font-medium">
+        <div className="flex items-center gap-2 font-medium">
+          <BrandLogo
+            logoPath={row.original.car.brandLogoPath}
+            brandName={row.original.car.make}
+            size={20}
+            className="shrink-0"
+          />
           {row.original.car.make} {row.original.car.model}
-        </span>
+        </div>
       ),
     },
   ];

@@ -20,6 +20,7 @@ import {
   CarInUseBadge,
   CarStatusBadge,
 } from "@/components/cars/car-status-badge";
+import { BrandLogo } from "@/components/cars/brand-logo";
 
 export default async function CarDetailPage({
   params,
@@ -48,11 +49,19 @@ export default async function CarDetailPage({
           <Card>
             <CardHeader>
               <div className="flex items-start justify-between gap-2">
-                <div>
-                  <CardTitle className="text-2xl">
-                    {car.make} {car.model}
-                  </CardTitle>
-                  <CardDescription>{car.year} model</CardDescription>
+                <div className="flex items-start gap-3">
+                  <BrandLogo
+                    logoPath={car.brandLogoPath}
+                    brandName={car.make}
+                    size={48}
+                    className="mt-1 shrink-0"
+                  />
+                  <div>
+                    <CardTitle className="text-2xl">
+                      {car.make} {car.model}
+                    </CardTitle>
+                    <CardDescription>{car.year} model</CardDescription>
+                  </div>
                 </div>
                 {car.inUse ? (
                   <CarInUseBadge />

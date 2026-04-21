@@ -17,6 +17,7 @@ import { Settings2 } from "lucide-react";
 
 import type { InvoiceDTO } from "@/lib/data/invoices";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { BrandLogo } from "@/components/cars/brand-logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -59,10 +60,16 @@ const columns: ColumnDef<InvoiceDTO>[] = [
       <DataTableColumnHeader column={column} title="Car" />
     ),
     cell: ({ row }) => (
-      <span className="font-medium">
+      <div className="flex items-center gap-2 font-medium">
+        <BrandLogo
+          logoPath={row.original.car.brandLogoPath}
+          brandName={row.original.car.make}
+          size={20}
+          className="shrink-0"
+        />
         {row.original.car.make} {row.original.car.model} (
         {row.original.car.year})
-      </span>
+      </div>
     ),
   },
   {

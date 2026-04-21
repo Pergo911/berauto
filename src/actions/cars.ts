@@ -29,7 +29,7 @@ export async function createCar(
     return { success: false, error: "Unauthorized" };
   }
 
-  const { make, model, year, licensePlate, mileageKm, dailyRate, status } =
+  const { make, model, year, licensePlate, mileageKm, dailyRate, status, brandId } =
     parsed.data;
 
   const [car] = await db
@@ -42,6 +42,7 @@ export async function createCar(
       mileageKm,
       dailyRate: dailyRate.toString(),
       status,
+      brandId: brandId ?? null,
     })
     .returning({ id: cars.id });
 

@@ -14,6 +14,8 @@ import { toast } from "sonner";
 
 import type { CarDTO } from "@/lib/data/cars";
 import type { RentalDTO } from "@/lib/data/rentals";
+import type { BrandDTO } from "@/lib/data/brands";
+import { BrandLogo } from "@/components/cars/brand-logo";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { deleteCar, getCarRentalHistory } from "@/actions/cars";
 import {
@@ -47,6 +49,7 @@ import { RentalStatusBadge } from "@/components/rentals/rental-status-badge";
 
 type CarDetailDialogProps = {
   car: CarDTO;
+  brands: BrandDTO[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
@@ -96,6 +99,7 @@ function RentalHistoryItem({ rental }: { rental: RentalDTO }) {
 
 export function CarDetailDialog({
   car,
+  brands,
   open,
   onOpenChange,
 }: CarDetailDialogProps) {
@@ -142,7 +146,15 @@ export function CarDetailDialog({
         <DialogHeader>
           <div className="flex items-center gap-2">
             <DialogTitle className="flex items-center gap-2">
-              <Car className="size-5 text-muted-foreground" />
+              {car.brandLogoPath ? (
+                <BrandLogo
+                  logoPath={car.brandLogoPath}
+                  brandName={car.make}
+                  size={20}
+                />
+              ) : (
+                <Car className="size-5 text-muted-foreground" />
+              )}
               {car.make} {car.model}
             </DialogTitle>
             <CarStatusBadge status={car.status} />
@@ -172,6 +184,7 @@ export function CarDetailDialog({
           <TabsContent value="details" className="mt-4 space-y-6">
             <CarForm
               car={car}
+              brands={brands}
               onSuccess={() => {
                 onOpenChange(false);
               }}

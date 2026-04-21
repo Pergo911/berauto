@@ -3,7 +3,7 @@ import { alias } from "drizzle-orm/pg-core";
 
 import type { RentalStatus } from "@/types";
 import { db } from "@/db";
-import { cars, rentalEvents, rentals, users } from "@/db/schema";
+import { brands, cars, rentalEvents, rentals, users } from "@/db/schema";
 
 // ── Table aliases (self-join on users) ─────────────────
 
@@ -22,6 +22,7 @@ export type RentalDTO = {
     year: number;
     licensePlate: string;
     dailyRate: number;
+    brandLogoPath: string | null;
   };
   userId: string | null;
   userName: string | null;
@@ -63,6 +64,7 @@ type RentalRow = {
   carLicensePlate: string | null;
   carDailyRate: string | null;
   carMileageKm: number;
+  carBrandLogoPath: string | null;
   lastEventMileageKm: number | null;
   requestNotes: string | null;
   userName: string | null;
@@ -80,6 +82,7 @@ function toRentalDTO(row: RentalRow): RentalDTO {
       year: row.carYear ?? 0,
       licensePlate: row.carLicensePlate ?? "",
       dailyRate: Number(row.carDailyRate ?? 0),
+      brandLogoPath: row.carBrandLogoPath ?? null,
     },
     userId: row.rental.userId,
     userName: row.userName,
@@ -136,6 +139,7 @@ export async function getRentals(filters?: {
       carLicensePlate: cars.licensePlate,
       carDailyRate: cars.dailyRate,
       carMileageKm: cars.mileageKm,
+      carBrandLogoPath: brands.logoPath,
       lastEventMileageKm: sql<number | null>`(
         SELECT mileage_km FROM rental_events
         WHERE rental_id = ${rentals.id}
@@ -155,6 +159,7 @@ export async function getRentals(filters?: {
     })
     .from(rentals)
     .innerJoin(cars, eq(rentals.carId, cars.id))
+    .leftJoin(brands, eq(cars.brandId, brands.id))
     .leftJoin(userRef, eq(rentals.userId, userRef.id))
     .leftJoin(agentRef, eq(rentals.agentId, agentRef.id))
     .where(conditions.length > 0 ? and(...conditions) : undefined)
@@ -174,6 +179,7 @@ export async function getRentalById(id: string): Promise<RentalDTO | null> {
       carLicensePlate: cars.licensePlate,
       carDailyRate: cars.dailyRate,
       carMileageKm: cars.mileageKm,
+      carBrandLogoPath: brands.logoPath,
       lastEventMileageKm: sql<number | null>`(
         SELECT mileage_km FROM rental_events
         WHERE rental_id = ${rentals.id}
@@ -193,6 +199,7 @@ export async function getRentalById(id: string): Promise<RentalDTO | null> {
     })
     .from(rentals)
     .innerJoin(cars, eq(rentals.carId, cars.id))
+    .leftJoin(brands, eq(cars.brandId, brands.id))
     .leftJoin(userRef, eq(rentals.userId, userRef.id))
     .leftJoin(agentRef, eq(rentals.agentId, agentRef.id))
     .where(eq(rentals.id, id))

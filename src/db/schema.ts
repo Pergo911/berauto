@@ -37,6 +37,14 @@ export const carStatusEnum = pgEnum("car_status", [
   "UNAVAILABLE",
 ]);
 
+// ── Brands ──────────────────────────────────────────────
+
+export const brands = pgTable("brands", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: varchar("name", { length: 100 }).notNull().unique(),
+  logoPath: varchar("logo_path", { length: 255 }).notNull(),
+});
+
 // ── Users ──────────────────────────────────────────────
 
 export const users = pgTable("users", {
@@ -65,6 +73,7 @@ export const cars = pgTable(
     mileageKm: integer("mileage_km").notNull().default(0),
     dailyRate: numeric("daily_rate", { precision: 10, scale: 2 }).notNull(),
     status: carStatusEnum("status").notNull().default("AVAILABLE"),
+    brandId: uuid("brand_id").references(() => brands.id),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

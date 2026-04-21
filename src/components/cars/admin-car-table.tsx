@@ -17,7 +17,9 @@ import {
 import { Eye, Plus, Settings2 } from "lucide-react";
 
 import type { CarDTO } from "@/lib/data/cars";
+import type { BrandDTO } from "@/lib/data/brands";
 import { formatCurrency } from "@/lib/utils";
+import { BrandLogo } from "@/components/cars/brand-logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -62,6 +64,7 @@ import { DataTablePagination } from "@/components/shared/data-table-pagination";
 
 type AdminCarTableProps = {
   cars: CarDTO[];
+  brands: BrandDTO[];
 };
 
 const COLUMN_LABELS: Record<string, string> = {
@@ -90,9 +93,15 @@ function getColumns(): ColumnDef<CarDTO>[] {
         <DataTableColumnHeader column={column} title="Make / Model" />
       ),
       cell: ({ row }) => (
-        <span className="font-medium">
+        <div className="flex items-center gap-2 font-medium">
+          <BrandLogo
+            logoPath={row.original.brandLogoPath}
+            brandName={row.original.make}
+            size={24}
+            className="shrink-0"
+          />
           {row.original.make} {row.original.model}
-        </span>
+        </div>
       ),
     },
     {
@@ -145,7 +154,7 @@ function getColumns(): ColumnDef<CarDTO>[] {
   ];
 }
 
-export function AdminCarTable({ cars }: AdminCarTableProps) {
+export function AdminCarTable({ cars, brands }: AdminCarTableProps) {
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState<CarDTO | null>(null);
 
@@ -203,7 +212,7 @@ export function AdminCarTable({ cars }: AdminCarTableProps) {
               Fill in the details to add a new car to the fleet.
             </DialogDescription>
           </DialogHeader>
-          <CarForm onSuccess={() => setCreateOpen(false)} />
+          <CarForm brands={brands} onSuccess={() => setCreateOpen(false)} />
         </DialogContent>
       </Dialog>
 
@@ -211,6 +220,7 @@ export function AdminCarTable({ cars }: AdminCarTableProps) {
       {selectedCar && (
         <CarDetailDialog
           car={selectedCar}
+          brands={brands}
           open={!!selectedCar}
           onOpenChange={(open) => {
             if (!open) setSelectedCar(null);

@@ -28,6 +28,7 @@ export const createCarSchema = z.object({
   mileageKm: z.coerce.number().int().min(0).default(0),
   dailyRate: z.coerce.number().positive("Daily rate must be positive"),
   status: carStatusEnum.default("AVAILABLE"),
+  brandId: z.string().uuid().nullish(),
 });
 
 export type CreateCarInput = z.infer<typeof createCarSchema>;

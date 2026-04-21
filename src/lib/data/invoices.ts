@@ -3,7 +3,7 @@ import { alias } from "drizzle-orm/pg-core";
 
 import type { RentalStatus } from "@/types";
 import { db } from "@/db";
-import { cars, invoices, rentals, users } from "@/db/schema";
+import { brands, cars, invoices, rentals, users } from "@/db/schema";
 import type { InvoicePDFData } from "@/components/invoices/invoice-pdf";
 
 // ── Table alias ────────────────────────────────────────
@@ -31,6 +31,7 @@ export type InvoiceDTO = {
     model: string;
     year: number;
     licensePlate: string;
+    brandLogoPath: string | null;
   };
 };
 
@@ -43,6 +44,7 @@ export type ClosedRentalWithoutInvoiceDTO = {
     year: number;
     licensePlate: string;
     dailyRate: number;
+    brandLogoPath: string | null;
   };
   userId: string | null;
   userName: string | null;
@@ -83,11 +85,13 @@ export async function getInvoices(filters?: {
       carModel: cars.model,
       carYear: cars.year,
       carLicensePlate: cars.licensePlate,
+      carBrandLogoPath: brands.logoPath,
       issuerName: issuerRef.name,
     })
     .from(invoices)
     .innerJoin(rentals, eq(invoices.rentalId, rentals.id))
     .innerJoin(cars, eq(rentals.carId, cars.id))
+    .leftJoin(brands, eq(cars.brandId, brands.id))
     .leftJoin(issuerRef, eq(invoices.issuedBy, issuerRef.id))
     .where(conditions.length > 0 ? and(...conditions) : undefined)
     .orderBy(desc(invoices.issuedAt));
@@ -111,6 +115,7 @@ export async function getInvoices(filters?: {
       model: r.carModel,
       year: r.carYear,
       licensePlate: r.carLicensePlate,
+      brandLogoPath: r.carBrandLogoPath ?? null,
     },
   }));
 }
@@ -138,6 +143,7 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
       carYear: cars.year,
       carLicensePlate: cars.licensePlate,
       carDailyRate: cars.dailyRate,
+      carBrandLogoPath: brands.logoPath,
       invoiceId: invoices.id,
       userName: users.name,
       userEmail: users.email,
@@ -150,6 +156,7 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
     })
     .from(rentals)
     .innerJoin(cars, eq(rentals.carId, cars.id))
+    .leftJoin(brands, eq(cars.brandId, brands.id))
     .leftJoin(invoices, eq(rentals.id, invoices.rentalId))
     .leftJoin(users, eq(rentals.userId, users.id))
     .where(and(eq(rentals.status, "CLOSED"), isNull(invoices.id)))
@@ -164,6 +171,7 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
       year: r.carYear,
       licensePlate: r.carLicensePlate,
       dailyRate: Number(r.carDailyRate),
+      brandLogoPath: r.carBrandLogoPath ?? null,
     },
     userId: r.rental.userId,
     userName: r.userName ?? null,

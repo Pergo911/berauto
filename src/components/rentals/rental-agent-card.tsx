@@ -5,6 +5,7 @@ import type { RentalDTO } from "@/lib/data/rentals";
 import { formatDate } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { BrandLogo } from "@/components/cars/brand-logo";
 import { RentalStatusBadge } from "@/components/rentals/rental-status-badge";
 import { NoteDisplay } from "@/components/rentals/note-display";
 
@@ -21,8 +22,17 @@ export function RentalAgentCard({ rental, action }: RentalAgentCardProps) {
     <Card className="border-border/60 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_50%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(240,253,250,0.95))] dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_50%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(17,24,39,0.95))]">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">
-            <Car className="mr-1.5 inline-block size-4 text-muted-foreground" />
+          <CardTitle className="flex items-center gap-2 text-base">
+            {rental.car.brandLogoPath ? (
+              <BrandLogo
+                logoPath={rental.car.brandLogoPath}
+                brandName={rental.car.make}
+                size={20}
+                className="shrink-0"
+              />
+            ) : (
+              <Car className="size-4 shrink-0 text-muted-foreground" />
+            )}
             {rental.car.make} {rental.car.model} ({rental.car.year})
           </CardTitle>
           <RentalStatusBadge status={rental.status} />

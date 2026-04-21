@@ -16,7 +16,7 @@ import {
 
 import type { CarStatus } from "@/types";
 import { db } from "@/db";
-import { cars, rentals } from "@/db/schema";
+import { cars, rentals, brands } from "@/db/schema";
 
 // ── DTO ────────────────────────────────────────────────
 
@@ -29,6 +29,8 @@ export type CarDTO = {
   mileageKm: number;
   dailyRate: number;
   status: CarStatus;
+  brandId: string | null;
+  brandLogoPath: string | null;
   /** True when at least one ACTIVE or APPROVED rental exists for this car. */
   inUse: boolean;
   createdAt: Date;
@@ -47,10 +49,13 @@ const inUseExpr = sql<boolean>`exists (
 )`;
 
 /** Convert a raw query result row to a page-ready DTO (numeric → number). */
-function toCarDTO(row: typeof cars.$inferSelect & { inUse: boolean }): CarDTO {
+function toCarDTO(
+  row: typeof cars.$inferSelect & { inUse: boolean; brandLogoPath: string | null }
+): CarDTO {
   return {
     ...row,
     dailyRate: Number(row.dailyRate),
+    brandLogoPath: row.brandLogoPath,
   };
 }
 
@@ -115,8 +120,9 @@ export async function getCars(filters?: {
   }
 
   const rows = await db
-    .select({ ...getTableColumns(cars), inUse: inUseExpr })
+    .select({ ...getTableColumns(cars), inUse: inUseExpr, brandLogoPath: brands.logoPath })
     .from(cars)
+    .leftJoin(brands, eq(cars.brandId, brands.id))
     .where(conditions.length > 0 ? and(...conditions) : undefined)
     .orderBy(orderBy);
 
@@ -133,8 +139,9 @@ export async function getCarById(
     conditions.push(isNull(cars.deletedAt));
   }
   const [row] = await db
-    .select({ ...getTableColumns(cars), inUse: inUseExpr })
+    .select({ ...getTableColumns(cars), inUse: inUseExpr, brandLogoPath: brands.logoPath })
     .from(cars)
+    .leftJoin(brands, eq(cars.brandId, brands.id))
     .where(and(...conditions))
     .limit(1);
   return row ? toCarDTO(row) : null;

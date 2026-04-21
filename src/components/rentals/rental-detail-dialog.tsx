@@ -31,6 +31,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { BrandLogo } from "@/components/cars/brand-logo";
 import { RentalStatusBadge } from "@/components/rentals/rental-status-badge";
 
 // ── Types ──────────────────────────────────────────────
@@ -270,7 +271,15 @@ export function RentalDetailDialog({
         <DialogHeader>
           <div className="flex items-center gap-2">
             <DialogTitle className="flex items-center gap-2">
-              <Car className="size-5 text-muted-foreground" />
+              {rental.car.brandLogoPath ? (
+                <BrandLogo
+                  logoPath={rental.car.brandLogoPath}
+                  brandName={rental.car.make}
+                  size={20}
+                />
+              ) : (
+                <Car className="size-5 text-muted-foreground" />
+              )}
               {rental.car.make} {rental.car.model} ({rental.car.year})
             </DialogTitle>
             <RentalStatusBadge status={rental.status} />

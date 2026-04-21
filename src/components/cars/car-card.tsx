@@ -9,6 +9,7 @@ import {
   CarInUseBadge,
   CarStatusBadge,
 } from "@/components/cars/car-status-badge";
+import { BrandLogo } from "@/components/cars/brand-logo";
 
 type CarCardProps = {
   car: CarDTO;
@@ -21,9 +22,17 @@ export function CarCard({ car, bookable }: CarCardProps) {
     <Card className={cn("flex flex-col", unavailable && "opacity-70")}>
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-lg">
-            {car.make} {car.model}
-          </CardTitle>
+          <div className="flex items-center gap-3">
+            <BrandLogo
+              logoPath={car.brandLogoPath}
+              brandName={car.make}
+              size={36}
+              className="shrink-0"
+            />
+            <CardTitle className="text-lg">
+              {car.make} {car.model}
+            </CardTitle>
+          </div>
           {unavailable &&
             (car.inUse ? (
               <CarInUseBadge />

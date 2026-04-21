@@ -8,7 +8,9 @@ import type { Resolver } from "react-hook-form";
 import { toast } from "sonner";
 
 import type { CarDTO } from "@/lib/data/cars";
+import type { BrandDTO } from "@/lib/data/brands";
 import { createCarSchema, type CreateCarInput } from "@/lib/validations/cars";
+import { BrandLogo } from "@/components/cars/brand-logo";
 import { createCar, updateCar } from "@/actions/cars";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,10 +32,11 @@ import {
 
 type CarFormProps = {
   car?: CarDTO;
+  brands: BrandDTO[];
   onSuccess?: () => void;
 };
 
-export function CarForm({ car, onSuccess }: CarFormProps) {
+export function CarForm({ car, brands, onSuccess }: CarFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -47,6 +50,7 @@ export function CarForm({ car, onSuccess }: CarFormProps) {
       mileageKm: car?.mileageKm ?? 0,
       dailyRate: car?.dailyRate ?? 0,
       status: car?.status ?? "AVAILABLE",
+      brandId: car?.brandId ?? undefined,
     },
   });
 
@@ -71,7 +75,56 @@ export function CarForm({ car, onSuccess }: CarFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
-        <div className="grid gap-4 sm:grid-cols-2">
+        {/* Row 1: Brand (auto) | Make | Model */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-[auto_1fr_1fr]">
+          <FormField
+            control={form.control}
+            name="brandId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Brand</FormLabel>
+                <Select
+                  onValueChange={(brandId) => {
+                    field.onChange(brandId || undefined);
+                    const brand = brands.find((b) => b.id === brandId);
+                    if (brand) {
+                      form.setValue("make", brand.name, {
+                        shouldValidate: true,
+                      });
+                    }
+                  }}
+                  value={field.value ?? ""}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full sm:w-auto">
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <SelectValue placeholder="Select…" />
+                      </div>
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="max-h-60">
+                    {brands.map((brand) => (
+                      <SelectItem
+                        key={brand.id}
+                        value={brand.id}
+                        textValue={brand.name}
+                      >
+                        <div className="flex items-center gap-2">
+                          <BrandLogo
+                            logoPath={brand.logoPath}
+                            brandName={brand.name}
+                            size={20}
+                          />
+                          {brand.name}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="make"
@@ -100,7 +153,8 @@ export function CarForm({ car, onSuccess }: CarFormProps) {
           />
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        {/* Row 2: Year | License Plate | Mileage */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <FormField
             control={form.control}
             name="year"
@@ -127,9 +181,6 @@ export function CarForm({ car, onSuccess }: CarFormProps) {
               </FormItem>
             )}
           />
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="mileageKm"
@@ -143,21 +194,24 @@ export function CarForm({ car, onSuccess }: CarFormProps) {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="dailyRate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Daily Rate (HUF)</FormLabel>
-                <FormControl>
-                  <Input type="number" step="1" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
 
+        {/* Row 3: Daily Rate */}
+        <FormField
+          control={form.control}
+          name="dailyRate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Daily Rate (HUF)</FormLabel>
+              <FormControl>
+                <Input type="number" step="1" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Row 4: Status */}
         <FormField
           control={form.control}
           name="status"

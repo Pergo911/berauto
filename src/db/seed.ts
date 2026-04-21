@@ -41,11 +41,12 @@ async function seed() {
 
   // ── 1. Clean all data (in FK order) ──────────────────
 
-  console.log("  Clearing invoices, rental_events, rentals, cars, users…");
+  console.log("  Clearing invoices, rental_events, rentals, cars, brands, users…");
   await db.delete(schema.invoices);
   await db.delete(schema.rentalEvents);
   await db.delete(schema.rentals);
   await db.delete(schema.cars);
+  await db.delete(schema.brands);  // add this line
   await db.delete(schema.users);
 
   // ── 2. Insert users ─────────────────────────────────
@@ -108,7 +109,44 @@ async function seed() {
 
   console.log(`  Created ${insertedUsers.length} users`);
 
-  // ── 3. Insert cars ───────────────────────────────────
+  // ── 3. Insert brands ─────────────────────────────────
+
+  console.log("  Inserting brands…");
+
+  const insertedBrands = await db
+    .insert(schema.brands)
+    .values([
+      { name: "Audi", logoPath: "/brands/audi.svg" },
+      { name: "BMW", logoPath: "/brands/bmw.svg" },
+      { name: "Citroën", logoPath: "/brands/citroen.svg" },
+      { name: "Fiat", logoPath: "/brands/fiat.svg" },
+      { name: "Ford", logoPath: "/brands/ford.svg" },
+      { name: "Honda", logoPath: "/brands/honda.svg" },
+      { name: "Hyundai", logoPath: "/brands/hyundai.svg" },
+      { name: "Kia", logoPath: "/brands/kia.svg" },
+      { name: "Mazda", logoPath: "/brands/mazda.svg" },
+      { name: "Mercedes-Benz", logoPath: "/brands/mercedes-benz.svg" },
+      { name: "Nissan", logoPath: "/brands/nissan.svg" },
+      { name: "Opel", logoPath: "/brands/opel.svg" },
+      { name: "Peugeot", logoPath: "/brands/peugeot.svg" },
+      { name: "Renault", logoPath: "/brands/renault.svg" },
+      { name: "SEAT", logoPath: "/brands/seat.svg" },
+      { name: "Škoda", logoPath: "/brands/skoda.svg" },
+      { name: "Suzuki", logoPath: "/brands/suzuki.svg" },
+      { name: "Toyota", logoPath: "/brands/toyota.svg" },
+      { name: "Volkswagen", logoPath: "/brands/volkswagen.svg" },
+      { name: "Volvo", logoPath: "/brands/volvo.svg" },
+    ])
+    .returning();
+
+  const brandByName = (name: string) => {
+    const brand = insertedBrands.find((b) => b.name === name);
+    return brand?.id ?? null;
+  };
+
+  console.log(`  Created ${insertedBrands.length} brands`);
+
+  // ── 4. Insert cars ───────────────────────────────────
 
   console.log("  Inserting cars…");
 
@@ -121,6 +159,7 @@ async function seed() {
       mileageKm: 15_000,
       dailyRate: "8500.00",
       status: "AVAILABLE",
+      brandId: brandByName("Toyota"),
     },
     {
       make: "Volkswagen",
@@ -130,6 +169,7 @@ async function seed() {
       mileageKm: 8_000,
       dailyRate: "12000.00",
       status: "AVAILABLE",
+      brandId: brandByName("Volkswagen"),
     },
     {
       make: "BMW",
@@ -139,6 +179,7 @@ async function seed() {
       mileageKm: 32_000,
       dailyRate: "18000.00",
       status: "AVAILABLE",
+      brandId: brandByName("BMW"),
     },
     {
       make: "Audi",
@@ -148,6 +189,7 @@ async function seed() {
       mileageKm: 5_200,
       dailyRate: "22000.00",
       status: "AVAILABLE",
+      brandId: brandByName("Audi"),
     },
     {
       make: "Mercedes-Benz",
@@ -157,6 +199,7 @@ async function seed() {
       mileageKm: 18_700,
       dailyRate: "25000.00",
       status: "AVAILABLE",
+      brandId: brandByName("Mercedes-Benz"),
     },
     {
       make: "Opel",
@@ -166,6 +209,7 @@ async function seed() {
       mileageKm: 54_300,
       dailyRate: "7000.00",
       status: "AVAILABLE",
+      brandId: brandByName("Opel"),
     },
     {
       make: "Škoda",
@@ -175,6 +219,7 @@ async function seed() {
       mileageKm: 1_200,
       dailyRate: "14000.00",
       status: "AVAILABLE",
+      brandId: brandByName("Škoda"),
     },
     {
       make: "Ford",
@@ -184,6 +229,7 @@ async function seed() {
       mileageKm: 78_600,
       dailyRate: "6500.00",
       status: "MAINTENANCE",
+      brandId: brandByName("Ford"),
     },
     {
       make: "Renault",
@@ -193,6 +239,7 @@ async function seed() {
       mileageKm: 41_000,
       dailyRate: "9000.00",
       status: "UNAVAILABLE",
+      brandId: brandByName("Renault"),
     },
     {
       make: "Suzuki",
@@ -202,6 +249,7 @@ async function seed() {
       mileageKm: 12_400,
       dailyRate: "11000.00",
       status: "AVAILABLE",
+      brandId: brandByName("Suzuki"),
     },
   ];
 
