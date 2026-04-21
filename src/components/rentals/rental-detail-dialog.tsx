@@ -6,7 +6,9 @@ import {
   Car,
   CheckCircle2,
   Clock,
+  Download,
   Eye,
+  FileText,
   Loader2,
   Mail,
   MessageSquare,
@@ -27,6 +29,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { RentalStatusBadge } from "@/components/rentals/rental-status-badge";
 
@@ -48,6 +51,11 @@ type DetailData = {
     phone: string | null;
   } | null;
   customerPhone: string | null;
+  invoice: {
+    id: string;
+    amount: number;
+    issuedAt: Date;
+  } | null;
 };
 
 // ── Event type config ──────────────────────────────────
@@ -371,6 +379,52 @@ export function RentalDetailDialog({
             <Separator />
           </>
         ) : null}
+
+        {/* Invoice Section */}
+        {rental.status === "CLOSED_INVOICED" && (
+          <>
+            <Separator />
+            <div className="space-y-2">
+              <h4 className="flex items-center gap-1.5 text-sm font-semibold">
+                <FileText className="size-3.5 text-muted-foreground" />
+                Invoice
+              </h4>
+              {loading ? (
+                <div className="flex items-center gap-2 py-2">
+                  <Loader2 className="size-4 animate-spin text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    Loading invoice…
+                  </span>
+                </div>
+              ) : details?.invoice ? (
+                <div className="flex items-center justify-between rounded-lg border bg-muted/30 p-3">
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium">
+                      {formatCurrency(details.invoice.amount)}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Issued {formatDate(details.invoice.issuedAt)}
+                    </p>
+                  </div>
+                  <Button asChild size="sm" variant="outline">
+                    <a
+                      href={`/api/invoices/${rental.id}/pdf`}
+                      download
+                      className="flex items-center gap-1.5"
+                    >
+                      <Download className="size-3.5" />
+                      Download PDF
+                    </a>
+                  </Button>
+                </div>
+              ) : (
+                <p className="text-sm italic text-muted-foreground">
+                  Invoice data unavailable.
+                </p>
+              )}
+            </div>
+          </>
+        )}
 
         {/* Status History */}
         <div className="space-y-3">

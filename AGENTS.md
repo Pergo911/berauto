@@ -76,13 +76,15 @@ src/
       users/             #   → /admin/users
     api/                 # Route Handlers
       auth/[...nextauth]/ #  → /api/auth/* (Auth.js)
+      invoices/[rentalId]/
+        pdf/             #   → /api/invoices/[rentalId]/pdf (GET: stream invoice PDF; auth required)
   components/
     ui/                  # shadcn/ui primitives (auto-generated, do not edit manually)
     shared/              # navbar, navbar-client, page-header, stat-card, empty-state, back-link, theme provider, theme toggle, sign-out button, action-feedback, data-table helpers
     auth/                # login and register forms
     cars/                # domain components for cars
     rentals/             # domain components for rentals
-    invoices/            # domain components for invoices
+    invoices/            # domain components for invoices (table, issue-button, invoice-pdf document)
     users/               # domain components for users (e.g. user-search)
   db/
     schema.ts            # Drizzle table definitions (single source of truth)
@@ -201,6 +203,17 @@ export async function approveRental(id: string): Promise<ActionResult<Rental>> {
   - `/dashboard/*` → requires any authenticated session
 - Always call `auth()` inside Server Actions to re-verify — middleware alone is not sufficient.
 - Passwords are hashed with `bcryptjs` (salt rounds: 12). Never store plaintext passwords.
+
+---
+
+## PDF Generation
+
+- Invoice PDFs are generated on-the-fly (no cloud storage) via `GET /api/invoices/[rentalId]/pdf`.
+- The PDF document component lives in `src/components/invoices/invoice-pdf.tsx`. It exports `InvoicePDFDocument` and the `InvoicePDFData` type. **No `"use client"` directive** — it is server-side only.
+- Rendering uses `renderToBuffer` from `@react-pdf/renderer` (v4). Always use built-in PDF fonts (`Helvetica`, `Helvetica-Bold`, etc.) — never register external fonts unless absolutely necessary.
+- `@react-pdf/renderer` is listed in `serverExternalPackages` in `next.config.ts` to prevent webpack from bundling it for the browser. **Do not remove this entry.**
+- Authorization in the PDF route: regular users may only download invoices for their own rentals; `agent` and `admin` roles can access all invoices.
+- Data for the PDF is fetched by `getInvoicePDFData(rentalId)` in `src/lib/data/invoices.ts`, which joins invoices → rentals → cars → customer user → issuer user in a single query.
 
 ---
 

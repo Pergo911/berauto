@@ -150,7 +150,6 @@ export const invoices = pgTable(
     issuedBy: uuid("issued_by")
       .notNull()
       .references(() => users.id),
-    pdfUrl: text("pdf_url"),
   },
   (table) => [index("invoices_issued_at_idx").on(table.issuedAt)]
 );

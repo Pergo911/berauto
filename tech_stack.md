@@ -116,7 +116,7 @@ rental_events
 
 invoices
   id, rental_id → rentals (unique),       ← one invoice per rental
-  amount, issued_at, issued_by → users, pdf_url
+  amount, issued_at, issued_by → users
 ```
 
 ---

@@ -8,6 +8,7 @@ import { cars, rentalEvents, rentals, users } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { isCarBookable, getConflictingPendingRentals } from "@/lib/data/cars";
 import { getRentalEvents, getRentalById } from "@/lib/data/rentals";
+import { getInvoiceByRentalId } from "@/lib/data/invoices";
 import { getUserById } from "@/lib/data/users";
 import {
   createRentalSchema,
@@ -471,6 +472,11 @@ export async function getRentalDetails(
       phone: string | null;
     } | null;
     customerPhone: string | null;
+    invoice: {
+      id: string;
+      amount: number;
+      issuedAt: Date;
+    } | null;
   }>
 > {
   const idParsed = idSchema.safeParse(rentalId);
@@ -514,8 +520,21 @@ export async function getRentalDetails(
     }
   }
 
+  const invoiceRecord = await getInvoiceByRentalId(rentalId);
+
   return {
     success: true,
-    data: { events, agentContact, customerPhone },
+    data: {
+      events,
+      agentContact,
+      customerPhone,
+      invoice: invoiceRecord
+        ? {
+            id: invoiceRecord.id,
+            amount: invoiceRecord.amount,
+            issuedAt: invoiceRecord.issuedAt,
+          }
+        : null,
+    },
   };
 }

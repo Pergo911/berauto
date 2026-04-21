@@ -62,7 +62,6 @@ export async function issueInvoice(
       amount,
       issuedBy: session.user.id,
       issuedAt: new Date(),
-      pdfUrl: null,
     })
     .returning({ id: invoices.id });
 

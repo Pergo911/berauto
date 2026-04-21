@@ -722,7 +722,6 @@ async function seed() {
       amount: "42500.00",
       issuedAt: daysAgo(25),
       issuedBy: agent.id,
-      pdfUrl: null,
     },
     // R7 — Opel Astra, 5 days × 7,000 Ft = 35,000 Ft
     {
@@ -730,7 +729,6 @@ async function seed() {
       amount: "35000.00",
       issuedAt: daysAgo(15),
       issuedBy: agent.id,
-      pdfUrl: null,
     },
     // R9 — Renault Mégane, 5 days × 9,000 Ft = 45,000 Ft
     {
@@ -738,7 +736,6 @@ async function seed() {
       amount: "45000.00",
       issuedAt: daysAgo(40),
       issuedBy: admin.id,
-      pdfUrl: null,
     },
     // R11 — Toyota Corolla, 5 days × 8,500 Ft = 42,500 Ft (Mária)
     {
@@ -746,7 +743,6 @@ async function seed() {
       amount: "42500.00",
       issuedAt: daysAgo(55),
       issuedBy: agent.id,
-      pdfUrl: null,
     },
   ];
 
