@@ -37,6 +37,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Image from "next/image";
 
 // ---------- Types ----------
 
@@ -255,7 +256,13 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Left: Logo + Panel Switcher */}
         <div className="flex items-center gap-1">
-          <Link href="/" className="text-xl font-bold">
+          <Link href="/" className="text-xl font-bold flex items-center gap-4">
+            <Image
+              src="/com-logo.png"
+              alt="Company logo"
+              width={42}
+              height={42}
+            />
             BerAuto
           </Link>
           {showPanelSwitcher && (
