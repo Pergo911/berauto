@@ -5,3 +5,10 @@ export const invoiceSearchSchema = z.object({
 });
 
 export type InvoiceSearchInput = z.infer<typeof invoiceSearchSchema>;
+
+export const issueInvoiceSchema = z.object({
+  rentalId: z.string().uuid(),
+  amount: z.number().positive().finite(),
+});
+
+export type IssueInvoiceInput = z.infer<typeof issueInvoiceSchema>;

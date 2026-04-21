@@ -4,20 +4,21 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
-import { invoices, rentals, cars } from "@/db/schema";
+import { invoices, rentals } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { idSchema } from "@/lib/validations/rentals";
+import { issueInvoiceSchema } from "@/lib/validations/invoices";
 
 type ActionResult<T> =
   | { success: true; data: T }
   | { success: false; error: string };
 
 export async function issueInvoice(
-  rentalId: string
+  rentalId: string,
+  customAmount: number
 ): Promise<ActionResult<{ id: string }>> {
-  const parsed = idSchema.safeParse(rentalId);
+  const parsed = issueInvoiceSchema.safeParse({ rentalId, amount: customAmount });
   if (!parsed.success) {
-    return { success: false, error: "Invalid ID" };
+    return { success: false, error: "Invalid input" };
   }
 
   const session = await auth();
@@ -52,22 +53,7 @@ export async function issueInvoice(
     return { success: false, error: "Invoice already exists for this rental" };
   }
 
-  const [car] = await db
-    .select({ dailyRate: cars.dailyRate })
-    .from(cars)
-    .where(eq(cars.id, rental.carId))
-    .limit(1);
-
-  if (!car) {
-    return { success: false, error: "Car not found" };
-  }
-
-  const startDate = new Date(rental.startDate);
-  const endDate = new Date(rental.endDate);
-  const days = Math.ceil(
-    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-  );
-  const amount = (parseFloat(car.dailyRate) * days).toFixed(2);
+  const amount = parsed.data.amount.toFixed(2);
 
   const [invoice] = await db
     .insert(invoices)
