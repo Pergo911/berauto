@@ -1,14 +1,14 @@
-export { auth as proxy } from "@/lib/auth";
+import createMiddleware from 'next-intl/middleware';
+
+import {auth} from '@/lib/auth';
+import {routing} from '@/i18n/routing';
+
+const intlMiddleware = createMiddleware(routing);
+
+export default auth((request) => intlMiddleware(request));
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon)
-     * - public folder assets
-     */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

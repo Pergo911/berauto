@@ -1,0 +1,248 @@
+{
+  "Navbar": {
+    "companyLogoAlt": "Céglogó",
+    "panel": {
+      "userMode": "Felhasználói mód",
+      "agentMode": "Ügyintézői mód",
+      "adminMode": "Admin mód"
+    },
+    "routes": {
+      "home": "Főoldal",
+      "dashboard": "Irányítópult",
+      "overview": "Áttekintés",
+      "requests": "Kérelmek",
+      "activeRentals": "Aktív bérlések",
+      "invoices": "Számlák",
+      "cars": "Autók",
+      "users": "Felhasználók"
+    },
+    "actions": {
+      "login": "Bejelentkezés",
+      "signOut": "Kijelentkezés"
+    },
+    "theme": {
+      "light": "Világos",
+      "dark": "Sötét",
+      "system": "Rendszer"
+    },
+    "language": {
+      "label": "Nyelv",
+      "hu": "Magyar",
+      "en": "Angol"
+    }
+  },
+  "HomePage": {
+    "hero": {
+      "badge": "Friss autók hétköznapokra és kiruccanásokhoz",
+      "title": "Indulj útnak egy olyan autóval, amit valóban neked választottak.",
+      "description": "A BerAuto gyors és letisztult böngészést ad: másodpercek alatt szűrhetsz a flottában, és egyszerűen küldhetsz bérlési kérelmet.",
+      "exploreButton": "Flotta böngészése",
+      "openDashboardButton": "Irányítópult megnyitása",
+      "createAccountButton": "Fiók létrehozása"
+    },
+    "stats": {
+      "carsShown": "megjelenített autó",
+      "live": "Élő",
+      "fast": "Gyors",
+      "fastDescription": "keresés, rendezés, kérelem",
+      "fleetFull": "teljes flotta látható",
+      "fleetAvailableOnly": "csak elérhető autók"
+    },
+    "promo": {
+      "whyLabel": "Miért működik a BerAuto",
+      "title": "Tisztább élmény a következő autó kiválasztásához.",
+      "badge": "Igény szerint"
+    },
+    "highlights": {
+      "cityLineup": {
+        "title": "Városi kínálat",
+        "description": "Kompakt modellek, tágas SUV-k és megbízható mindennapi autók."
+      },
+      "simpleBooking": {
+        "title": "Egyszerű foglalási folyamat",
+        "description": "Válassz autót, küldj kérelmet, és intézz mindent egy helyen."
+      },
+      "clearDetails": {
+        "title": "Átlátható részletek",
+        "description": "Egyértelmű árak és státuszok, mielőtt döntesz."
+      }
+    },
+    "fleet": {
+      "label": "Flottaválasztás",
+      "title": "Elérhető autók",
+      "description": "Szűrj típus, ár, futásteljesítmény vagy elérhetőség szerint, hogy gyorsabban megtaláld a megfelelőt.",
+      "empty": "Nincs találat a megadott szűrők mellett."
+    },
+    "footer": "BerAuto Autóbérlés {year}"
+  },
+  "Auth": {
+    "loginPage": {
+      "title": "Üdv újra",
+      "description": "Jelentkezz be a fiókodba a bérlések kezeléséhez",
+      "noAccount": "Még nincs fiókod?",
+      "register": "Regisztráció"
+    },
+    "registerPage": {
+      "title": "Fiók létrehozása",
+      "description": "Regisztrálj az autóbérlés megkezdéséhez",
+      "hasAccount": "Már van fiókod?",
+      "signIn": "Bejelentkezés"
+    },
+    "forms": {
+      "nameLabel": "Név",
+      "emailLabel": "Email",
+      "passwordLabel": "Jelszó",
+      "confirmPasswordLabel": "Jelszó megerősítése",
+      "signIn": "Bejelentkezés",
+      "createAccount": "Fiók létrehozása",
+      "errors": {
+        "invalidCredentials": "Hibás email vagy jelszó",
+        "generic": "Valami hiba történt. Kérjük, próbáld újra."
+      }
+    }
+  },
+  "Dashboard": {
+    "title": "Irányítópult",
+    "welcomeBack": "Üdv újra, {name}",
+    "rentButton": "Autóbérlés",
+    "myRentals": "Bérléseim",
+    "stats": {
+      "totalRentals": {
+        "title": "Összes bérlés",
+        "description": "A teljes bérlési előzményeid."
+      },
+      "activeRentals": {
+        "title": "Aktív bérlések",
+        "description": "Jelenleg futó bérlések."
+      },
+      "pendingRequests": {
+        "title": "Függő kérelmek",
+        "description": "Jóváhagyásra váró bérlések."
+      }
+    }
+  },
+  "Agent": {
+    "dashboard": {
+      "title": "Ügyintézői irányítópult",
+      "rentalHistory": "Bérlési előzmények",
+      "cards": {
+        "requests": {
+          "title": "Kérelmek",
+          "description": "Bérlési kérelmek kezelése",
+          "subLabel": "jelenleg függő"
+        },
+        "rentals": {
+          "title": "Bérlések",
+          "description": "Aktív bérlések kezelése",
+          "subLabel": "aktív bérlés"
+        },
+        "invoices": {
+          "title": "Számlák",
+          "description": "Bérleti számlák kezelése",
+          "subLabel": "számlázatlan bérlés"
+        }
+      }
+    },
+    "requests": {
+      "backToDashboard": "Vissza az irányítópultra",
+      "title": "Bérlési kérelmek",
+      "emptyPending": "Nincs függő kérelem",
+      "pastRequests": "Korábbi kérelmek"
+    },
+    "active": {
+      "backToDashboard": "Vissza az irányítópultra",
+      "title": "Aktív bérlések",
+      "awaitingHandover": "Átadásra vár",
+      "emptyAwaiting": "Nincs átadásra váró bérlés",
+      "currentlyActive": "Jelenleg aktív",
+      "emptyActive": "Nincs aktív bérlés",
+      "pastRentals": "Korábbi bérlések"
+    },
+    "invoices": {
+      "backToDashboard": "Vissza az irányítópultra",
+      "title": "Számlák",
+      "awaitingInvoice": "Számlára vár",
+      "allInvoiced": "Minden lezárt bérlés számlázva lett",
+      "issuedInvoices": "Kiállított számlák",
+      "guest": "Vendég",
+      "start": "Kezdet",
+      "end": "Vége",
+      "dailyLine": "{days} nap × {rate}/nap",
+      "returnNotes": "Visszavételi megjegyzések"
+    }
+  },
+  "Admin": {
+    "dashboard": {
+      "title": "Admin irányítópult",
+      "overview": "Áttekintés",
+      "navCards": {
+        "cars": {
+          "title": "Autók",
+          "description": "Flotta kezelése",
+          "subLabel": "összes jármű"
+        },
+        "users": {
+          "title": "Felhasználók",
+          "description": "Felhasználók és ügyintézők kezelése",
+          "subLabel": "regisztrált felhasználó"
+        }
+      },
+      "stats": {
+        "totalCars": {"title": "Összes autó", "description": "A flottában lévő járművek"},
+        "availableCars": {"title": "Elérhető autók", "description": "Bérlésre kész"},
+        "maintenance": {"title": "Szerviz", "description": "Szerviz alatt lévő autók"},
+        "totalRentals": {"title": "Összes bérlés", "description": "Minden eddigi bérlés"},
+        "pendingRentals": {"title": "Függő bérlések", "description": "Jóváhagyásra vár"},
+        "activeRentals": {"title": "Aktív bérlések", "description": "Jelenleg fut"},
+        "totalInvoices": {"title": "Összes számla", "description": "Kiállított számlák"},
+        "revenue": {"title": "Bevétel", "description": "Összes számlázott összeg"},
+        "users": {"title": "Felhasználók", "description": "Regisztrált felhasználók"},
+        "agents": {"title": "Ügyintézők", "description": "Ügyintézői fiókok"}
+      }
+    },
+    "carsPage": {
+      "backToDashboard": "Vissza az irányítópultra",
+      "title": "Autókezelés"
+    },
+    "usersPage": {
+      "backToDashboard": "Vissza az irányítópultra",
+      "title": "Felhasználókezelés",
+      "staffTitle": "Személyzet (Adminok és Ügyintézők)",
+      "members": "{count} tag",
+      "usersTitle": "Felhasználók",
+      "usersCount": "{count} felhasználó"
+    }
+  },
+  "CarDetail": {
+    "backToCars": "Vissza az autókhoz",
+    "modelYear": "{year}-es modell",
+    "fields": {
+      "make": "Gyártó",
+      "model": "Modell",
+      "year": "Évjárat",
+      "licensePlate": "Rendszám",
+      "mileage": "Kilométeróra",
+      "added": "Hozzáadva",
+      "dailyRate": "Napi díj"
+    },
+    "perDay": "/nap",
+    "request": {
+      "title": "Bérlési kérelem",
+      "available": "Küldj bérlési kérelmet erre a járműre.",
+      "unavailable": "Ez a jármű jelenleg nem bérelhető.",
+      "currently": "Ez az autó jelenleg",
+      "underMaintenance": "szerviz alatt áll",
+      "unavailableStatus": "nem elérhető",
+      "checkBack": "Kérjük, nézz vissza később vagy böngéssz más elérhető járművek között.",
+      "browseCars": "Elérhető autók böngészése"
+    }
+  },
+  "Common": {
+    "notFound": {
+      "errorCode": "404-es hiba",
+      "title": "Nem található",
+      "description": "A keresett oldal nem létezik vagy áthelyezték. Visszairányítunk az útra.",
+      "backHome": "Vissza a főoldalra"
+    }
+  }
+}

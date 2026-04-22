@@ -1,0 +1,248 @@
+{
+  "Navbar": {
+    "companyLogoAlt": "Company logo",
+    "panel": {
+      "userMode": "User Mode",
+      "agentMode": "Agent Mode",
+      "adminMode": "Admin Mode"
+    },
+    "routes": {
+      "home": "Home",
+      "dashboard": "Dashboard",
+      "overview": "Overview",
+      "requests": "Requests",
+      "activeRentals": "Active Rentals",
+      "invoices": "Invoices",
+      "cars": "Cars",
+      "users": "Users"
+    },
+    "actions": {
+      "login": "Login",
+      "signOut": "Sign Out"
+    },
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "language": {
+      "label": "Language",
+      "hu": "Hungarian",
+      "en": "English"
+    }
+  },
+  "HomePage": {
+    "hero": {
+      "badge": "Fresh rides for workdays and getaways",
+      "title": "Catch the road in a car that feels chosen, not just booked.",
+      "description": "BerAuto keeps rental browsing fast and polished, with a fleet you can filter in seconds and request without friction.",
+      "exploreButton": "Explore the fleet",
+      "openDashboardButton": "Open dashboard",
+      "createAccountButton": "Create an account"
+    },
+    "stats": {
+      "carsShown": "cars shown",
+      "live": "Live",
+      "fast": "Fast",
+      "fastDescription": "search, sort, request",
+      "fleetFull": "entire fleet visible",
+      "fleetAvailableOnly": "available cars only"
+    },
+    "promo": {
+      "whyLabel": "Why BerAuto clicks",
+      "title": "A cleaner way to pick your next ride.",
+      "badge": "On demand"
+    },
+    "highlights": {
+      "cityLineup": {
+        "title": "City-smart lineup",
+        "description": "Compact commuters, roomy SUVs, and polished daily drivers."
+      },
+      "simpleBooking": {
+        "title": "Simple booking flow",
+        "description": "Pick a car, send a request, and keep everything in one place."
+      },
+      "clearDetails": {
+        "title": "Clear rental details",
+        "description": "Transparent rates and vehicle status before you commit."
+      }
+    },
+    "fleet": {
+      "label": "Fleet selection",
+      "title": "Available cars",
+      "description": "Narrow the list by model, price, mileage, or availability to find the right match faster.",
+      "empty": "No cars found matching your criteria."
+    },
+    "footer": "BerAuto Car Rental {year}"
+  },
+  "Auth": {
+    "loginPage": {
+      "title": "Welcome back",
+      "description": "Sign in to your account to manage rentals",
+      "noAccount": "Don't have an account?",
+      "register": "Register"
+    },
+    "registerPage": {
+      "title": "Create an account",
+      "description": "Register to start renting cars",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "forms": {
+      "nameLabel": "Name",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm password",
+      "signIn": "Sign in",
+      "createAccount": "Create account",
+      "errors": {
+        "invalidCredentials": "Invalid email or password",
+        "generic": "Something went wrong. Please try again."
+      }
+    }
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "welcomeBack": "Welcome back, {name}",
+    "rentButton": "Rent a Car",
+    "myRentals": "My Rentals",
+    "stats": {
+      "totalRentals": {
+        "title": "Total Rentals",
+        "description": "Your complete rental history."
+      },
+      "activeRentals": {
+        "title": "Active Rentals",
+        "description": "Currently active rentals."
+      },
+      "pendingRequests": {
+        "title": "Pending Requests",
+        "description": "Rentals awaiting approval."
+      }
+    }
+  },
+  "Agent": {
+    "dashboard": {
+      "title": "Agent Dashboard",
+      "rentalHistory": "Rental History",
+      "cards": {
+        "requests": {
+          "title": "Requests",
+          "description": "Manage rental requests",
+          "subLabel": "pending now"
+        },
+        "rentals": {
+          "title": "Rentals",
+          "description": "Manage active rentals",
+          "subLabel": "active rentals"
+        },
+        "invoices": {
+          "title": "Invoices",
+          "description": "View and manage rental invoices",
+          "subLabel": "uninvoiced rentals"
+        }
+      }
+    },
+    "requests": {
+      "backToDashboard": "Back to Dashboard",
+      "title": "Rental Requests",
+      "emptyPending": "No pending requests",
+      "pastRequests": "Past Requests"
+    },
+    "active": {
+      "backToDashboard": "Back to Dashboard",
+      "title": "Active Rentals",
+      "awaitingHandover": "Awaiting Handover",
+      "emptyAwaiting": "No rentals awaiting handover",
+      "currentlyActive": "Currently Active",
+      "emptyActive": "No active rentals",
+      "pastRentals": "Past Rentals"
+    },
+    "invoices": {
+      "backToDashboard": "Back to Dashboard",
+      "title": "Invoices",
+      "awaitingInvoice": "Awaiting Invoice",
+      "allInvoiced": "All closed rentals have been invoiced",
+      "issuedInvoices": "Issued Invoices",
+      "guest": "Guest",
+      "start": "Start",
+      "end": "End",
+      "dailyLine": "{days} day(s) × {rate}/day",
+      "returnNotes": "Return Notes"
+    }
+  },
+  "Admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "overview": "Overview",
+      "navCards": {
+        "cars": {
+          "title": "Cars",
+          "description": "Manage the vehicle fleet",
+          "subLabel": "total vehicles"
+        },
+        "users": {
+          "title": "Users",
+          "description": "Manage users and agents",
+          "subLabel": "registered users"
+        }
+      },
+      "stats": {
+        "totalCars": {"title": "Total Cars", "description": "Vehicles in the fleet"},
+        "availableCars": {"title": "Available Cars", "description": "Ready for rental"},
+        "maintenance": {"title": "Maintenance", "description": "Cars under maintenance"},
+        "totalRentals": {"title": "Total Rentals", "description": "All-time rentals"},
+        "pendingRentals": {"title": "Pending Rentals", "description": "Awaiting approval"},
+        "activeRentals": {"title": "Active Rentals", "description": "Currently ongoing"},
+        "totalInvoices": {"title": "Total Invoices", "description": "Invoices issued"},
+        "revenue": {"title": "Revenue", "description": "Total invoiced amount"},
+        "users": {"title": "Users", "description": "Registered users"},
+        "agents": {"title": "Agents", "description": "Agent accounts"}
+      }
+    },
+    "carsPage": {
+      "backToDashboard": "Back to Dashboard",
+      "title": "Car Management"
+    },
+    "usersPage": {
+      "backToDashboard": "Back to Dashboard",
+      "title": "User Management",
+      "staffTitle": "Staff (Admins & Agents)",
+      "members": "{count} member(s)",
+      "usersTitle": "Users",
+      "usersCount": "{count} user(s)"
+    }
+  },
+  "CarDetail": {
+    "backToCars": "Back to all cars",
+    "modelYear": "{year} model",
+    "fields": {
+      "make": "Make",
+      "model": "Model",
+      "year": "Year",
+      "licensePlate": "License plate",
+      "mileage": "Mileage",
+      "added": "Added",
+      "dailyRate": "Daily rate"
+    },
+    "perDay": "/day",
+    "request": {
+      "title": "Rental Request",
+      "available": "Submit a rental request for this vehicle.",
+      "unavailable": "This vehicle is currently not available for rental.",
+      "currently": "This car is currently",
+      "underMaintenance": "under maintenance",
+      "unavailableStatus": "unavailable",
+      "checkBack": "Please check back later or browse other available vehicles.",
+      "browseCars": "Browse Available Cars"
+    }
+  },
+  "Common": {
+    "notFound": {
+      "errorCode": "Error 404",
+      "title": "Not found",
+      "description": "The page you're looking for doesn't exist or has been moved. Let's get you back on the road.",
+      "backHome": "Back to Home"
+    }
+  }
+}

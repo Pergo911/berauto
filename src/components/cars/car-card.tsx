@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Calendar, Gauge, CreditCard, Eye } from "lucide-react";
 
 import type { CarDTO } from "@/lib/data/cars";
