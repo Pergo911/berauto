@@ -7,6 +7,8 @@ import {db} from '@/db';
 import {users} from '@/db/schema';
 
 import type {UserRole} from '@/types';
+import {hasLocale} from 'next-intl';
+
 import {routing} from '@/i18n/routing';
 
 declare module 'next-auth' {
@@ -32,8 +34,17 @@ declare module 'next-auth' {
 }
 
 function getLocaleFromPath(pathname: string) {
+  if (!pathname || pathname === '/') {
+    return routing.defaultLocale;
+  }
+
   const segment = pathname.split('/')[1];
-  return routing.locales.includes(segment as (typeof routing.locales)[number])
+
+  if (!segment) {
+    return routing.defaultLocale;
+  }
+
+  return hasLocale(routing.locales, segment)
     ? segment
     : routing.defaultLocale;
 }
@@ -47,6 +58,7 @@ function stripLocalePrefix(pathname: string) {
     return pathname.slice(prefixed.length);
   }
 
+  // Pathname does not start with a known locale prefix; return as-is.
   return pathname;
 }
 

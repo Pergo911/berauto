@@ -167,7 +167,7 @@
       "guest": "Guest",
       "start": "Start",
       "end": "End",
-      "dailyLine": "{days} day(s) × {rate}/day",
+      "dailyLine": "{days, plural, one {# day} other {# days}} × {rate}/day",
       "returnNotes": "Return Notes"
     }
   },
@@ -208,9 +208,9 @@
       "backToDashboard": "Back to Dashboard",
       "title": "User Management",
       "staffTitle": "Staff (Admins & Agents)",
-      "members": "{count} member(s)",
+      "members": "{count, plural, one {# member} other {# members}}",
       "usersTitle": "Users",
-      "usersCount": "{count} user(s)"
+      "usersCount": "{count, plural, one {# user} other {# users}}"
     }
   },
   "CarDetail": {

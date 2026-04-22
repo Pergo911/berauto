@@ -1,4 +1,5 @@
 import {Car, Clock, Loader} from 'lucide-react';
+import type {Session} from 'next-auth';
 import {getTranslations} from 'next-intl/server';
 
 import {auth} from '@/lib/auth';
@@ -10,6 +11,15 @@ import {StatCard} from '@/components/shared/stat-card';
 import {PageHeader} from '@/components/shared/page-header';
 import {RentalTable} from '@/components/rentals/rental-table';
 
+function ensureUser(
+  user: Session['user'] | undefined,
+  locale: string
+): asserts user is Session['user'] {
+  if (!user) {
+    redirect({href: '/login', locale});
+  }
+}
+
 export default async function DashboardPage({
   params,
 }: {
@@ -19,11 +29,13 @@ export default async function DashboardPage({
   const {locale} = await params;
 
   const session = await auth();
-  if (!session?.user) redirect({href: '/login', locale});
+  const user = session?.user;
+
+  ensureUser(user, locale);
 
   const [stats, rentals] = await Promise.all([
-    getUserDashboardStats(session.user.id),
-    getRentals({userId: session.user.id}),
+    getUserDashboardStats(user.id),
+    getRentals({userId: user.id}),
   ]);
 
   return (
@@ -32,7 +44,7 @@ export default async function DashboardPage({
         <div>
           <PageHeader title={t('title')} />
           <p className="text-sm font-medium uppercase tracking-[0.22em] text-primary">
-            {t('welcomeBack', {name: session.user.name})}
+            {t('welcomeBack', {name: user.name})}
           </p>
         </div>
         <Button asChild>

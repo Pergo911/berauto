@@ -167,7 +167,7 @@
       "guest": "Vendég",
       "start": "Kezdet",
       "end": "Vége",
-      "dailyLine": "{days} nap × {rate}/nap",
+      "dailyLine": "{days, plural, one {# nap} other {# nap}} × {rate}/nap",
       "returnNotes": "Visszavételi megjegyzések"
     }
   },
@@ -208,9 +208,9 @@
       "backToDashboard": "Vissza az irányítópultra",
       "title": "Felhasználókezelés",
       "staffTitle": "Személyzet (Adminok és Ügyintézők)",
-      "members": "{count} tag",
+      "members": "{count, plural, one {# tag} other {# tag}}",
       "usersTitle": "Felhasználók",
-      "usersCount": "{count} felhasználó"
+      "usersCount": "{count, plural, one {# felhasználó} other {# felhasználó}}"
     }
   },
   "CarDetail": {

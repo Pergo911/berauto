@@ -3,7 +3,7 @@ import {getLocale, getTranslations} from 'next-intl/server';
 
 import {auth} from '@/lib/auth';
 import {getBookedIntervals, getCarById} from '@/lib/data/cars';
-import {formatCurrency, formatDate} from '@/lib/utils';
+import {formatCurrency, formatDate, toIntlLocale} from '@/lib/utils';
 import {Link} from '@/i18n/navigation';
 import {Button} from '@/components/ui/button';
 import {
@@ -89,7 +89,7 @@ export default async function CarDetailPage({
                 <div>
                   <p className="text-sm text-muted-foreground">{t('fields.mileage')}</p>
                   <p className="font-medium">
-                    {car.mileageKm.toLocaleString(locale === 'hu' ? 'hu-HU' : 'en-US')} km
+                    {car.mileageKm.toLocaleString(toIntlLocale(locale))} km
                   </p>
                 </div>
                 <div>
