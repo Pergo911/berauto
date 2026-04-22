@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Maximize2, MessageSquare } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,9 @@ type NoteDisplayProps = {
   label?: string;
 };
 
-export function NoteDisplay({ notes, label = "Notes" }: NoteDisplayProps) {
+export function NoteDisplay({ notes, label }: NoteDisplayProps) {
+  const t = useTranslations("NoteDisplay");
+  const resolvedLabel = label ?? t("defaultLabel");
   const [open, setOpen] = useState(false);
 
   return (
@@ -26,7 +29,7 @@ export function NoteDisplay({ notes, label = "Notes" }: NoteDisplayProps) {
         <div className="flex items-center justify-between">
           <p className="flex items-center gap-1 text-xs text-muted-foreground">
             <MessageSquare className="size-3" />
-            {label}
+            {resolvedLabel}
           </p>
           {notes && (
             <Button
@@ -34,7 +37,7 @@ export function NoteDisplay({ notes, label = "Notes" }: NoteDisplayProps) {
               size="icon"
               className="size-5 text-muted-foreground hover:text-foreground"
               onClick={() => setOpen(true)}
-              aria-label={`Expand ${label}`}
+              aria-label={`Expand ${resolvedLabel}`}
             >
               <Maximize2 className="size-3" />
             </Button>
@@ -44,7 +47,7 @@ export function NoteDisplay({ notes, label = "Notes" }: NoteDisplayProps) {
           {notes ? (
             <p className="whitespace-pre-wrap">{notes}</p>
           ) : (
-            <p className="italic">No notes provided.</p>
+            <p className="italic">{t("noNotes")}</p>
           )}
         </div>
       </div>
@@ -54,7 +57,7 @@ export function NoteDisplay({ notes, label = "Notes" }: NoteDisplayProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
               <MessageSquare className="size-3" />
-              {label}
+              {resolvedLabel}
             </DialogTitle>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto rounded-md border bg-muted/40 px-2.5 py-2 text-xs text-muted-foreground">

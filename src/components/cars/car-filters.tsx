@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowUpDown, Search } from "lucide-react";
 
+import { useRouter, usePathname } from "@/i18n/navigation";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -16,6 +18,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 
 export function CarFilters() {
+  const t = useTranslations("CarFilters");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -35,7 +38,7 @@ export function CarFilters() {
       }
 
       const qs = params.toString();
-      router.replace(pathname + (qs ? `?${qs}` : ""), { scroll: false });
+      router.replace((pathname + (qs ? `?${qs}` : "")) as "/");
     },
     [router, pathname, searchParams]
   );
@@ -49,7 +52,7 @@ export function CarFilters() {
         params.delete("showUnavailable");
       }
       const qs = params.toString();
-      router.replace(pathname + (qs ? `?${qs}` : ""), { scroll: false });
+      router.replace((pathname + (qs ? `?${qs}` : "")) as "/");
     },
     [router, pathname, searchParams]
   );
@@ -60,7 +63,7 @@ export function CarFilters() {
         <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
         <Input
           className="pl-9"
-          placeholder="Search by make, model, or plate..."
+          placeholder={t("searchPlaceholder")}
           defaultValue={search}
           onChange={(e) => updateParams("search", e.target.value)}
         />
@@ -72,16 +75,16 @@ export function CarFilters() {
       >
         <SelectTrigger className="w-full sm:w-[180px]">
           <ArrowUpDown className="size-4 text-muted-foreground" />
-          <SelectValue placeholder="Sort by" />
+          <SelectValue placeholder={t("sortPlaceholder")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="newest">Newest</SelectItem>
-          <SelectItem value="price-asc">Price ↑</SelectItem>
-          <SelectItem value="price-desc">Price ↓</SelectItem>
-          <SelectItem value="year-asc">Year ↑</SelectItem>
-          <SelectItem value="year-desc">Year ↓</SelectItem>
-          <SelectItem value="mileage-asc">Mileage ↑</SelectItem>
-          <SelectItem value="mileage-desc">Mileage ↓</SelectItem>
+          <SelectItem value="newest">{t("sortOptions.newest")}</SelectItem>
+          <SelectItem value="price-asc">{t("sortOptions.priceAsc")}</SelectItem>
+          <SelectItem value="price-desc">{t("sortOptions.priceDesc")}</SelectItem>
+          <SelectItem value="year-asc">{t("sortOptions.yearAsc")}</SelectItem>
+          <SelectItem value="year-desc">{t("sortOptions.yearDesc")}</SelectItem>
+          <SelectItem value="mileage-asc">{t("sortOptions.mileageAsc")}</SelectItem>
+          <SelectItem value="mileage-desc">{t("sortOptions.mileageDesc")}</SelectItem>
         </SelectContent>
       </Select>
 
@@ -92,9 +95,10 @@ export function CarFilters() {
           onCheckedChange={toggleShowUnavailable}
         />
         <Label htmlFor="show-unavailable" className="cursor-pointer">
-          Show unavailable
+          {t("showUnavailable")}
         </Label>
       </div>
     </div>
   );
 }
+

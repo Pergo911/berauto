@@ -8,9 +8,9 @@
     },
     "routes": {
       "home": "Főoldal",
-      "dashboard": "Irányítópult",
+      "dashboard": "Vezérlőpult",
       "overview": "Áttekintés",
-      "requests": "Kérelmek",
+      "requests": "Igénylések",
       "activeRentals": "Aktív bérlések",
       "invoices": "Számlák",
       "cars": "Autók",
@@ -33,34 +33,34 @@
   },
   "HomePage": {
     "hero": {
-      "badge": "Friss autók hétköznapokra és kiruccanásokhoz",
-      "title": "Indulj útnak egy olyan autóval, amit valóban neked választottak.",
-      "description": "A BerAuto gyors és letisztult böngészést ad: másodpercek alatt szűrhetsz a flottában, és egyszerűen küldhetsz bérlési kérelmet.",
-      "exploreButton": "Flotta böngészése",
-      "openDashboardButton": "Irányítópult megnyitása",
+      "badge": "Autók hétköznapokra és hétvégi kiruccanásokhoz",
+      "title": "Indulj el azzal az autóval, amit tényleg te szemeltél ki – ne csak az elsővel, ami épp szabad.",
+      "description": "A BerAuto gyors és letisztult böngészést kínál: válassz másodpercek alatt, és könnyedén add le igényed.",
+      "exploreButton": "A flottánk böngészése",
+      "openDashboardButton": "Vezérlőpult megnyitása",
       "createAccountButton": "Fiók létrehozása"
     },
     "stats": {
       "carsShown": "megjelenített autó",
       "live": "Élő",
       "fast": "Gyors",
-      "fastDescription": "keresés, rendezés, kérelem",
+      "fastDescription": "keresés, rendezés, igénylés",
       "fleetFull": "teljes flotta látható",
       "fleetAvailableOnly": "csak elérhető autók"
     },
     "promo": {
-      "whyLabel": "Miért működik a BerAuto",
-      "title": "Tisztább élmény a következő autó kiválasztásához.",
+      "whyLabel": "Miért a BerAuto?",
+      "title": "Egyszerűbb módja a következő autód megtalálásának.",
       "badge": "Igény szerint"
     },
     "highlights": {
       "cityLineup": {
-        "title": "Városi kínálat",
+        "title": "Városra hangolt kínálat",
         "description": "Kompakt modellek, tágas SUV-k és megbízható mindennapi autók."
       },
       "simpleBooking": {
-        "title": "Egyszerű foglalási folyamat",
-        "description": "Válassz autót, küldj kérelmet, és intézz mindent egy helyen."
+        "title": "Egyszerű kölcsönzési folyamat",
+        "description": "Válassz autót, add le az igénylést, és intézd mindent egy helyen."
       },
       "clearDetails": {
         "title": "Átlátható részletek",
@@ -68,9 +68,9 @@
       }
     },
     "fleet": {
-      "label": "Flottaválasztás",
+      "label": "Flottánk",
       "title": "Elérhető autók",
-      "description": "Szűrj típus, ár, futásteljesítmény vagy elérhetőség szerint, hogy gyorsabban megtaláld a megfelelőt.",
+      "description": "Szűrj modell, ár, kilométeróra vagy elérhetőség alapján",
       "empty": "Nincs találat a megadott szűrők mellett."
     },
     "footer": "BerAuto Autóbérlés {year}"
@@ -102,7 +102,7 @@
     }
   },
   "Dashboard": {
-    "title": "Irányítópult",
+    "title": "Vezérlőpult",
     "welcomeBack": "Üdv újra, {name}",
     "rentButton": "Autóbérlés",
     "myRentals": "Bérléseim",
@@ -117,19 +117,19 @@
       },
       "pendingRequests": {
         "title": "Függő kérelmek",
-        "description": "Jóváhagyásra váró bérlések."
+        "description": "Jóváhagyásra váró igénylések."
       }
     }
   },
   "Agent": {
     "dashboard": {
-      "title": "Ügyintézői irányítópult",
+      "title": "Ügyintézői vezérlőpult",
       "rentalHistory": "Bérlési előzmények",
       "cards": {
         "requests": {
-          "title": "Kérelmek",
-          "description": "Bérlési kérelmek kezelése",
-          "subLabel": "jelenleg függő"
+          "title": "Igénylések",
+          "description": "Kölcsönzési igények kezelése",
+          "subLabel": "jelenleg függőben"
         },
         "rentals": {
           "title": "Bérlések",
@@ -144,13 +144,13 @@
       }
     },
     "requests": {
-      "backToDashboard": "Vissza az irányítópultra",
-      "title": "Bérlési kérelmek",
-      "emptyPending": "Nincs függő kérelem",
-      "pastRequests": "Korábbi kérelmek"
+      "backToDashboard": "Vissza a vezérlőpultra",
+      "title": "Kölcsönzési igények",
+      "emptyPending": "Nincs függőben lévő igénylés",
+      "pastRequests": "Korábbi igénylések"
     },
     "active": {
-      "backToDashboard": "Vissza az irányítópultra",
+      "backToDashboard": "Vissza a vezérlőpultra",
       "title": "Aktív bérlések",
       "awaitingHandover": "Átadásra vár",
       "emptyAwaiting": "Nincs átadásra váró bérlés",
@@ -159,13 +159,13 @@
       "pastRentals": "Korábbi bérlések"
     },
     "invoices": {
-      "backToDashboard": "Vissza az irányítópultra",
+      "backToDashboard": "Vissza a vezérlőpultra",
       "title": "Számlák",
-      "awaitingInvoice": "Számlára vár",
-      "allInvoiced": "Minden lezárt bérlés számlázva lett",
+      "awaitingInvoice": "Számlázásra vár",
+      "allInvoiced": "Minden lezárt kölcsönzés számlázva van",
       "issuedInvoices": "Kiállított számlák",
       "guest": "Vendég",
-      "start": "Kezdet",
+      "start": "Kezdete",
       "end": "Vége",
       "dailyLine": "{days, plural, one {# nap} other {# nap}} × {rate}/nap",
       "returnNotes": "Visszavételi megjegyzések"
@@ -173,7 +173,7 @@
   },
   "Admin": {
     "dashboard": {
-      "title": "Admin irányítópult",
+      "title": "Admin vezérlőpult",
       "overview": "Áttekintés",
       "navCards": {
         "cars": {
@@ -188,26 +188,53 @@
         }
       },
       "stats": {
-        "totalCars": {"title": "Összes autó", "description": "A flottában lévő járművek"},
-        "availableCars": {"title": "Elérhető autók", "description": "Bérlésre kész"},
-        "maintenance": {"title": "Szerviz", "description": "Szerviz alatt lévő autók"},
-        "totalRentals": {"title": "Összes bérlés", "description": "Minden eddigi bérlés"},
-        "pendingRentals": {"title": "Függő bérlések", "description": "Jóváhagyásra vár"},
-        "activeRentals": {"title": "Aktív bérlések", "description": "Jelenleg fut"},
-        "totalInvoices": {"title": "Összes számla", "description": "Kiállított számlák"},
-        "revenue": {"title": "Bevétel", "description": "Összes számlázott összeg"},
-        "users": {"title": "Felhasználók", "description": "Regisztrált felhasználók"},
-        "agents": {"title": "Ügyintézők", "description": "Ügyintézői fiókok"}
+        "totalCars": {
+          "title": "Összes autó",
+          "description": "A flottában lévő járművek"
+        },
+        "availableCars": {
+          "title": "Elérhető autók",
+          "description": "Bérlésre kész"
+        },
+        "maintenance": {
+          "title": "Szerviz",
+          "description": "Szerviz alatt lévő autók"
+        },
+        "totalRentals": {
+          "title": "Összes bérlés",
+          "description": "Minden eddigi bérlés"
+        },
+        "pendingRentals": {
+          "title": "Függő bérlések",
+          "description": "Jóváhagyásra vár"
+        },
+        "activeRentals": {
+          "title": "Aktív bérlések",
+          "description": "Jelenleg fut"
+        },
+        "totalInvoices": {
+          "title": "Összes számla",
+          "description": "Kiállított számlák"
+        },
+        "revenue": {
+          "title": "Bevétel",
+          "description": "Összes számlázott összeg"
+        },
+        "users": {
+          "title": "Felhasználók",
+          "description": "Regisztrált felhasználók"
+        },
+        "agents": { "title": "Ügyintézők", "description": "Ügyintézői fiókok" }
       }
     },
     "carsPage": {
-      "backToDashboard": "Vissza az irányítópultra",
+      "backToDashboard": "Vissza a vezérlőpultra",
       "title": "Autókezelés"
     },
     "usersPage": {
-      "backToDashboard": "Vissza az irányítópultra",
+      "backToDashboard": "Vissza a vezérlőpultra",
       "title": "Felhasználókezelés",
-      "staffTitle": "Személyzet (Adminok és Ügyintézők)",
+      "staffTitle": "Személyzet (Adminisztrátorok és ügyintézők)",
       "members": "{count, plural, one {# tag} other {# tag}}",
       "usersTitle": "Felhasználók",
       "usersCount": "{count, plural, one {# felhasználó} other {# felhasználó}}"
@@ -227,13 +254,13 @@
     },
     "perDay": "/nap",
     "request": {
-      "title": "Bérlési kérelem",
-      "available": "Küldj bérlési kérelmet erre a járműre.",
+      "title": "Kölcsönzési igény",
+      "available": "Adj le kölcsönzési igényt erre a járműre.",
       "unavailable": "Ez a jármű jelenleg nem bérelhető.",
       "currently": "Ez az autó jelenleg",
       "underMaintenance": "szerviz alatt áll",
       "unavailableStatus": "nem elérhető",
-      "checkBack": "Kérjük, nézz vissza később vagy böngéssz más elérhető járművek között.",
+      "checkBack": "Kérjük, nézz vissza később, vagy böngéssz más elérhető járművek között.",
       "browseCars": "Elérhető autók böngészése"
     }
   },
@@ -241,8 +268,305 @@
     "notFound": {
       "errorCode": "404-es hiba",
       "title": "Nem található",
-      "description": "A keresett oldal nem létezik vagy áthelyezték. Visszairányítunk az útra.",
+      "description": "A keresett oldal nem létezik, vagy áthelyezték. Térj vissza a főoldalra.",
       "backHome": "Vissza a főoldalra"
+    },
+    "noResults": "Nincs találat.",
+    "toggleColumns": "Oszlopok",
+    "view": "Oszlopok",
+    "optional": "(opcionális)",
+    "cancel": "Mégsem",
+    "reset": "Visszaállítás",
+    "saving": "Mentés...",
+    "notProvided": "Nincs megadva",
+    "guest": "Vendég",
+    "unknown": "Ismeretlen"
+  },
+  "CarStatusBadge": {
+    "available": "Elérhető",
+    "maintenance": "Szerviz",
+    "unavailable": "Nem elérhető",
+    "inUse": "Használatban"
+  },
+  "RentalStatusBadge": {
+    "pending": "Függőben",
+    "approved": "Jóváhagyva",
+    "rejected": "Elutasítva",
+    "active": "Aktív",
+    "closed": "Lezárva",
+    "closedInvoiced": "Lezárva – Számlázva"
+  },
+  "CarFilters": {
+    "searchPlaceholder": "Keresés márka, modell vagy rendszám alapján...",
+    "sortPlaceholder": "Rendezés",
+    "sortOptions": {
+      "newest": "Legújabb",
+      "priceAsc": "Ár ↑",
+      "priceDesc": "Ár ↓",
+      "yearAsc": "Évjárat ↑",
+      "yearDesc": "Évjárat ↓",
+      "mileageAsc": "Km ↑",
+      "mileageDesc": "Km ↓"
+    },
+    "showUnavailable": "Nem elérhetők"
+  },
+  "RentalTable": {
+    "columns": {
+      "car": "Autó",
+      "customer": "Ügyfél",
+      "startDate": "Kezdés",
+      "endDate": "Visszaadás",
+      "status": "Státusz",
+      "createdAt": "Létrehozva"
+    },
+    "searchByCar": "Keresés autó alapján…",
+    "searchByCarOrCustomer": "Keresés autó vagy ügyfél alapján…",
+    "allStatuses": "Minden státusz",
+    "noRentals": "Nincs bérlés.",
+    "statuses": {
+      "PENDING": "Függőben",
+      "APPROVED": "Jóváhagyva",
+      "REJECTED": "Elutasítva",
+      "ACTIVE": "Aktív",
+      "CLOSED": "Lezárva",
+      "CLOSED_INVOICED": "Lezárva – Számlázva"
     }
+  },
+  "AdminCarTable": {
+    "columns": {
+      "makeModel": "Márka / Modell",
+      "year": "Évjárat",
+      "licensePlate": "Rendszám",
+      "mileage": "Kilométeróra",
+      "dailyRate": "Napi díj",
+      "status": "Státusz"
+    },
+    "searchPlaceholder": "Keresés márka, modell vagy rendszám alapján…",
+    "allStatuses": "Minden státusz",
+    "statusAvailable": "Elérhető",
+    "statusMaintenance": "Szerviz",
+    "statusUnavailable": "Nem elérhető",
+    "addNewCar": "Új autó hozzáadása",
+    "addNewCarTitle": "Új autó hozzáadása",
+    "addNewCarDesc": "Töltsd ki az adatokat az új autó flottához adásához.",
+    "noCars": "Nincs autó. Add hozzá az első autót."
+  },
+  "UsersTable": {
+    "columns": {
+      "name": "Név",
+      "email": "Email",
+      "role": "Szerepkör",
+      "phone": "Telefon",
+      "address": "Cím",
+      "createdAt": "Regisztrálva"
+    },
+    "searchPlaceholder": "Keresés név vagy email alapján…",
+    "allRoles": "Minden szerepkör",
+    "roles": {
+      "admin": "Admin",
+      "agent": "Ügyintéző",
+      "user": "Felhasználó"
+    },
+    "noUsers": "Nincs felhasználó."
+  },
+  "InvoicesTable": {
+    "columns": {
+      "car": "Autó",
+      "amount": "Összeg",
+      "issuedAt": "Kiállítva",
+      "issuedBy": "Kiállító"
+    },
+    "searchPlaceholder": "Keresés autó vagy kiállító alapján…",
+    "noInvoices": "Még nincs kiállított számla"
+  },
+  "ApproveRejectActions": {
+    "approve": "Jóváhagyás",
+    "reject": "Elutasítás",
+    "processing": "Feldolgozás…",
+    "approving": "Jóváhagyás…",
+    "rejecting": "Elutasítás…",
+    "cancel": "Mégsem",
+    "approveTitle": "Kölcsönzési igény jóváhagyása",
+    "checkingConflicts": "Ütközések ellenőrzése…",
+    "approveDescNoConflict": "Biztosan jóvá akarod hagyni ezt a kölcsönzési igényt?",
+    "approveDescConflicts": "A jóváhagyás automatikusan elutasít {count, plural, one {# ütköző függőben lévő igénylést} other {# ütköző függőben lévő igénylést}}.",
+    "reasonLabel": "Indok",
+    "reasonOptional": "(opcionális)",
+    "approveNotePlaceholder": "Megjegyzés a jóváhagyáshoz…",
+    "conflictsSectionTitle": "Elutasításra kerülő kérelmek",
+    "rejectTitle": "Kölcsönzési igény elutasítása",
+    "rejectDesc": "Add meg az elutasítás okát. Ez bekerül a kölcsönzési előzményekbe.",
+    "rejectNotePlaceholder": "Elutasítás oka…",
+    "rejectionMessagePlaceholder": "Elutasítás üzenete…",
+    "defaultConflictNote": "Sajnáljuk, ezt az igénylést automatikusan elutasítottuk, mert egy másik kölcsönzést ugyanazokra a dátumokra hagytak jóvá.",
+    "toastApproved": "Bérlés jóváhagyva",
+    "toastRejected": "Bérlés elutasítva",
+    "toastNeedReason": "Kérjük, add meg az elutasítás okát"
+  },
+  "HandoverReturnActions": {
+    "recordHandover": "Átadás rögzítése",
+    "recordReturn": "Visszaadás rögzítése",
+    "mileageLabel": "Kilométeróra (km)",
+    "lastRecorded": "Legutóbb rögzített:",
+    "noteLabel": "Megjegyzés",
+    "noteOptional": "(opcionális)",
+    "observationsPlaceholder": "Észrevételek, megjegyzések…",
+    "saving": "Mentés…",
+    "toastHandover": "Átadás rögzítve",
+    "toastReturn": "Visszaadás rögzítve",
+    "validMileageError": "Kérjük, adj meg érvényes kilométerállást"
+  },
+  "IssueInvoiceButton": {
+    "amountLabel": "Összeg (HUF)",
+    "computed": "Számított: {amount}",
+    "issueInvoice": "Számla kiállítása",
+    "issuing": "Kiállítás…",
+    "toastIssued": "Számla kiállítva"
+  },
+  "RentalRequestForm": {
+    "rentalPeriod": "Bérlési időszak",
+    "pickStart": "Kezdő dátum kiválasztása",
+    "pickEnd": " – Záró dátum kiválasztása",
+    "phaseStart": "Kezdő",
+    "phaseEnd": "Záró",
+    "phaseClickToSelect": "{phase} dátum kiválasztása",
+    "resetButton": "Újra",
+    "perDay": "/nap",
+    "estimatedTotal": "Becsült összköltség",
+    "daysLine": "{days, plural, one {# nap} other {# nap}} × {rate}/nap",
+    "justRate": "{rate}/nap",
+    "fullName": "Teljes név",
+    "guestNamePlaceholder": "Kovács János",
+    "email": "Email",
+    "emailPlaceholder": "pelda@email.hu",
+    "phone": "Telefon",
+    "phonePlaceholder": "+36 30 123 4567",
+    "notes": "Megjegyzés",
+    "notesPlaceholder": "Különleges kérések vagy megjegyzések az ügyintézőnek… (opcionális)",
+    "submitButton": "Kölcsönzési igény leadása",
+    "successTitle": "Kölcsönzési igény leadva!",
+    "successDescription": "Igénylésedet fogadtuk. Az ügyintéző hamarosan átnézi, és értesítünk a döntésről."
+  },
+  "RentalDetailDialog": {
+    "sections": {
+      "rentalDetails": "Bérlés részletei",
+      "customerInfo": "Ügyfél adatai",
+      "statusHistory": "Előzmények",
+      "invoice": "Számla"
+    },
+    "fields": {
+      "startDate": "Kezdés",
+      "endDate": "Visszaadás",
+      "duration": "Időtartam",
+      "estimatedCost": "Becsült összeg"
+    },
+    "days": "{days, plural, one {# nap} other {# nap}}",
+    "assignedAgentUser": "A te ügyintéződ",
+    "assignedAgentAdmin": "Jelenlegi ügyintéző",
+    "noAgent": "Még nincs ügyintéző hozzárendelve.",
+    "guestBadge": "Vendég",
+    "notProvided": "Nincs megadva",
+    "noEvents": "Nincs rögzített esemény.",
+    "loadingInvoice": "Számla betöltése…",
+    "invoiceUnavailable": "Számla nem elérhető.",
+    "issued": "Kiállítva: {date}",
+    "downloadPdf": "PDF letöltése",
+    "by": "{name} által",
+    "mileageKm": "Kilométeróra: {mileage} km",
+    "fieldName": "Név",
+    "fieldEmail": "Email",
+    "fieldPhone": "Telefon",
+    "eventTypes": {
+      "REQUEST": "Igénylés",
+      "APPROVE": "Jóváhagyva",
+      "REJECT": "Elutasítva",
+      "HANDOVER": "Átadva",
+      "RETURN": "Visszaadva"
+    }
+  },
+  "UserDetailDialog": {
+    "formLabels": {
+      "name": "Név",
+      "email": "Email",
+      "phone": "Telefon",
+      "address": "Cím",
+      "role": "Szerepkör"
+    },
+    "notProvided": "Nincs megadva",
+    "saveChanges": "Mentés",
+    "saving": "Mentés...",
+    "toastUpdated": "Felhasználó sikeresen frissítve.",
+    "joined": "Csatlakozott: {date}",
+    "roles": {
+      "user": "Felhasználó",
+      "agent": "Ügyintéző",
+      "admin": "Admin"
+    }
+  },
+  "NoteDisplay": {
+    "defaultLabel": "Megjegyzések",
+    "noNotes": "Nincs megjegyzés."
+  },
+  "RentalAgentCard": {
+    "guest": "Vendég",
+    "start": "Kezdés",
+    "end": "Visszaadás"
+  },
+  "CarCard": {
+    "year": "Évjárat",
+    "mileage": "Kilométeróra",
+    "license": "Rendszám",
+    "perDay": "/nap",
+    "viewDetails": "Részletek"
+  },
+  "DataTablePagination": {
+    "rowsSummary": "{filtered} / {total} sor",
+    "rowsPerPage": "Sorok oldalanként",
+    "pageOf": "{page} / {total}. oldal",
+    "goToFirstPage": "Ugrás az első oldalra",
+    "goToPreviousPage": "Ugrás az előző oldalra",
+    "goToNextPage": "Ugrás a következő oldalra",
+    "goToLastPage": "Ugrás az utolsó oldalra"
+  },
+  "CarDetailDialog": {
+    "tabDetails": "Részletek",
+    "tabRentalHistory": "Bérlési előzmények",
+    "dangerZone": "Veszélyzóna",
+    "deleteCarHeading": "Autó törlése",
+    "deleteCarDesc": "Ez a művelet nem visszavonható. Aktív vagy függőben lévő bérlésekkel rendelkező autók nem törölhetők.",
+    "deleteButton": "Törlés",
+    "deletingButton": "Törlés...",
+    "deleteConfirmTitle": "Autó törlése",
+    "deleteConfirmDesc": "Biztosan törlöd a(z) <strong>{name}</strong> autót? Ez a művelet nem visszavonható.",
+    "guestBadge": "Vendég",
+    "noHistory": "Nincs bérlési előzmény ehhez az autóhoz."
+  },
+  "SocialButtons": {
+    "orContinueWith": "Vagy folytatás ezzel",
+    "comingSoon": "Közösségi bejelentkezés hamarosan"
+  },
+  "CarForm": {
+    "brandLabel": "Márka",
+    "brandPlaceholder": "Válassz…",
+    "makeLabel": "Gyártó",
+    "makePlaceholder": "pl. Toyota",
+    "modelLabel": "Modell",
+    "modelPlaceholder": "pl. Corolla",
+    "yearLabel": "Évjárat",
+    "licensePlateLabel": "Rendszám",
+    "licensePlatePlaceholder": "pl. ABC-123",
+    "mileageLabel": "Kilométeróra (km)",
+    "dailyRateLabel": "Napi díj (HUF)",
+    "statusLabel": "Státusz",
+    "statusPlaceholder": "Válassz státuszt",
+    "statusAvailable": "Elérhető",
+    "statusMaintenance": "Szerviz",
+    "statusUnavailable": "Nem elérhető",
+    "createButton": "Autó létrehozása",
+    "updateButton": "Autó módosítása",
+    "creatingButton": "Létrehozás...",
+    "updatingButton": "Módosítás...",
+    "toastCreated": "Autó sikeresen létrehozva.",
+    "toastUpdated": "Autó sikeresen módosítva."
   }
 }

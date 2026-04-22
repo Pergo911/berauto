@@ -1,3 +1,4 @@
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Calendar, Gauge, CreditCard, Eye } from "lucide-react";
 
@@ -13,7 +14,9 @@ type CarCardProps = {
   bookable?: boolean;
 };
 
-export function CarCard({ car, bookable }: CarCardProps) {
+export async function CarCard({ car, bookable }: CarCardProps) {
+  const t = await getTranslations("CarCard");
+  const locale = await getLocale();
   const unavailable = bookable === false;
   return (
     <Card className={cn("flex flex-col", unavailable && "opacity-70")}>
@@ -37,32 +40,32 @@ export function CarCard({ car, bookable }: CarCardProps) {
         <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-1.5">
             <Calendar className="size-3.5 text-muted-foreground" />
-            <span className="font-medium text-foreground">Year:</span>{" "}
+            <span className="font-medium text-foreground">{t("year")}:</span>{" "}
             {car.year}
           </div>
           <div className="flex items-center gap-1.5">
             <Gauge className="size-3.5 text-muted-foreground" />
-            <span className="font-medium text-foreground">Mileage:</span>{" "}
-            {car.mileageKm.toLocaleString("hu-HU")} km
+            <span className="font-medium text-foreground">{t("mileage")}:</span>{" "}
+            {car.mileageKm.toLocaleString(locale === "en" ? "en-US" : "hu-HU")} km
           </div>
           <div className="col-span-2 flex items-center gap-1.5">
             <CreditCard className="size-3.5 text-muted-foreground" />
-            <span className="font-medium text-foreground">License:</span>{" "}
+            <span className="font-medium text-foreground">{t("license")}:</span>{" "}
             {car.licensePlate}
           </div>
         </div>
 
         <div className="mt-auto space-y-3">
           <p className="text-lg font-semibold">
-            {formatCurrency(car.dailyRate)}
+            {formatCurrency(car.dailyRate, locale)}
             <span className="text-sm font-normal text-muted-foreground">
-              /day
+              {t("perDay")}
             </span>
           </p>
           <Link href={`/cars/${car.id}`} className="block">
             <Button variant="outline" className="w-full">
               <Eye className="size-4" />
-              View Details
+              {t("viewDetails")}
             </Button>
           </Link>
         </div>

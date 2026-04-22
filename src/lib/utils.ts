@@ -17,7 +17,7 @@ export function toIntlLocale(locale: string): string {
   return normalized === 'en' ? 'en-US' : 'hu-HU';
 }
 
-export function formatDate(date: Date | string, locale = 'hu'): string {
+export function formatDate(date: Date | string, locale: string = routing.defaultLocale): string {
   return new Intl.DateTimeFormat(toIntlLocale(locale), {
     year: 'numeric',
     month: '2-digit',
@@ -25,7 +25,7 @@ export function formatDate(date: Date | string, locale = 'hu'): string {
   }).format(new Date(date));
 }
 
-export function formatDateTime(date: Date | string, locale = 'hu'): string {
+export function formatDateTime(date: Date | string, locale: string = routing.defaultLocale): string {
   return new Intl.DateTimeFormat(toIntlLocale(locale), {
     year: 'numeric',
     month: '2-digit',
@@ -35,7 +35,7 @@ export function formatDateTime(date: Date | string, locale = 'hu'): string {
   }).format(new Date(date));
 }
 
-export function formatCurrency(amount: number, locale = 'hu'): string {
+export function formatCurrency(amount: number, locale: string = routing.defaultLocale): string {
   return new Intl.NumberFormat(toIntlLocale(locale), {
     style: 'currency',
     currency: 'HUF',

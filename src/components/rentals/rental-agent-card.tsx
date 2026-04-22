@@ -1,4 +1,7 @@
+"use client";
+
 import type { ReactNode } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { CalendarDays, Car, User } from "lucide-react";
 
 import type { RentalDTO } from "@/lib/data/rentals";
@@ -16,6 +19,8 @@ type RentalAgentCardProps = {
 };
 
 export function RentalAgentCard({ rental, action }: RentalAgentCardProps) {
+  const t = useTranslations("RentalAgentCard");
+  const locale = useLocale();
   const email = rental.userEmail ?? rental.guestEmail;
 
   return (
@@ -49,7 +54,7 @@ export function RentalAgentCard({ rental, action }: RentalAgentCardProps) {
               <>
                 {rental.guestName}
                 <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
-                  Guest
+                  {t("guest")}
                 </span>
               </>
             ) : (
@@ -65,16 +70,16 @@ export function RentalAgentCard({ rental, action }: RentalAgentCardProps) {
           <div>
             <p className="flex items-center gap-1 text-xs text-muted-foreground">
               <CalendarDays className="size-3" />
-              Start
+              {t("start")}
             </p>
-            <p className="font-medium">{formatDate(rental.startDate)}</p>
+            <p className="font-medium">{formatDate(rental.startDate, locale)}</p>
           </div>
           <div>
             <p className="flex items-center gap-1 text-xs text-muted-foreground">
               <CalendarDays className="size-3" />
-              End
+              {t("end")}
             </p>
-            <p className="font-medium">{formatDate(rental.endDate)}</p>
+            <p className="font-medium">{formatDate(rental.endDate, locale)}</p>
           </div>
         </div>
 

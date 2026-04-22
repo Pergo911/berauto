@@ -11,13 +11,16 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
   },
-  client: {},
+  client: {
+    NEXT_PUBLIC_DEFAULT_LOCALE: z.enum(["hu", "en"]).default("hu"),
+  },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
     NODE_ENV: process.env.NODE_ENV,
+    NEXT_PUBLIC_DEFAULT_LOCALE: process.env.NEXT_PUBLIC_DEFAULT_LOCALE,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });

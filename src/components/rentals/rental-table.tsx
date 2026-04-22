@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -58,24 +59,20 @@ type RentalTableProps = {
   variant?: "user" | "agent";
 };
 
-const COLUMN_LABELS: Record<string, string> = {
-  car: "Car",
-  customer: "Customer",
-  dates: "Dates",
-  startDate: "Start Date",
-  endDate: "End Date",
-  status: "Status",
-  createdAt: "Created",
-};
+type TFn = ReturnType<typeof useTranslations<"RentalTable">>;
 
-function getColumns(showUser: boolean): ColumnDef<RentalDTO>[] {
+function getColumns(
+  showUser: boolean,
+  t: TFn,
+  locale: string
+): ColumnDef<RentalDTO>[] {
   const cols: ColumnDef<RentalDTO>[] = [
     {
       id: "car",
       accessorFn: (row) =>
         `${row.car.make} ${row.car.model} ${row.car.licensePlate}`,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Car" />
+        <DataTableColumnHeader column={column} title={t("columns.car")} />
       ),
       cell: ({ row }) => (
         <div className="flex items-center gap-2 font-medium">
@@ -96,11 +93,11 @@ function getColumns(showUser: boolean): ColumnDef<RentalDTO>[] {
       id: "customer",
       accessorFn: (row) => row.userName ?? row.guestName ?? row.userEmail ?? "",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Customer" />
+        <DataTableColumnHeader column={column} title={t("columns.customer")} />
       ),
       cell: ({ row }) => (
         <span>
-          {row.original.userName ?? row.original.guestName ?? "Unknown"}
+          {row.original.userName ?? row.original.guestName ?? tCommon("unknown")}
         </span>
       ),
     });
@@ -111,23 +108,23 @@ function getColumns(showUser: boolean): ColumnDef<RentalDTO>[] {
       id: "startDate",
       accessorFn: (row) => row.startDate,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Start Date" />
+        <DataTableColumnHeader column={column} title={t("columns.startDate")} />
       ),
-      cell: ({ row }) => formatDate(row.original.startDate),
+      cell: ({ row }) => formatDate(row.original.startDate, locale),
       sortingFn: "datetime",
     },
     {
       id: "endDate",
       accessorFn: (row) => row.endDate,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="End Date" />
+        <DataTableColumnHeader column={column} title={t("columns.endDate")} />
       ),
-      cell: ({ row }) => formatDate(row.original.endDate),
+      cell: ({ row }) => formatDate(row.original.endDate, locale),
       sortingFn: "datetime",
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: t("columns.status"),
       cell: ({ row }) => <RentalStatusBadge status={row.original.status} />,
       filterFn: "equals",
       enableSorting: false,
@@ -136,11 +133,11 @@ function getColumns(showUser: boolean): ColumnDef<RentalDTO>[] {
       id: "createdAt",
       accessorFn: (row) => row.createdAt,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Created" />
+        <DataTableColumnHeader column={column} title={t("columns.createdAt")} />
       ),
       cell: ({ row }) => (
         <span className="text-muted-foreground">
-          {formatDate(row.original.createdAt)}
+          {formatDate(row.original.createdAt, locale)}
         </span>
       ),
       sortingFn: "datetime",
@@ -161,28 +158,50 @@ function getColumns(showUser: boolean): ColumnDef<RentalDTO>[] {
   return cols;
 }
 
-const RENTAL_STATUSES: { value: RentalStatus; label: string }[] = [
-  { value: "PENDING", label: "Pending" },
-  { value: "APPROVED", label: "Approved" },
-  { value: "REJECTED", label: "Rejected" },
-  { value: "ACTIVE", label: "Active" },
-  { value: "CLOSED", label: "Closed" },
-  { value: "CLOSED_INVOICED", label: "Closed – Invoiced" },
-];
-
 export function RentalTable({
   rentals,
   showUser = false,
   hideStatusFilter = false,
   variant = "user",
 }: RentalTableProps) {
+  const t = useTranslations("RentalTable");
+  const tCommon = useTranslations("Common");
+  const locale = useLocale();
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState("");
   const [selectedRental, setSelectedRental] = useState<RentalDTO | null>(null);
 
-  const columns = getColumns(showUser);
+  const columns = useMemo(
+    () => getColumns(showUser, t, locale),
+    [showUser, t, locale]
+  );
+
+  const rentalStatuses: { value: RentalStatus; label: string }[] = useMemo(
+    () => [
+      { value: "PENDING", label: t("statuses.PENDING") },
+      { value: "APPROVED", label: t("statuses.APPROVED") },
+      { value: "REJECTED", label: t("statuses.REJECTED") },
+      { value: "ACTIVE", label: t("statuses.ACTIVE") },
+      { value: "CLOSED", label: t("statuses.CLOSED") },
+      { value: "CLOSED_INVOICED", label: t("statuses.CLOSED_INVOICED") },
+    ],
+    [t]
+  );
+
+  const columnLabels: Record<string, string> = useMemo(
+    () => ({
+      car: t("columns.car"),
+      customer: t("columns.customer"),
+      startDate: t("columns.startDate"),
+      endDate: t("columns.endDate"),
+      status: t("columns.status"),
+      createdAt: t("columns.createdAt"),
+    }),
+    [t]
+  );
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -227,7 +246,7 @@ export function RentalTable({
       <div className="flex flex-wrap items-center gap-2 py-4">
         <Input
           placeholder={
-            showUser ? "Search by car or customer…" : "Search by car…"
+            showUser ? t("searchByCarOrCustomer") : t("searchByCar")
           }
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
@@ -243,11 +262,11 @@ export function RentalTable({
             }
           >
             <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="All statuses" />
+              <SelectValue placeholder={t("allStatuses")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              {RENTAL_STATUSES.map((s) => (
+              <SelectItem value="all">{t("allStatuses")}</SelectItem>
+              {rentalStatuses.map((s) => (
                 <SelectItem key={s.value} value={s.value}>
                   {s.label}
                 </SelectItem>
@@ -265,11 +284,11 @@ export function RentalTable({
                 className="hidden h-8 lg:flex"
               >
                 <Settings2 className="mr-2 h-4 w-4" />
-                View
+                {tCommon("view")}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-              <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+              <DropdownMenuLabel>{tCommon("toggleColumns")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {table
                 .getAllColumns()
@@ -281,7 +300,7 @@ export function RentalTable({
                     checked={col.getIsVisible()}
                     onCheckedChange={(value) => col.toggleVisibility(!!value)}
                   >
-                    {COLUMN_LABELS[col.id] ?? col.id}
+                    {columnLabels[col.id] ?? col.id}
                   </DropdownMenuCheckboxItem>
                 ))}
             </DropdownMenuContent>
@@ -291,7 +310,7 @@ export function RentalTable({
 
       {/* Table */}
       {rentals.length === 0 ? (
-        <EmptyState message="No rentals found." />
+        <EmptyState message={t("noRentals")} />
       ) : (
         <>
           <div className="overflow-hidden rounded-md border">
@@ -336,7 +355,7 @@ export function RentalTable({
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      {tCommon("noResults")}
                     </TableCell>
                   </TableRow>
                 )}

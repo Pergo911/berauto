@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Resolver } from "react-hook-form";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import type { CarDTO } from "@/lib/data/cars";
 import type { BrandDTO } from "@/lib/data/brands";
@@ -39,6 +40,7 @@ type CarFormProps = {
 export function CarForm({ car, brands, onSuccess }: CarFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("CarForm");
 
   const form = useForm<CreateCarInput>({
     resolver: zodResolver(createCarSchema) as Resolver<CreateCarInput>,
@@ -61,9 +63,7 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
         : await createCar(data);
 
       if (result.success) {
-        toast.success(
-          car ? "Car updated successfully." : "Car created successfully."
-        );
+        toast.success(car ? t("toastUpdated") : t("toastCreated"));
         router.refresh();
         onSuccess?.();
       } else {
@@ -82,7 +82,7 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
             name="brandId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Brand</FormLabel>
+                <FormLabel>{t("brandLabel")}</FormLabel>
                 <Select
                   onValueChange={(brandId) => {
                     field.onChange(brandId || undefined);
@@ -98,7 +98,7 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
                   <FormControl>
                     <SelectTrigger className="w-full sm:w-auto">
                       <div className="flex items-center gap-2 overflow-hidden">
-                        <SelectValue placeholder="Select…" />
+                        <SelectValue placeholder={t("brandPlaceholder")} />
                       </div>
                     </SelectTrigger>
                   </FormControl>
@@ -130,9 +130,9 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
             name="make"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Make</FormLabel>
+                <FormLabel>{t("makeLabel")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. Toyota" {...field} />
+                  <Input placeholder={t("makePlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -143,9 +143,9 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
             name="model"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Model</FormLabel>
+                <FormLabel>{t("modelLabel")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. Corolla" {...field} />
+                  <Input placeholder={t("modelPlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -160,7 +160,7 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
             name="year"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Year</FormLabel>
+                <FormLabel>{t("yearLabel")}</FormLabel>
                 <FormControl>
                   <Input type="number" {...field} />
                 </FormControl>
@@ -173,9 +173,9 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
             name="licensePlate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>License Plate</FormLabel>
+                <FormLabel>{t("licensePlateLabel")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. ABC-123" {...field} />
+                  <Input placeholder={t("licensePlatePlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -186,7 +186,7 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
             name="mileageKm"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Mileage (km)</FormLabel>
+                <FormLabel>{t("mileageLabel")}</FormLabel>
                 <FormControl>
                   <Input type="number" {...field} />
                 </FormControl>
@@ -202,7 +202,7 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
           name="dailyRate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Daily Rate (HUF)</FormLabel>
+              <FormLabel>{t("dailyRateLabel")}</FormLabel>
               <FormControl>
                 <Input type="number" step="1" {...field} />
               </FormControl>
@@ -217,17 +217,17 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
           name="status"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Status</FormLabel>
+              <FormLabel>{t("statusLabel")}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select status" />
+                    <SelectValue placeholder={t("statusPlaceholder")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="AVAILABLE">Available</SelectItem>
-                  <SelectItem value="MAINTENANCE">Maintenance</SelectItem>
-                  <SelectItem value="UNAVAILABLE">Unavailable</SelectItem>
+                  <SelectItem value="AVAILABLE">{t("statusAvailable")}</SelectItem>
+                  <SelectItem value="MAINTENANCE">{t("statusMaintenance")}</SelectItem>
+                  <SelectItem value="UNAVAILABLE">{t("statusUnavailable")}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -238,11 +238,11 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
         <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
           {isPending
             ? car
-              ? "Updating..."
-              : "Creating..."
+              ? t("updatingButton")
+              : t("creatingButton")
             : car
-              ? "Update Car"
-              : "Create Car"}
+              ? t("updateButton")
+              : t("createButton")}
         </Button>
       </form>
     </Form>

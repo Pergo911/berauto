@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -44,67 +45,79 @@ type InvoicesTableProps = {
   invoices: InvoiceDTO[];
 };
 
-const COLUMN_LABELS: Record<string, string> = {
-  car: "Car",
-  amount: "Amount",
-  issuedAt: "Issued Date",
-  issuedBy: "Issued By",
-};
-
-const columns: ColumnDef<InvoiceDTO>[] = [
-  {
-    id: "car",
-    accessorFn: (row) =>
-      `${row.car.make} ${row.car.model} ${row.car.year} ${row.car.licensePlate}`,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Car" />
-    ),
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2 font-medium">
-        <BrandLogo
-          logoPath={row.original.car.brandLogoPath}
-          brandName={row.original.car.make}
-          size={20}
-          className="shrink-0"
-        />
-        {row.original.car.make} {row.original.car.model} (
-        {row.original.car.year})
-      </div>
-    ),
-  },
-  {
-    id: "amount",
-    accessorFn: (row) => row.amount,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Amount" />
-    ),
-    cell: ({ row }) => (
-      <span className="font-medium">{formatCurrency(row.original.amount)}</span>
-    ),
-    sortingFn: "basic",
-  },
-  {
-    id: "issuedAt",
-    accessorFn: (row) => row.issuedAt,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Issued Date" />
-    ),
-    cell: ({ row }) => formatDate(row.original.issuedAt),
-    sortingFn: "datetime",
-  },
-  {
-    id: "issuedBy",
-    accessorFn: (row) => row.issuerName ?? "",
-    header: "Issued By",
-    cell: ({ row }) => row.original.issuerName ?? "—",
-  },
-];
-
 export function InvoicesTable({ invoices }: InvoicesTableProps) {
+  const t = useTranslations("InvoicesTable");
+  const tCommon = useTranslations("Common");
+  const locale = useLocale();
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState("");
+
+  const columnLabels: Record<string, string> = useMemo(
+    () => ({
+      car: t("columns.car"),
+      amount: t("columns.amount"),
+      issuedAt: t("columns.issuedAt"),
+      issuedBy: t("columns.issuedBy"),
+    }),
+    [t]
+  );
+
+  const columns: ColumnDef<InvoiceDTO>[] = useMemo(
+    () => [
+      {
+        id: "car",
+        accessorFn: (row) =>
+          `${row.car.make} ${row.car.model} ${row.car.year} ${row.car.licensePlate}`,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t("columns.car")} />
+        ),
+        cell: ({ row }) => (
+          <div className="flex items-center gap-2 font-medium">
+            <BrandLogo
+              logoPath={row.original.car.brandLogoPath}
+              brandName={row.original.car.make}
+              size={20}
+              className="shrink-0"
+            />
+            {row.original.car.make} {row.original.car.model} (
+            {row.original.car.year})
+          </div>
+        ),
+      },
+      {
+        id: "amount",
+        accessorFn: (row) => row.amount,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t("columns.amount")} />
+        ),
+        cell: ({ row }) => (
+          <span className="font-medium">
+            {formatCurrency(row.original.amount, locale)}
+          </span>
+        ),
+        sortingFn: "basic",
+      },
+      {
+        id: "issuedAt",
+        accessorFn: (row) => row.issuedAt,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t("columns.issuedAt")} />
+        ),
+        cell: ({ row }) => formatDate(row.original.issuedAt, locale),
+        sortingFn: "datetime",
+      },
+      {
+        id: "issuedBy",
+        accessorFn: (row) => row.issuerName ?? "",
+        header: t("columns.issuedBy"),
+        cell: ({ row }) => row.original.issuerName ?? "—",
+      },
+    ],
+    [t, locale]
+  );
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -146,7 +159,7 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 py-4">
         <Input
-          placeholder="Search by car or issuer…"
+          placeholder={t("searchPlaceholder")}
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
@@ -161,11 +174,11 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
                 className="hidden h-8 lg:flex"
               >
                 <Settings2 className="mr-2 h-4 w-4" />
-                View
+                {tCommon("view")}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-              <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+              <DropdownMenuLabel>{tCommon("toggleColumns")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {table
                 .getAllColumns()
@@ -177,7 +190,7 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
                     checked={col.getIsVisible()}
                     onCheckedChange={(value) => col.toggleVisibility(!!value)}
                   >
-                    {COLUMN_LABELS[col.id] ?? col.id}
+                    {columnLabels[col.id] ?? col.id}
                   </DropdownMenuCheckboxItem>
                 ))}
             </DropdownMenuContent>
@@ -187,7 +200,7 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
 
       {/* Table */}
       {invoices.length === 0 ? (
-        <EmptyState variant="plain" message="No invoices issued yet" />
+        <EmptyState variant="plain" message={t("noInvoices")} />
       ) : (
         <>
           <div className="overflow-hidden rounded-md border">
@@ -228,7 +241,7 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      {tCommon("noResults")}
                     </TableCell>
                   </TableRow>
                 )}

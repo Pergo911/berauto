@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -35,6 +37,7 @@ function GitHubIcon({ className }: { className?: string }) {
 }
 
 export function SocialButtons() {
+  const t = useTranslations("SocialButtons");
   return (
     <div className="grid gap-4">
       <div className="relative">
@@ -43,7 +46,7 @@ export function SocialButtons() {
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-card px-2 text-muted-foreground">
-            Or continue with
+            {t("orContinueWith")}
           </span>
         </div>
       </div>
@@ -68,7 +71,7 @@ export function SocialButtons() {
         </Button>
       </div>
       <p className="text-center text-xs text-muted-foreground">
-        Social login coming soon
+        {t("comingSoon")}
       </p>
     </div>
   );
