@@ -461,9 +461,7 @@ export async function returnRental(
 
 // ── 7. Get Rental Details (for detail dialog) ─────────
 
-export async function getRentalDetails(
-  rentalId: string
-): Promise<
+export async function getRentalDetails(rentalId: string): Promise<
   ActionResult<{
     events: RentalEventDTO[];
     agentContact: {

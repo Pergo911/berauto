@@ -16,7 +16,10 @@ export async function issueInvoice(
   rentalId: string,
   customAmount: number
 ): Promise<ActionResult<{ id: string }>> {
-  const parsed = issueInvoiceSchema.safeParse({ rentalId, amount: customAmount });
+  const parsed = issueInvoiceSchema.safeParse({
+    rentalId,
+    amount: customAmount,
+  });
   if (!parsed.success) {
     return { success: false, error: "Invalid input" };
   }

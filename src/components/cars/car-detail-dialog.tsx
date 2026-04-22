@@ -2,14 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import {
-  CalendarDays,
-  Car,
-  Eye,
-  Loader2,
-  Trash2,
-  User,
-} from "lucide-react";
+import { CalendarDays, Car, Eye, Loader2, Trash2, User } from "lucide-react";
 import { toast } from "sonner";
 
 import type { CarDTO } from "@/lib/data/cars";

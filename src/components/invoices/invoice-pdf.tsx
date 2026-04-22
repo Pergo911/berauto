@@ -450,9 +450,7 @@ export function InvoicePDFDocument({ data }: { data: InvoicePDFData }) {
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text style={styles.footerMain}>
-            Thank you for choosing BérAutó!
-          </Text>
+          <Text style={styles.footerMain}>Thank you for choosing BérAutó!</Text>
           <Text style={styles.footerSub}>
             This document was generated electronically and is valid without a
             signature.

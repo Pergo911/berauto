@@ -231,7 +231,10 @@ export async function getInvoicePDFData(
 
   const start = new Date(r.startDate);
   const end = new Date(r.endDate);
-  const days = Math.max(1, Math.ceil((end.getTime() - start.getTime()) / 86400000));
+  const days = Math.max(
+    1,
+    Math.ceil((end.getTime() - start.getTime()) / 86400000)
+  );
   const amount = Number(r.amount);
 
   const shortId = r.invoiceId.replace(/-/g, "").slice(0, 8).toUpperCase();

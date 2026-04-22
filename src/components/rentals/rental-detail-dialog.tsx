@@ -84,8 +84,7 @@ const EVENT_TYPE_CONFIG: Record<
   REJECT: {
     label: "Rejected",
     icon: XCircle,
-    className:
-      "border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-400",
+    className: "border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-400",
   },
   HANDOVER: {
     label: "Handover",
@@ -161,11 +160,7 @@ function ContactSection({
       <div className="rounded-lg border bg-muted/30 p-3 space-y-1.5">
         <DetailRow icon={User} label="Name" value={name} />
         <DetailRow icon={Mail} label="Email" value={email} />
-        <DetailRow
-          icon={Phone}
-          label="Phone"
-          value={phone ?? "Not provided"}
-        />
+        <DetailRow icon={Phone} label="Phone" value={phone ?? "Not provided"} />
       </div>
     </div>
   );
@@ -178,7 +173,8 @@ function EventItem({
   event: RentalEventDTO;
   variant: "user" | "agent";
 }) {
-  const config = EVENT_TYPE_CONFIG[event.eventType] ?? EVENT_TYPE_CONFIG.REQUEST;
+  const config =
+    EVENT_TYPE_CONFIG[event.eventType] ?? EVENT_TYPE_CONFIG.REQUEST;
   const Icon = config.icon;
   const showNotes = shouldShowNotes(event.eventType, variant);
 
@@ -208,9 +204,7 @@ function EventItem({
           </span>
         </div>
         {event.actorName && (
-          <p className="text-xs text-muted-foreground">
-            by {event.actorName}
-          </p>
+          <p className="text-xs text-muted-foreground">by {event.actorName}</p>
         )}
         {event.mileageKm != null && (
           <p className="text-xs text-muted-foreground">
@@ -239,7 +233,8 @@ export function RentalDetailDialog({
     rentalId: string;
     data: DetailData;
   } | null>(null);
-  const details = detailsState?.rentalId === rental.id ? detailsState.data : null;
+  const details =
+    detailsState?.rentalId === rental.id ? detailsState.data : null;
   const loading = open && detailsState?.rentalId !== rental.id;
 
   useEffect(() => {
@@ -261,8 +256,7 @@ export function RentalDetailDialog({
 
   const customerName = rental.userName ?? rental.guestName ?? "Unknown";
   const customerEmail = rental.userEmail ?? rental.guestEmail ?? "—";
-  const customerPhone =
-    details?.customerPhone ?? rental.guestPhone ?? null;
+  const customerPhone = details?.customerPhone ?? rental.guestPhone ?? null;
   const isGuest = !!rental.guestName;
 
   return (

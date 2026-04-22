@@ -29,8 +29,16 @@ export async function createCar(
     return { success: false, error: "Unauthorized" };
   }
 
-  const { make, model, year, licensePlate, mileageKm, dailyRate, status, brandId } =
-    parsed.data;
+  const {
+    make,
+    model,
+    year,
+    licensePlate,
+    mileageKm,
+    dailyRate,
+    status,
+    brandId,
+  } = parsed.data;
 
   const [car] = await db
     .insert(cars)

@@ -27,10 +27,7 @@ export async function GET(
   }
 
   // Regular users may only download invoices for their own rentals
-  if (
-    session.user.role === "user" &&
-    data.rentalId !== rentalId
-  ) {
+  if (session.user.role === "user" && data.rentalId !== rentalId) {
     return new NextResponse("Forbidden", { status: 403 });
   }
 

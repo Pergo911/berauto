@@ -41,12 +41,14 @@ async function seed() {
 
   // ── 1. Clean all data (in FK order) ──────────────────
 
-  console.log("  Clearing invoices, rental_events, rentals, cars, brands, users…");
+  console.log(
+    "  Clearing invoices, rental_events, rentals, cars, brands, users…"
+  );
   await db.delete(schema.invoices);
   await db.delete(schema.rentalEvents);
   await db.delete(schema.rentals);
   await db.delete(schema.cars);
-  await db.delete(schema.brands);  // add this line
+  await db.delete(schema.brands); // add this line
   await db.delete(schema.users);
 
   // ── 2. Insert users ─────────────────────────────────

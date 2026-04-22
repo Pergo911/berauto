@@ -50,7 +50,10 @@ const inUseExpr = sql<boolean>`exists (
 
 /** Convert a raw query result row to a page-ready DTO (numeric → number). */
 function toCarDTO(
-  row: typeof cars.$inferSelect & { inUse: boolean; brandLogoPath: string | null }
+  row: typeof cars.$inferSelect & {
+    inUse: boolean;
+    brandLogoPath: string | null;
+  }
 ): CarDTO {
   return {
     ...row,
@@ -120,7 +123,11 @@ export async function getCars(filters?: {
   }
 
   const rows = await db
-    .select({ ...getTableColumns(cars), inUse: inUseExpr, brandLogoPath: brands.logoPath })
+    .select({
+      ...getTableColumns(cars),
+      inUse: inUseExpr,
+      brandLogoPath: brands.logoPath,
+    })
     .from(cars)
     .leftJoin(brands, eq(cars.brandId, brands.id))
     .where(conditions.length > 0 ? and(...conditions) : undefined)
@@ -139,7 +146,11 @@ export async function getCarById(
     conditions.push(isNull(cars.deletedAt));
   }
   const [row] = await db
-    .select({ ...getTableColumns(cars), inUse: inUseExpr, brandLogoPath: brands.logoPath })
+    .select({
+      ...getTableColumns(cars),
+      inUse: inUseExpr,
+      brandLogoPath: brands.logoPath,
+    })
     .from(cars)
     .leftJoin(brands, eq(cars.brandId, brands.id))
     .where(and(...conditions))
