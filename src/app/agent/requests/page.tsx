@@ -1,6 +1,7 @@
 import { getRentals } from "@/lib/data/rentals";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
+import { BackLink } from "@/components/shared/back-link";
 import { RentalAgentCard } from "@/components/rentals/rental-agent-card";
 import { ApproveRejectActions } from "@/components/rentals/approve-reject-actions";
 import { RentalTable } from "@/components/rentals/rental-table";
@@ -14,6 +15,7 @@ export default async function AgentRequestsPage() {
   return (
     <div className="space-y-10">
       <section>
+        <BackLink href="/agent" label="Back to Dashboard" />
         <PageHeader title="Rental Requests" className="mb-6" />
 
         {pendingRentals.length === 0 ? (
@@ -38,7 +40,12 @@ export default async function AgentRequestsPage() {
             ({pastRentals.length})
           </span>
         </h2>
-        <RentalTable rentals={pastRentals} showUser hideStatusFilter />
+        <RentalTable
+          rentals={pastRentals}
+          showUser
+          hideStatusFilter
+          variant="agent"
+        />
       </section>
     </div>
   );

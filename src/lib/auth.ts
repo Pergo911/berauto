@@ -117,9 +117,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return isLoggedIn;
       }
 
-      // Auth pages should redirect logged-in users
+      // Auth pages should redirect logged-in users to their role dashboard
       if (path.startsWith("/login") || path.startsWith("/register")) {
         if (isLoggedIn) {
+          const role = auth.user.role;
+          if (role === "admin") {
+            return Response.redirect(new URL("/admin", nextUrl));
+          }
+          if (role === "agent") {
+            return Response.redirect(new URL("/agent", nextUrl));
+          }
           return Response.redirect(new URL("/dashboard", nextUrl));
         }
         return true;

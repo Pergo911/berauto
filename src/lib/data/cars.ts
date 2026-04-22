@@ -7,6 +7,7 @@ import {
   gt,
   ilike,
   inArray,
+  isNull,
   lt,
   ne,
   or,
@@ -15,7 +16,7 @@ import {
 
 import type { CarStatus } from "@/types";
 import { db } from "@/db";
-import { cars, rentals } from "@/db/schema";
+import { cars, rentals, brands } from "@/db/schema";
 
 // ── DTO ────────────────────────────────────────────────
 
@@ -28,6 +29,8 @@ export type CarDTO = {
   mileageKm: number;
   dailyRate: number;
   status: CarStatus;
+  brandId: string | null;
+  brandLogoPath: string | null;
   /** True when at least one ACTIVE or APPROVED rental exists for this car. */
   inUse: boolean;
   createdAt: Date;
@@ -46,10 +49,16 @@ const inUseExpr = sql<boolean>`exists (
 )`;
 
 /** Convert a raw query result row to a page-ready DTO (numeric → number). */
-function toCarDTO(row: typeof cars.$inferSelect & { inUse: boolean }): CarDTO {
+function toCarDTO(
+  row: typeof cars.$inferSelect & {
+    inUse: boolean;
+    brandLogoPath: string | null;
+  }
+): CarDTO {
   return {
     ...row,
     dailyRate: Number(row.dailyRate),
+    brandLogoPath: row.brandLogoPath,
   };
 }
 
@@ -66,8 +75,13 @@ export async function getCars(filters?: {
     | "year-desc"
     | "mileage-asc"
     | "mileage-desc";
+  includeDeleted?: boolean;
 }): Promise<CarDTO[]> {
   const conditions = [];
+
+  if (!filters?.includeDeleted) {
+    conditions.push(isNull(cars.deletedAt));
+  }
 
   if (filters?.status) {
     conditions.push(eq(cars.status, filters.status));
@@ -109,20 +123,37 @@ export async function getCars(filters?: {
   }
 
   const rows = await db
-    .select({ ...getTableColumns(cars), inUse: inUseExpr })
+    .select({
+      ...getTableColumns(cars),
+      inUse: inUseExpr,
+      brandLogoPath: brands.logoPath,
+    })
     .from(cars)
+    .leftJoin(brands, eq(cars.brandId, brands.id))
     .where(conditions.length > 0 ? and(...conditions) : undefined)
     .orderBy(orderBy);
 
   return rows.map(toCarDTO);
 }
 
-/** Get a single car by ID, or `null` if not found. */
-export async function getCarById(id: string): Promise<CarDTO | null> {
+/** Get a single car by ID, or `null` if not found. Excludes soft-deleted cars unless specified. */
+export async function getCarById(
+  id: string,
+  opts?: { includeDeleted?: boolean }
+): Promise<CarDTO | null> {
+  const conditions = [eq(cars.id, id)];
+  if (!opts?.includeDeleted) {
+    conditions.push(isNull(cars.deletedAt));
+  }
   const [row] = await db
-    .select({ ...getTableColumns(cars), inUse: inUseExpr })
+    .select({
+      ...getTableColumns(cars),
+      inUse: inUseExpr,
+      brandLogoPath: brands.logoPath,
+    })
     .from(cars)
-    .where(eq(cars.id, id))
+    .leftJoin(brands, eq(cars.brandId, brands.id))
+    .where(and(...conditions))
     .limit(1);
   return row ? toCarDTO(row) : null;
 }

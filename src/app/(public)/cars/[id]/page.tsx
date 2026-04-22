@@ -14,11 +14,13 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Navbar } from "@/components/shared/navbar";
+import { BackLink } from "@/components/shared/back-link";
 import { RentalRequestForm } from "@/components/cars/rental-request-form";
 import {
   CarInUseBadge,
   CarStatusBadge,
 } from "@/components/cars/car-status-badge";
+import { BrandLogo } from "@/components/cars/brand-logo";
 
 export default async function CarDetailPage({
   params,
@@ -33,30 +35,33 @@ export default async function CarDetailPage({
     notFound();
   }
 
-  const isAvailable = car.status === "AVAILABLE" && !car.inUse;
+  const isAvailable = car.status === "AVAILABLE";
 
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
 
       <main className="container mx-auto flex-1 px-4 py-8">
-        <Link
-          href="/"
-          className="mb-6 inline-block text-sm text-muted-foreground hover:underline"
-        >
-          &larr; Back to all cars
-        </Link>
+        <BackLink href="/" label="Back to all cars" />
 
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Car Details */}
           <Card>
             <CardHeader>
               <div className="flex items-start justify-between gap-2">
-                <div>
-                  <CardTitle className="text-2xl">
-                    {car.make} {car.model}
-                  </CardTitle>
-                  <CardDescription>{car.year} model</CardDescription>
+                <div className="flex items-start gap-3">
+                  <BrandLogo
+                    logoPath={car.brandLogoPath}
+                    brandName={car.make}
+                    size={48}
+                    className="mt-1 shrink-0"
+                  />
+                  <div>
+                    <CardTitle className="text-2xl">
+                      {car.make} {car.model}
+                    </CardTitle>
+                    <CardDescription>{car.year} model</CardDescription>
+                  </div>
                 </div>
                 {car.inUse ? (
                   <CarInUseBadge />
@@ -132,11 +137,9 @@ export default async function CarDetailPage({
                   <p className="text-sm text-yellow-800 dark:text-yellow-200">
                     This car is currently{" "}
                     <span className="font-bold">
-                      {car.inUse
-                        ? "in use"
-                        : car.status === "MAINTENANCE"
-                          ? "under maintenance"
-                          : "unavailable"}
+                      {car.status === "MAINTENANCE"
+                        ? "under maintenance"
+                        : "unavailable"}
                     </span>
                     . Please check back later or browse other available
                     vehicles.

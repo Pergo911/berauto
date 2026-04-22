@@ -1,9 +1,10 @@
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, isNull, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 import type { RentalStatus } from "@/types";
 import { db } from "@/db";
-import { cars, invoices, rentals, users } from "@/db/schema";
+import { brands, cars, invoices, rentals, users } from "@/db/schema";
+import type { InvoicePDFData } from "@/components/invoices/invoice-pdf";
 
 // ── Table alias ────────────────────────────────────────
 
@@ -18,7 +19,6 @@ export type InvoiceDTO = {
   issuedAt: Date;
   issuedBy: string;
   issuerName: string | null;
-  pdfUrl: string | null;
   rental: {
     startDate: Date;
     endDate: Date;
@@ -31,6 +31,7 @@ export type InvoiceDTO = {
     model: string;
     year: number;
     licensePlate: string;
+    brandLogoPath: string | null;
   };
 };
 
@@ -43,6 +44,7 @@ export type ClosedRentalWithoutInvoiceDTO = {
     year: number;
     licensePlate: string;
     dailyRate: number;
+    brandLogoPath: string | null;
   };
   userId: string | null;
   userName: string | null;
@@ -53,6 +55,8 @@ export type ClosedRentalWithoutInvoiceDTO = {
   endDate: Date;
   status: RentalStatus;
   createdAt: Date;
+  /** Notes from the RETURN event, if any. */
+  returnNotes: string | null;
 };
 
 // ── Queries ────────────────────────────────────────────
@@ -81,11 +85,13 @@ export async function getInvoices(filters?: {
       carModel: cars.model,
       carYear: cars.year,
       carLicensePlate: cars.licensePlate,
+      carBrandLogoPath: brands.logoPath,
       issuerName: issuerRef.name,
     })
     .from(invoices)
     .innerJoin(rentals, eq(invoices.rentalId, rentals.id))
     .innerJoin(cars, eq(rentals.carId, cars.id))
+    .leftJoin(brands, eq(cars.brandId, brands.id))
     .leftJoin(issuerRef, eq(invoices.issuedBy, issuerRef.id))
     .where(conditions.length > 0 ? and(...conditions) : undefined)
     .orderBy(desc(invoices.issuedAt));
@@ -97,7 +103,6 @@ export async function getInvoices(filters?: {
     issuedAt: r.invoice.issuedAt,
     issuedBy: r.invoice.issuedBy,
     issuerName: r.issuerName,
-    pdfUrl: r.invoice.pdfUrl,
     rental: {
       startDate: r.rentalStartDate,
       endDate: r.rentalEndDate,
@@ -110,6 +115,7 @@ export async function getInvoices(filters?: {
       model: r.carModel,
       year: r.carYear,
       licensePlate: r.carLicensePlate,
+      brandLogoPath: r.carBrandLogoPath ?? null,
     },
   }));
 }
@@ -137,12 +143,20 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
       carYear: cars.year,
       carLicensePlate: cars.licensePlate,
       carDailyRate: cars.dailyRate,
+      carBrandLogoPath: brands.logoPath,
       invoiceId: invoices.id,
       userName: users.name,
       userEmail: users.email,
+      returnNotes: sql<string | null>`(
+        SELECT notes FROM rental_events
+        WHERE rental_id = ${rentals.id}
+          AND event_type = 'RETURN'
+        LIMIT 1
+      )`,
     })
     .from(rentals)
     .innerJoin(cars, eq(rentals.carId, cars.id))
+    .leftJoin(brands, eq(cars.brandId, brands.id))
     .leftJoin(invoices, eq(rentals.id, invoices.rentalId))
     .leftJoin(users, eq(rentals.userId, users.id))
     .where(and(eq(rentals.status, "CLOSED"), isNull(invoices.id)))
@@ -157,6 +171,7 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
       year: r.carYear,
       licensePlate: r.carLicensePlate,
       dailyRate: Number(r.carDailyRate),
+      brandLogoPath: r.carBrandLogoPath ?? null,
     },
     userId: r.rental.userId,
     userName: r.userName ?? null,
@@ -167,5 +182,86 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
     endDate: r.rental.endDate,
     status: r.rental.status,
     createdAt: r.rental.createdAt,
+    returnNotes: r.returnNotes,
   }));
+}
+
+// ── PDF Data Query ─────────────────────────────────────
+
+const customerRef = alias(users, "customerRef");
+const pdfIssuerRef = alias(users, "pdfIssuerRef");
+
+/**
+ * Fetch all data required to render an invoice PDF.
+ * Returns `null` if no invoice exists for the given rental ID.
+ */
+export async function getInvoicePDFData(
+  rentalId: string
+): Promise<InvoicePDFData | null> {
+  const rows = await db
+    .select({
+      invoiceId: invoices.id,
+      rentalId: invoices.rentalId,
+      amount: invoices.amount,
+      issuedAt: invoices.issuedAt,
+      issuerName: pdfIssuerRef.name,
+      startDate: rentals.startDate,
+      endDate: rentals.endDate,
+      userId: rentals.userId,
+      guestName: rentals.guestName,
+      guestEmail: rentals.guestEmail,
+      carMake: cars.make,
+      carModel: cars.model,
+      carYear: cars.year,
+      carLicensePlate: cars.licensePlate,
+      carDailyRate: cars.dailyRate,
+      customerName: customerRef.name,
+      customerEmail: customerRef.email,
+    })
+    .from(invoices)
+    .innerJoin(rentals, eq(invoices.rentalId, rentals.id))
+    .innerJoin(cars, eq(rentals.carId, cars.id))
+    .leftJoin(customerRef, eq(rentals.userId, customerRef.id))
+    .leftJoin(pdfIssuerRef, eq(invoices.issuedBy, pdfIssuerRef.id))
+    .where(eq(invoices.rentalId, rentalId))
+    .limit(1);
+
+  const r = rows[0];
+  if (!r) return null;
+
+  const start = new Date(r.startDate);
+  const end = new Date(r.endDate);
+  const days = Math.max(
+    1,
+    Math.ceil((end.getTime() - start.getTime()) / 86400000)
+  );
+  const amount = Number(r.amount);
+
+  const shortId = r.invoiceId.replace(/-/g, "").slice(0, 8).toUpperCase();
+  const invoiceNumber = `INV-${new Date(r.issuedAt).getFullYear()}-${shortId}`;
+
+  return {
+    invoiceNumber,
+    id: r.invoiceId,
+    rentalId: r.rentalId,
+    amount,
+    issuedAt: r.issuedAt,
+    issuerName: r.issuerName ?? null,
+    customer: {
+      name: r.customerName ?? r.guestName ?? "Unknown Customer",
+      email: r.customerEmail ?? r.guestEmail ?? "",
+    },
+    rental: {
+      startDate: start,
+      endDate: end,
+      days,
+    },
+    car: {
+      make: r.carMake,
+      model: r.carModel,
+      year: r.carYear,
+      licensePlate: r.carLicensePlate,
+      dailyRate: Number(r.carDailyRate),
+    },
+  };
 }

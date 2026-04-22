@@ -15,6 +15,10 @@ export const createRentalSchema = z
     carId: z.uuid("Invalid car ID"),
     startDate: z.iso.date("Invalid start date"),
     endDate: z.iso.date("Invalid end date"),
+    notes: z
+      .string()
+      .max(1000, "Notes cannot exceed 1000 characters")
+      .optional(),
     // Guest fields (for non-registered users)
     guestName: z
       .string()
@@ -49,6 +53,12 @@ export const mileageSchema = z.object({
 });
 
 export type MileageInput = z.infer<typeof mileageSchema>;
+
+export const mileageWithNotesSchema = mileageSchema.extend({
+  notes: z.string().max(1000, "Notes cannot exceed 1000 characters").optional(),
+});
+
+export type MileageWithNotesInput = z.infer<typeof mileageWithNotesSchema>;
 
 export const rejectReasonSchema = z.object({
   reason: z

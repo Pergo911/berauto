@@ -5,10 +5,8 @@ import type { CarDTO } from "@/lib/data/cars";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  CarInUseBadge,
-  CarStatusBadge,
-} from "@/components/cars/car-status-badge";
+import { CarStatusBadge } from "@/components/cars/car-status-badge";
+import { BrandLogo } from "@/components/cars/brand-logo";
 
 type CarCardProps = {
   car: CarDTO;
@@ -21,15 +19,18 @@ export function CarCard({ car, bookable }: CarCardProps) {
     <Card className={cn("flex flex-col", unavailable && "opacity-70")}>
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-lg">
-            {car.make} {car.model}
-          </CardTitle>
-          {unavailable &&
-            (car.inUse ? (
-              <CarInUseBadge />
-            ) : (
-              <CarStatusBadge status={car.status} />
-            ))}
+          <div className="flex items-center gap-3">
+            <BrandLogo
+              logoPath={car.brandLogoPath}
+              brandName={car.make}
+              size={36}
+              className="shrink-0"
+            />
+            <CardTitle className="text-lg">
+              {car.make} {car.model}
+            </CardTitle>
+          </div>
+          {unavailable && <CarStatusBadge status={car.status} />}
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col gap-4">

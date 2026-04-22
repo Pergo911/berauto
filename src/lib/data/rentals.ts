@@ -3,7 +3,7 @@ import { alias } from "drizzle-orm/pg-core";
 
 import type { RentalStatus } from "@/types";
 import { db } from "@/db";
-import { cars, rentalEvents, rentals, users } from "@/db/schema";
+import { brands, cars, rentalEvents, rentals, users } from "@/db/schema";
 
 // ── Table aliases (self-join on users) ─────────────────
 
@@ -21,6 +21,8 @@ export type RentalDTO = {
     model: string;
     year: number;
     licensePlate: string;
+    dailyRate: number;
+    brandLogoPath: string | null;
   };
   userId: string | null;
   userName: string | null;
@@ -37,6 +39,8 @@ export type RentalDTO = {
   updatedAt: Date;
   /** Most recent mileage reading: latest rental-event mileage, falling back to the car's stored mileage. */
   lastMileageKm: number | null;
+  /** Notes from the initial REQUEST event, if any. */
+  requestNotes: string | null;
 };
 
 export type RentalEventDTO = {
@@ -58,8 +62,11 @@ type RentalRow = {
   carModel: string | null;
   carYear: number | null;
   carLicensePlate: string | null;
+  carDailyRate: string | null;
   carMileageKm: number;
+  carBrandLogoPath: string | null;
   lastEventMileageKm: number | null;
+  requestNotes: string | null;
   userName: string | null;
   userEmail: string | null;
   agentName: string | null;
@@ -74,6 +81,8 @@ function toRentalDTO(row: RentalRow): RentalDTO {
       model: row.carModel ?? "",
       year: row.carYear ?? 0,
       licensePlate: row.carLicensePlate ?? "",
+      dailyRate: Number(row.carDailyRate ?? 0),
+      brandLogoPath: row.carBrandLogoPath ?? null,
     },
     userId: row.rental.userId,
     userName: row.userName,
@@ -89,6 +98,7 @@ function toRentalDTO(row: RentalRow): RentalDTO {
     createdAt: row.rental.createdAt,
     updatedAt: row.rental.updatedAt,
     lastMileageKm: row.lastEventMileageKm ?? row.carMileageKm,
+    requestNotes: row.requestNotes,
   };
 }
 
@@ -127,12 +137,20 @@ export async function getRentals(filters?: {
       carModel: cars.model,
       carYear: cars.year,
       carLicensePlate: cars.licensePlate,
+      carDailyRate: cars.dailyRate,
       carMileageKm: cars.mileageKm,
+      carBrandLogoPath: brands.logoPath,
       lastEventMileageKm: sql<number | null>`(
         SELECT mileage_km FROM rental_events
         WHERE rental_id = ${rentals.id}
           AND mileage_km IS NOT NULL
         ORDER BY "timestamp" DESC
+        LIMIT 1
+      )`,
+      requestNotes: sql<string | null>`(
+        SELECT notes FROM rental_events
+        WHERE rental_id = ${rentals.id}
+          AND event_type = 'REQUEST'
         LIMIT 1
       )`,
       userName: userRef.name,
@@ -141,6 +159,7 @@ export async function getRentals(filters?: {
     })
     .from(rentals)
     .innerJoin(cars, eq(rentals.carId, cars.id))
+    .leftJoin(brands, eq(cars.brandId, brands.id))
     .leftJoin(userRef, eq(rentals.userId, userRef.id))
     .leftJoin(agentRef, eq(rentals.agentId, agentRef.id))
     .where(conditions.length > 0 ? and(...conditions) : undefined)
@@ -158,12 +177,20 @@ export async function getRentalById(id: string): Promise<RentalDTO | null> {
       carModel: cars.model,
       carYear: cars.year,
       carLicensePlate: cars.licensePlate,
+      carDailyRate: cars.dailyRate,
       carMileageKm: cars.mileageKm,
+      carBrandLogoPath: brands.logoPath,
       lastEventMileageKm: sql<number | null>`(
         SELECT mileage_km FROM rental_events
         WHERE rental_id = ${rentals.id}
           AND mileage_km IS NOT NULL
         ORDER BY "timestamp" DESC
+        LIMIT 1
+      )`,
+      requestNotes: sql<string | null>`(
+        SELECT notes FROM rental_events
+        WHERE rental_id = ${rentals.id}
+          AND event_type = 'REQUEST'
         LIMIT 1
       )`,
       userName: userRef.name,
@@ -172,6 +199,7 @@ export async function getRentalById(id: string): Promise<RentalDTO | null> {
     })
     .from(rentals)
     .innerJoin(cars, eq(rentals.carId, cars.id))
+    .leftJoin(brands, eq(cars.brandId, brands.id))
     .leftJoin(userRef, eq(rentals.userId, userRef.id))
     .leftJoin(agentRef, eq(rentals.agentId, agentRef.id))
     .where(eq(rentals.id, id))

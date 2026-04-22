@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -44,11 +45,14 @@ export function StatCard({
     <Card
       className={cn(
         // Hero-style gradient background
-        "border-border/60 h-full min-w-44 flex-1",
-        "bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_50%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(240,253,250,0.95))]",
-        "dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_50%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(17,24,39,0.95))]",
+        "h-full min-w-44 flex-1",
         href &&
-          "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/30"
+          "bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_50%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(240,253,250,0.95))]",
+        href &&
+          "dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_50%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(17,24,39,0.95))]",
+        href
+          ? "border-border/60 ring-1 ring-primary/30 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-primary/60"
+          : "border-border/60"
       )}
     >
       <CardHeader>
@@ -56,31 +60,52 @@ export function StatCard({
           <div className="min-w-0">
             <div className="flex items-center justify-between gap-2">
               <CardTitle className="flex min-w-0 items-center gap-2 text-sm font-medium">
-                <span className="shrink-0 rounded-lg bg-primary/10 p-1.5 text-primary">
+                <span
+                  className={cn(
+                    "shrink-0 rounded-lg p-1.5",
+                    href
+                      ? "bg-primary/15 text-primary"
+                      : "bg-primary/10 text-primary"
+                  )}
+                >
                   <Icon className="size-4" />
                 </span>
                 <span className="truncate">{title}</span>
               </CardTitle>
-              <p
-                className={cn(
-                  valueSizeClass[valueSize],
-                  "shrink-0 leading-none"
+              <div className="flex shrink-0 items-center gap-1.5">
+                <p className={cn(valueSizeClass[valueSize], "leading-none")}>
+                  {value}
+                </p>
+                {href && (
+                  <ArrowUpRight className="size-4 text-primary opacity-60" />
                 )}
-              >
-                {value}
-              </p>
+              </div>
             </div>
             <CardDescription className="mt-1">{description}</CardDescription>
           </div>
         ) : (
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl">{title}</CardTitle>
-            <span className="rounded-xl bg-primary/10 p-2 text-primary">
-              <Icon className="size-6" />
-            </span>
+          <div className="flex items-start justify-between gap-2">
+            <div className="space-y-1.5">
+              <CardTitle className="text-2xl">{title}</CardTitle>
+              <CardDescription>{description}</CardDescription>
+            </div>
+            <div className="flex shrink-0 items-center gap-1.5">
+              <span
+                className={cn(
+                  "rounded-xl p-2",
+                  href
+                    ? "bg-primary/15 text-primary"
+                    : "bg-primary/10 text-primary"
+                )}
+              >
+                <Icon className="size-6" />
+              </span>
+              {href && (
+                <ArrowUpRight className="size-5 text-primary opacity-60" />
+              )}
+            </div>
           </div>
         )}
-        {!compact && <CardDescription>{description}</CardDescription>}
       </CardHeader>
       {!compact && (
         <CardContent className="flex gap-2 items-baseline">

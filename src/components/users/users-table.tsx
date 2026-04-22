@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Settings2 } from "lucide-react";
+import { Eye, Settings2 } from "lucide-react";
 
 import type { UserDTO } from "@/lib/data/users";
 import type { UserRole } from "@/types";
@@ -44,6 +44,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { UserDetailDialog } from "@/components/users/user-detail-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
 import { DataTableColumnHeader } from "@/components/shared/data-table-column-header";
 import { DataTablePagination } from "@/components/shared/data-table-pagination";
@@ -125,6 +126,17 @@ const columns: ColumnDef<UserDTO>[] = [
     ),
     sortingFn: "datetime",
   },
+  {
+    id: "detail",
+    header: () => null,
+    cell: () => (
+      <span className="flex items-center justify-end opacity-0 transition-opacity group-hover/row:opacity-100">
+        <Eye className="size-4 text-muted-foreground" />
+      </span>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
 ];
 
 export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
@@ -132,6 +144,7 @@ export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState("");
+  const [selectedUser, setSelectedUser] = useState<UserDTO | null>(null);
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -259,7 +272,11 @@ export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
               <TableBody>
                 {table.getRowModel().rows.length > 0 ? (
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id}>
+                    <TableRow
+                      key={row.id}
+                      className="group/row cursor-pointer"
+                      onClick={() => setSelectedUser(row.original)}
+                    >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
                           {flexRender(
@@ -289,6 +306,16 @@ export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
             <DataTablePagination table={table} />
           </div>
         </>
+      )}
+
+      {selectedUser && (
+        <UserDetailDialog
+          user={selectedUser}
+          open={!!selectedUser}
+          onOpenChange={(open) => {
+            if (!open) setSelectedUser(null);
+          }}
+        />
       )}
     </div>
   );

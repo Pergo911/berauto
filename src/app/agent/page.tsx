@@ -65,7 +65,7 @@ export default async function AgentPage() {
             ({allRentals.length})
           </span>
         </h2>
-        <RentalTable rentals={allRentals} showUser />
+        <RentalTable rentals={allRentals} showUser variant="agent" />
       </section>
     </div>
   );

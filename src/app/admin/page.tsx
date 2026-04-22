@@ -16,6 +16,25 @@ import { formatCurrency } from "@/lib/utils";
 import { StatCard } from "@/components/shared/stat-card";
 import { PageHeader } from "@/components/shared/page-header";
 
+const navCards = [
+  {
+    key: "totalCars" as const,
+    title: "Cars",
+    description: "Manage the vehicle fleet",
+    href: "/admin/cars",
+    icon: Car,
+    subLabel: "total vehicles",
+  },
+  {
+    key: "totalUsers" as const,
+    title: "Users",
+    description: "Manage users and agents",
+    href: "/admin/users",
+    icon: Users,
+    subLabel: "registered users",
+  },
+];
+
 export default async function AdminPage() {
   const stats = await getAdminDashboardStats();
 
@@ -83,21 +102,40 @@ export default async function AdminPage() {
   ];
 
   return (
-    <div>
-      <PageHeader title="Admin Dashboard" className="mb-6" />
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {statCards.map((card) => (
-          <StatCard
-            key={card.title}
-            title={card.title}
-            description={card.description}
-            value={card.value}
-            icon={card.icon}
-            valueSize="2xl"
-            compact
-          />
-        ))}
-      </div>
+    <div className="space-y-10">
+      <section>
+        <PageHeader title="Admin Dashboard" className="mb-6" />
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {navCards.map((card) => (
+            <StatCard
+              key={card.key}
+              title={card.title}
+              description={card.description}
+              value={stats[card.key]}
+              icon={card.icon}
+              href={card.href}
+              subLabel={card.subLabel}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="mb-4 text-xl font-semibold">Overview</h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {statCards.map((card) => (
+            <StatCard
+              key={card.title}
+              title={card.title}
+              description={card.description}
+              value={card.value}
+              icon={card.icon}
+              valueSize="2xl"
+              compact
+            />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

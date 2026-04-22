@@ -1,6 +1,7 @@
 import { getRentals } from "@/lib/data/rentals";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
+import { BackLink } from "@/components/shared/back-link";
 import { RentalAgentCard } from "@/components/rentals/rental-agent-card";
 import { HandoverReturnActions } from "@/components/rentals/handover-return-actions";
 import { RentalTable } from "@/components/rentals/rental-table";
@@ -16,6 +17,7 @@ export default async function AgentActivePage() {
 
   return (
     <div className="space-y-10">
+      <BackLink href="/agent" label="Back to Dashboard" />
       <PageHeader title="Active Rentals" />
 
       {/* Awaiting Handover section */}
@@ -86,7 +88,12 @@ export default async function AgentActivePage() {
             ({pastRentals.length})
           </span>
         </h2>
-        <RentalTable rentals={pastRentals} showUser hideStatusFilter />
+        <RentalTable
+          rentals={pastRentals}
+          showUser
+          hideStatusFilter
+          variant="agent"
+        />
       </section>
     </div>
   );
