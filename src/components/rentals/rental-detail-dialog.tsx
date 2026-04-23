@@ -34,6 +34,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { BrandLogo } from "@/components/cars/brand-logo";
 import { RentalStatusBadge } from "@/components/rentals/rental-status-badge";
+import Image from "next/image";
 
 // ── Types ──────────────────────────────────────────────
 
@@ -285,22 +286,38 @@ export function RentalDetailDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
-          <div className="flex items-center gap-2">
-            <DialogTitle className="flex items-center gap-2">
-              {rental.car.brandLogoPath ? (
-                <BrandLogo
-                  logoPath={rental.car.brandLogoPath}
-                  brandName={rental.car.make}
-                  size={20}
+          <div className="flex items-start gap-3">
+            {/* Small square thumbnail */}
+            {rental.car.imageUrl && (
+              <div className="relative size-14 shrink-0 overflow-hidden rounded-md bg-muted border">
+                <Image
+                  src={rental.car.imageUrl}
+                  alt={`${rental.car.make} ${rental.car.model}`}
+                  fill
+                  className="object-cover"
+                  sizes="56px"
                 />
-              ) : (
-                <Car className="size-5 text-muted-foreground" />
-              )}
-              {rental.car.make} {rental.car.model} ({rental.car.year})
-            </DialogTitle>
-            <RentalStatusBadge status={rental.status} />
+              </div>
+            )}
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <DialogTitle className="flex items-center gap-2">
+                  {rental.car.brandLogoPath ? (
+                    <BrandLogo
+                      logoPath={rental.car.brandLogoPath}
+                      brandName={rental.car.make}
+                      size={20}
+                    />
+                  ) : (
+                    <Car className="size-5 text-muted-foreground" />
+                  )}
+                  {rental.car.make} {rental.car.model} ({rental.car.year})
+                </DialogTitle>
+                <RentalStatusBadge status={rental.status} />
+              </div>
+              <DialogDescription>{rental.car.licensePlate}</DialogDescription>
+            </div>
           </div>
-          <DialogDescription>{rental.car.licensePlate}</DialogDescription>
         </DialogHeader>
 
         {/* Rental Details */}

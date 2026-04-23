@@ -43,6 +43,13 @@
       "when": 1776759706055,
       "tag": "0005_striped_storm",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1776933253659,
+      "tag": "0006_spooky_trish_tilby",
+      "breakpoints": true
     }
   ]
 }

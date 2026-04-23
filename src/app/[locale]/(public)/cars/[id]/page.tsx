@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
+import Image from "next/image";
 
 import { auth } from "@/lib/auth";
 import { getBookedIntervals, getCarById } from "@/lib/data/cars";
@@ -78,6 +79,31 @@ export default async function CarDetailPage({
               </div>
             </CardHeader>
             <CardContent className="grid gap-4">
+              {/* Car image with overlay */}
+              {car.imageUrl && (
+                <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted">
+                  <Image
+                    src={car.imageUrl}
+                    alt={`${car.make} ${car.model}`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                  <div className="absolute bottom-0 left-0 flex items-center gap-2.5 p-4">
+                    <BrandLogo
+                      logoPath={car.brandLogoPath}
+                      brandName={car.make}
+                      size={32}
+                      className="shrink-0 brightness-0 invert"
+                    />
+                    <span className="text-base font-bold text-white drop-shadow">
+                      {car.make} {car.model}
+                    </span>
+                  </div>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">

@@ -74,6 +74,7 @@ export const cars = pgTable(
     dailyRate: numeric("daily_rate", { precision: 10, scale: 2 }).notNull(),
     status: carStatusEnum("status").notNull().default("AVAILABLE"),
     brandId: uuid("brand_id").references(() => brands.id),
+    imageUrl: varchar("image_url", { length: 512 }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

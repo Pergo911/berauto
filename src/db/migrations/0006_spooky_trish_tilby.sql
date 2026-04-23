@@ -1,0 +1,1 @@
+ALTER TABLE "cars" ADD COLUMN "image_url" varchar(512);

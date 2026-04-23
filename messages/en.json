@@ -220,8 +220,14 @@
           "title": "Revenue",
           "description": "Total invoiced amount"
         },
-        "users": { "title": "Users", "description": "Registered users" },
-        "agents": { "title": "Agents", "description": "Agent accounts" }
+        "users": {
+          "title": "Users",
+          "description": "Registered users"
+        },
+        "agents": {
+          "title": "Agents",
+          "description": "Agent accounts"
+        }
       }
     },
     "carsPage": {
@@ -564,6 +570,13 @@
     "creatingButton": "Creating...",
     "updatingButton": "Updating...",
     "toastCreated": "Car created successfully.",
-    "toastUpdated": "Car updated successfully."
+    "toastUpdated": "Car updated successfully.",
+    "imageLabel": "Car Photo",
+    "imageUpload": "Click or drag & drop to upload",
+    "imageDragActive": "Drop image here",
+    "imageHint": "JPG, PNG, WebP or GIF · max 4 MB",
+    "imageReplace": "Replace photo",
+    "imageRemove": "Remove",
+    "imageUploading": "Uploading..."
   }
 }

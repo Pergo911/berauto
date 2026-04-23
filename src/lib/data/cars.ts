@@ -31,6 +31,7 @@ export type CarDTO = {
   status: CarStatus;
   brandId: string | null;
   brandLogoPath: string | null;
+  imageUrl: string | null;
   /** True when at least one ACTIVE or APPROVED rental exists for this car. */
   inUse: boolean;
   createdAt: Date;
@@ -59,6 +60,7 @@ function toCarDTO(
     ...row,
     dailyRate: Number(row.dailyRate),
     brandLogoPath: row.brandLogoPath,
+    imageUrl: row.imageUrl ?? null,
   };
 }
 

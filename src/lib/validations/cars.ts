@@ -29,6 +29,7 @@ export const createCarSchema = z.object({
   dailyRate: z.coerce.number().positive("Daily rate must be positive"),
   status: carStatusEnum.default("AVAILABLE"),
   brandId: z.string().uuid().nullish(),
+  imageUrl: z.string().url().nullish(),
 });
 
 export type CreateCarInput = z.infer<typeof createCarSchema>;

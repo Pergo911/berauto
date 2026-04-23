@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { CalendarDays, Car, User } from "lucide-react";
+import Image from "next/image";
 
 import type { RentalDTO } from "@/lib/data/rentals";
 import { formatDate } from "@/lib/utils";
@@ -26,25 +27,40 @@ export function RentalAgentCard({ rental, action }: RentalAgentCardProps) {
   return (
     <Card className="border-border/60 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.08),transparent_50%),linear-gradient(135deg,rgba(255,255,255,0.98),rgba(240,253,250,0.95))] dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.15),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_50%),linear-gradient(135deg,rgba(15,23,42,0.97),rgba(17,24,39,0.95))]">
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base">
-            {rental.car.brandLogoPath ? (
-              <BrandLogo
-                logoPath={rental.car.brandLogoPath}
-                brandName={rental.car.make}
-                size={20}
-                className="shrink-0"
+        <div className="flex items-start gap-3">
+          {rental.car.imageUrl && (
+            <div className="relative size-14 shrink-0 overflow-hidden rounded-md bg-muted border">
+              <Image
+                src={rental.car.imageUrl}
+                alt={`${rental.car.make} ${rental.car.model}`}
+                fill
+                className="object-cover"
+                sizes="56px"
               />
-            ) : (
-              <Car className="size-4 shrink-0 text-muted-foreground" />
-            )}
-            {rental.car.make} {rental.car.model} ({rental.car.year})
-          </CardTitle>
-          <RentalStatusBadge status={rental.status} />
+            </div>
+          )}
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center justify-between gap-2">
+              <CardTitle className="flex items-center gap-2 text-base">
+                {rental.car.brandLogoPath ? (
+                  <BrandLogo
+                    logoPath={rental.car.brandLogoPath}
+                    brandName={rental.car.make}
+                    size={20}
+                    className="shrink-0"
+                  />
+                ) : (
+                  <Car className="size-4 shrink-0 text-muted-foreground" />
+                )}
+                {rental.car.make} {rental.car.model}
+              </CardTitle>
+              <RentalStatusBadge status={rental.status} />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {rental.car.year} · {rental.car.licensePlate}
+            </p>
+          </div>
         </div>
-        <p className="text-xs text-muted-foreground">
-          {rental.car.licensePlate}
-        </p>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="space-y-1 text-sm">

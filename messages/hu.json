@@ -224,7 +224,10 @@
           "title": "Felhasználók",
           "description": "Regisztrált felhasználók"
         },
-        "agents": { "title": "Ügyintézők", "description": "Ügyintézői fiókok" }
+        "agents": {
+          "title": "Ügyintézők",
+          "description": "Ügyintézői fiókok"
+        }
       }
     },
     "carsPage": {
@@ -567,6 +570,13 @@
     "creatingButton": "Létrehozás...",
     "updatingButton": "Módosítás...",
     "toastCreated": "Autó sikeresen létrehozva.",
-    "toastUpdated": "Autó sikeresen módosítva."
+    "toastUpdated": "Autó sikeresen módosítva.",
+    "imageLabel": "Autó fotó",
+    "imageUpload": "Kattints vagy húzd ide a feltöltéshez",
+    "imageDragActive": "Engedd el a képet",
+    "imageHint": "JPG, PNG, WebP vagy GIF · max 4 MB",
+    "imageReplace": "Fotó cseréje",
+    "imageRemove": "Eltávolítás",
+    "imageUploading": "Feltöltés..."
   }
 }

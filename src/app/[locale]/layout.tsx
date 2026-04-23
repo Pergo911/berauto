@@ -3,7 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
 
+import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { ThemeProvider } from "@/components/shared/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { routing } from "@/i18n/routing";
@@ -51,6 +54,7 @@ export default async function LocaleLayout({
       >
         <NextIntlClientProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
             {children}
             <Toaster />
           </ThemeProvider>

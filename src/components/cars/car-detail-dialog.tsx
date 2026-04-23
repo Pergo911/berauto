@@ -12,6 +12,7 @@ import type { BrandDTO } from "@/lib/data/brands";
 import { BrandLogo } from "@/components/cars/brand-logo";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { deleteCar, getCarRentalHistory } from "@/actions/cars";
+import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -143,26 +144,42 @@ export function CarDetailDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
-          <div className="flex items-center gap-2">
-            <DialogTitle className="flex items-center gap-2">
-              {car.brandLogoPath ? (
-                <BrandLogo
-                  logoPath={car.brandLogoPath}
-                  brandName={car.make}
-                  size={20}
+          <div className="flex items-start gap-3">
+            {/* Small square thumbnail */}
+            {car.imageUrl && (
+              <div className="relative size-14 shrink-0 overflow-hidden rounded-md bg-muted border">
+                <Image
+                  src={car.imageUrl}
+                  alt={`${car.make} ${car.model}`}
+                  fill
+                  className="object-cover"
+                  sizes="56px"
                 />
-              ) : (
-                <Car className="size-5 text-muted-foreground" />
-              )}
-              {car.make} {car.model}
-            </DialogTitle>
-            <CarStatusBadge status={car.status} />
-            {car.inUse && <CarInUseBadge />}
+              </div>
+            )}
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <DialogTitle className="flex items-center gap-2">
+                  {car.brandLogoPath ? (
+                    <BrandLogo
+                      logoPath={car.brandLogoPath}
+                      brandName={car.make}
+                      size={20}
+                    />
+                  ) : (
+                    <Car className="size-5 text-muted-foreground" />
+                  )}
+                  {car.make} {car.model}
+                </DialogTitle>
+                <CarStatusBadge status={car.status} />
+                {car.inUse && <CarInUseBadge />}
+              </div>
+              <DialogDescription>
+                {car.licensePlate} · {car.year} ·{" "}
+                {car.mileageKm.toLocaleString()} km
+              </DialogDescription>
+            </div>
           </div>
-          <DialogDescription>
-            {car.licensePlate} · {car.year} · {car.mileageKm.toLocaleString()}{" "}
-            km
-          </DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue="details">
