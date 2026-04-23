@@ -140,7 +140,8 @@ export function UserDetailDialog({
             </Badge>
           </div>
           <DialogDescription>
-          {user.email} · {t("joined", { date: formatDate(user.createdAt, locale) })}
+            {user.email} ·{" "}
+            {t("joined", { date: formatDate(user.createdAt, locale) })}
           </DialogDescription>
         </DialogHeader>
 

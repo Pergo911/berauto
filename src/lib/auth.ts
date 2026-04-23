@@ -1,17 +1,17 @@
-import NextAuth from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
-import bcryptjs from 'bcryptjs';
-import {eq} from 'drizzle-orm';
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import bcryptjs from "bcryptjs";
+import { eq } from "drizzle-orm";
 
-import {db} from '@/db';
-import {users} from '@/db/schema';
+import { db } from "@/db";
+import { users } from "@/db/schema";
 
-import type {UserRole} from '@/types';
-import {hasLocale} from 'next-intl';
+import type { UserRole } from "@/types";
+import { hasLocale } from "next-intl";
 
-import {routing} from '@/i18n/routing';
+import { routing } from "@/i18n/routing";
 
-declare module 'next-auth' {
+declare module "next-auth" {
   interface User {
     role: UserRole;
   }
@@ -26,7 +26,7 @@ declare module 'next-auth' {
   }
 }
 
-declare module 'next-auth' {
+declare module "next-auth" {
   interface JWT {
     id: string;
     role: UserRole;
@@ -34,26 +34,24 @@ declare module 'next-auth' {
 }
 
 function getLocaleFromPath(pathname: string) {
-  if (!pathname || pathname === '/') {
+  if (!pathname || pathname === "/") {
     return routing.defaultLocale;
   }
 
-  const segment = pathname.split('/')[1];
+  const segment = pathname.split("/")[1];
 
   if (!segment) {
     return routing.defaultLocale;
   }
 
-  return hasLocale(routing.locales, segment)
-    ? segment
-    : routing.defaultLocale;
+  return hasLocale(routing.locales, segment) ? segment : routing.defaultLocale;
 }
 
 function stripLocalePrefix(pathname: string) {
   const locale = getLocaleFromPath(pathname);
   const prefixed = `/${locale}`;
 
-  if (pathname === prefixed) return '/';
+  if (pathname === prefixed) return "/";
   if (pathname.startsWith(`${prefixed}/`)) {
     return pathname.slice(prefixed.length);
   }
@@ -63,18 +61,18 @@ function stripLocalePrefix(pathname: string) {
 }
 
 function localizedPath(path: string, locale: string) {
-  if (path === '/') return `/${locale}`;
+  if (path === "/") return `/${locale}`;
   return `/${locale}${path}`;
 }
 
-export const {handlers, signIn, signOut, auth} = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   providers: [
     Credentials({
-      name: 'credentials',
+      name: "credentials",
       credentials: {
-        email: {label: 'Email', type: 'email'},
-        password: {label: 'Password', type: 'password'},
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
@@ -113,49 +111,49 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
     }),
   ],
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
     maxAge: 24 * 60 * 60, // 24 hours
   },
   pages: {
-    signIn: '/login',
+    signIn: "/login",
   },
   callbacks: {
-    async jwt({token, user}) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id as string;
         token.role = user.role;
       }
       return token;
     },
-    async session({session, token}) {
+    async session({ session, token }) {
       session.user.id = token.id as string;
       session.user.role = token.role as UserRole;
       return session;
     },
-    async authorized({auth, request: {nextUrl}}) {
+    async authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const locale = getLocaleFromPath(nextUrl.pathname);
       const path = stripLocalePrefix(nextUrl.pathname);
 
-      const loginUrl = localizedPath('/login', locale);
+      const loginUrl = localizedPath("/login", locale);
 
-      if (path.startsWith('/agent')) {
+      if (path.startsWith("/agent")) {
         if (!isLoggedIn) {
           return Response.redirect(new URL(loginUrl, nextUrl));
         }
 
-        return auth.user.role === 'agent' || auth.user.role === 'admin';
+        return auth.user.role === "agent" || auth.user.role === "admin";
       }
 
-      if (path.startsWith('/admin')) {
+      if (path.startsWith("/admin")) {
         if (!isLoggedIn) {
           return Response.redirect(new URL(loginUrl, nextUrl));
         }
 
-        return auth.user.role === 'admin';
+        return auth.user.role === "admin";
       }
 
-      if (path.startsWith('/dashboard')) {
+      if (path.startsWith("/dashboard")) {
         if (!isLoggedIn) {
           return Response.redirect(new URL(loginUrl, nextUrl));
         }
@@ -163,21 +161,21 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
         return true;
       }
 
-      if (path.startsWith('/login') || path.startsWith('/register')) {
+      if (path.startsWith("/login") || path.startsWith("/register")) {
         if (isLoggedIn) {
           const role = auth.user.role;
-          if (role === 'admin') {
+          if (role === "admin") {
             return Response.redirect(
-              new URL(localizedPath('/admin', locale), nextUrl)
+              new URL(localizedPath("/admin", locale), nextUrl)
             );
           }
-          if (role === 'agent') {
+          if (role === "agent") {
             return Response.redirect(
-              new URL(localizedPath('/agent', locale), nextUrl)
+              new URL(localizedPath("/agent", locale), nextUrl)
             );
           }
           return Response.redirect(
-            new URL(localizedPath('/dashboard', locale), nextUrl)
+            new URL(localizedPath("/dashboard", locale), nextUrl)
           );
         }
         return true;

@@ -165,7 +165,11 @@ function ContactSection({
       <div className="rounded-lg border bg-muted/30 p-3 space-y-1.5">
         <DetailRow icon={User} label={t("fieldName")} value={name} />
         <DetailRow icon={Mail} label={t("fieldEmail")} value={email} />
-        <DetailRow icon={Phone} label={t("fieldPhone")} value={phone ?? t("notProvided")} />
+        <DetailRow
+          icon={Phone}
+          label={t("fieldPhone")}
+          value={phone ?? t("notProvided")}
+        />
       </div>
     </div>
   );
@@ -220,7 +224,9 @@ function EventItem({
         )}
         {event.mileageKm != null && (
           <p className="text-xs text-muted-foreground">
-            {t("mileageKm", { mileage: event.mileageKm.toLocaleString(locale) })}
+            {t("mileageKm", {
+              mileage: event.mileageKm.toLocaleString(locale),
+            })}
           </p>
         )}
         {showNotes && event.notes && (
@@ -269,7 +275,8 @@ export function RentalDetailDialog({
   const days = calculateDays(rental.startDate, rental.endDate);
   const estimatedCost = rental.car.dailyRate * days;
 
-  const customerName = rental.userName ?? rental.guestName ?? tCommon("unknown");
+  const customerName =
+    rental.userName ?? rental.guestName ?? tCommon("unknown");
   const customerEmail = rental.userEmail ?? rental.guestEmail ?? "—";
   const customerPhone = details?.customerPhone ?? rental.guestPhone ?? null;
   const isGuest = !!rental.guestName;
@@ -304,25 +311,31 @@ export function RentalDetailDialog({
           </h4>
           <div className="grid grid-cols-2 gap-3 rounded-lg border bg-muted/30 p-3">
             <div>
-              <p className="text-xs text-muted-foreground">{t("fields.startDate")}</p>
+              <p className="text-xs text-muted-foreground">
+                {t("fields.startDate")}
+              </p>
               <p className="text-sm font-medium">
                 {formatDate(rental.startDate, locale)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">{t("fields.endDate")}</p>
+              <p className="text-xs text-muted-foreground">
+                {t("fields.endDate")}
+              </p>
               <p className="text-sm font-medium">
                 {formatDate(rental.endDate, locale)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">{t("fields.duration")}</p>
-              <p className="text-sm font-medium">
-                {t("days", { days })}
+              <p className="text-xs text-muted-foreground">
+                {t("fields.duration")}
               </p>
+              <p className="text-sm font-medium">{t("days", { days })}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">{t("fields.estimatedCost")}</p>
+              <p className="text-xs text-muted-foreground">
+                {t("fields.estimatedCost")}
+              </p>
               <p className="text-sm font-semibold text-primary">
                 {formatCurrency(estimatedCost, locale)}
               </p>
@@ -349,8 +362,16 @@ export function RentalDetailDialog({
                 )}
               </h4>
               <div className="rounded-lg border bg-muted/30 p-3 space-y-1.5">
-                <DetailRow icon={User} label={t("fieldName")} value={customerName} />
-                <DetailRow icon={Mail} label={t("fieldEmail")} value={customerEmail} />
+                <DetailRow
+                  icon={User}
+                  label={t("fieldName")}
+                  value={customerName}
+                />
+                <DetailRow
+                  icon={Mail}
+                  label={t("fieldEmail")}
+                  value={customerEmail}
+                />
                 <DetailRow
                   icon={Phone}
                   label={t("fieldPhone")}
@@ -421,7 +442,9 @@ export function RentalDetailDialog({
                       {formatCurrency(details.invoice.amount, locale)}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {t("issued", { date: formatDate(details.invoice.issuedAt, locale) })}
+                      {t("issued", {
+                        date: formatDate(details.invoice.issuedAt, locale),
+                      })}
                     </p>
                   </div>
                   <Button asChild size="sm" variant="outline">

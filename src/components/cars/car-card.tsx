@@ -40,17 +40,24 @@ export async function CarCard({ car, bookable }: CarCardProps) {
         <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-1.5">
             <Calendar className="size-3.5 text-muted-foreground" />
-            <span className="font-medium text-foreground">{t("year")}:</span>{" "}
+            <span className="font-medium text-foreground">
+              {t("year")}:
+            </span>{" "}
             {car.year}
           </div>
           <div className="flex items-center gap-1.5">
             <Gauge className="size-3.5 text-muted-foreground" />
-            <span className="font-medium text-foreground">{t("mileage")}:</span>{" "}
-            {car.mileageKm.toLocaleString(locale === "en" ? "en-US" : "hu-HU")} km
+            <span className="font-medium text-foreground">
+              {t("mileage")}:
+            </span>{" "}
+            {car.mileageKm.toLocaleString(locale === "en" ? "en-US" : "hu-HU")}{" "}
+            km
           </div>
           <div className="col-span-2 flex items-center gap-1.5">
             <CreditCard className="size-3.5 text-muted-foreground" />
-            <span className="font-medium text-foreground">{t("license")}:</span>{" "}
+            <span className="font-medium text-foreground">
+              {t("license")}:
+            </span>{" "}
             {car.licensePlate}
           </div>
         </div>

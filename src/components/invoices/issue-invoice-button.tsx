@@ -51,7 +51,9 @@ export function IssueInvoiceButton({
           </Label>
           {isCustom && (
             <span className="text-xs text-muted-foreground">
-              {t("computed", { amount: formatCurrency(computedAmount, locale) })}
+              {t("computed", {
+                amount: formatCurrency(computedAmount, locale),
+              })}
             </span>
           )}
         </div>

@@ -80,11 +80,17 @@ export function CarFilters() {
         <SelectContent>
           <SelectItem value="newest">{t("sortOptions.newest")}</SelectItem>
           <SelectItem value="price-asc">{t("sortOptions.priceAsc")}</SelectItem>
-          <SelectItem value="price-desc">{t("sortOptions.priceDesc")}</SelectItem>
+          <SelectItem value="price-desc">
+            {t("sortOptions.priceDesc")}
+          </SelectItem>
           <SelectItem value="year-asc">{t("sortOptions.yearAsc")}</SelectItem>
           <SelectItem value="year-desc">{t("sortOptions.yearDesc")}</SelectItem>
-          <SelectItem value="mileage-asc">{t("sortOptions.mileageAsc")}</SelectItem>
-          <SelectItem value="mileage-desc">{t("sortOptions.mileageDesc")}</SelectItem>
+          <SelectItem value="mileage-asc">
+            {t("sortOptions.mileageAsc")}
+          </SelectItem>
+          <SelectItem value="mileage-desc">
+            {t("sortOptions.mileageDesc")}
+          </SelectItem>
         </SelectContent>
       </Select>
 
@@ -101,4 +107,3 @@ export function CarFilters() {
     </div>
   );
 }
-

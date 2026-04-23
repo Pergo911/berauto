@@ -245,7 +245,9 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
             disabled={isPending}
           />
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isPending}>{t("cancel")}</AlertDialogCancel>
+            <AlertDialogCancel disabled={isPending}>
+              {t("cancel")}
+            </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={handleReject}

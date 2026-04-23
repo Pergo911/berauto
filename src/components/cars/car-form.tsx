@@ -175,7 +175,10 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
               <FormItem>
                 <FormLabel>{t("licensePlateLabel")}</FormLabel>
                 <FormControl>
-                  <Input placeholder={t("licensePlatePlaceholder")} {...field} />
+                  <Input
+                    placeholder={t("licensePlatePlaceholder")}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -225,9 +228,15 @@ export function CarForm({ car, brands, onSuccess }: CarFormProps) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="AVAILABLE">{t("statusAvailable")}</SelectItem>
-                  <SelectItem value="MAINTENANCE">{t("statusMaintenance")}</SelectItem>
-                  <SelectItem value="UNAVAILABLE">{t("statusUnavailable")}</SelectItem>
+                  <SelectItem value="AVAILABLE">
+                    {t("statusAvailable")}
+                  </SelectItem>
+                  <SelectItem value="MAINTENANCE">
+                    {t("statusMaintenance")}
+                  </SelectItem>
+                  <SelectItem value="UNAVAILABLE">
+                    {t("statusUnavailable")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />

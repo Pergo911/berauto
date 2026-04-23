@@ -113,8 +113,7 @@ function getColumns(t: TFn, locale: string): ColumnDef<CarDTO>[] {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title={t("columns.mileage")} />
       ),
-      cell: ({ row }) =>
-        `${row.original.mileageKm.toLocaleString(locale)} km`,
+      cell: ({ row }) => `${row.original.mileageKm.toLocaleString(locale)} km`,
     },
     {
       accessorKey: "dailyRate",
@@ -259,8 +258,12 @@ export function AdminCarTable({ cars, brands }: AdminCarTableProps) {
           <SelectContent>
             <SelectItem value="all">{t("allStatuses")}</SelectItem>
             <SelectItem value="AVAILABLE">{t("statusAvailable")}</SelectItem>
-            <SelectItem value="MAINTENANCE">{t("statusMaintenance")}</SelectItem>
-            <SelectItem value="UNAVAILABLE">{t("statusUnavailable")}</SelectItem>
+            <SelectItem value="MAINTENANCE">
+              {t("statusMaintenance")}
+            </SelectItem>
+            <SelectItem value="UNAVAILABLE">
+              {t("statusUnavailable")}
+            </SelectItem>
           </SelectContent>
         </Select>
 

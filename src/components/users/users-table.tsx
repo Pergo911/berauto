@@ -138,7 +138,10 @@ export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
         id: "createdAt",
         accessorFn: (row) => row.createdAt,
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title={t("columns.createdAt")} />
+          <DataTableColumnHeader
+            column={column}
+            title={t("columns.createdAt")}
+          />
         ),
         cell: ({ row }) => (
           <span className="text-muted-foreground">

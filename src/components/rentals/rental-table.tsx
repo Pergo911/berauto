@@ -60,10 +60,12 @@ type RentalTableProps = {
 };
 
 type TFn = ReturnType<typeof useTranslations<"RentalTable">>;
+type TCommonFn = ReturnType<typeof useTranslations<"Common">>;
 
 function getColumns(
   showUser: boolean,
   t: TFn,
+  tCommon: TCommonFn,
   locale: string
 ): ColumnDef<RentalDTO>[] {
   const cols: ColumnDef<RentalDTO>[] = [
@@ -97,7 +99,9 @@ function getColumns(
       ),
       cell: ({ row }) => (
         <span>
-          {row.original.userName ?? row.original.guestName ?? tCommon("unknown")}
+          {row.original.userName ??
+            row.original.guestName ??
+            tCommon("unknown")}
         </span>
       ),
     });
@@ -175,8 +179,8 @@ export function RentalTable({
   const [selectedRental, setSelectedRental] = useState<RentalDTO | null>(null);
 
   const columns = useMemo(
-    () => getColumns(showUser, t, locale),
-    [showUser, t, locale]
+    () => getColumns(showUser, t, tCommon, locale),
+    [showUser, t, tCommon, locale]
   );
 
   const rentalStatuses: { value: RentalStatus; label: string }[] = useMemo(
@@ -245,9 +249,7 @@ export function RentalTable({
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 py-4">
         <Input
-          placeholder={
-            showUser ? t("searchByCarOrCustomer") : t("searchByCar")
-          }
+          placeholder={showUser ? t("searchByCarOrCustomer") : t("searchByCar")}
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"

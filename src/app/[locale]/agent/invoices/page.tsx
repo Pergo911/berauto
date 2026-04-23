@@ -1,21 +1,24 @@
-import {CalendarDays, Car, Receipt, User} from 'lucide-react';
-import {getLocale, getTranslations} from 'next-intl/server';
+import { CalendarDays, Car, Receipt, User } from "lucide-react";
+import { getLocale, getTranslations } from "next-intl/server";
 
-import {getInvoices, getClosedRentalsWithoutInvoice} from '@/lib/data/invoices';
-import {formatDate, formatCurrency} from '@/lib/utils';
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import {Separator} from '@/components/ui/separator';
-import {EmptyState} from '@/components/shared/empty-state';
-import {PageHeader} from '@/components/shared/page-header';
-import {BackLink} from '@/components/shared/back-link';
-import {BrandLogo} from '@/components/cars/brand-logo';
-import {IssueInvoiceButton} from '@/components/invoices/issue-invoice-button';
-import {InvoicesTable} from '@/components/invoices/invoices-table';
-import {NoteDisplay} from '@/components/rentals/note-display';
+import {
+  getInvoices,
+  getClosedRentalsWithoutInvoice,
+} from "@/lib/data/invoices";
+import { formatDate, formatCurrency } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { EmptyState } from "@/components/shared/empty-state";
+import { PageHeader } from "@/components/shared/page-header";
+import { BackLink } from "@/components/shared/back-link";
+import { BrandLogo } from "@/components/cars/brand-logo";
+import { IssueInvoiceButton } from "@/components/invoices/issue-invoice-button";
+import { InvoicesTable } from "@/components/invoices/invoices-table";
+import { NoteDisplay } from "@/components/rentals/note-display";
 
 export default async function AgentInvoicesPage() {
   const [t, locale, uninvoiced, issuedInvoices] = await Promise.all([
-    getTranslations('Agent.invoices'),
+    getTranslations("Agent.invoices"),
     getLocale(),
     getClosedRentalsWithoutInvoice(),
     getInvoices(),
@@ -23,20 +26,20 @@ export default async function AgentInvoicesPage() {
 
   return (
     <div className="space-y-10">
-      <BackLink href="/agent" label={t('backToDashboard')} />
-      <PageHeader title={t('title')} />
+      <BackLink href="/agent" label={t("backToDashboard")} />
+      <PageHeader title={t("title")} />
 
       <section>
         <h2 className="mb-4 text-xl font-semibold">
           <Receipt className="mr-2 inline-block size-5" />
-          {t('awaitingInvoice')}
+          {t("awaitingInvoice")}
           <span className="ml-2 text-base font-normal text-muted-foreground">
             ({uninvoiced.length})
           </span>
         </h2>
 
         {uninvoiced.length === 0 ? (
-          <EmptyState variant="plain" message={t('allInvoiced')} />
+          <EmptyState variant="plain" message={t("allInvoiced")} />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {uninvoiced.map((rental) => {
@@ -78,11 +81,11 @@ export default async function AgentInvoicesPage() {
                           <>
                             {rental.guestName}
                             <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
-                              {t('guest')}
+                              {t("guest")}
                             </span>
                           </>
                         ) : (
-                          (rental.userName ?? '—')
+                          (rental.userName ?? "—")
                         )}
                       </p>
                       {(rental.guestEmail ?? rental.userEmail) && (
@@ -98,22 +101,26 @@ export default async function AgentInvoicesPage() {
                       <div>
                         <p className="flex items-center gap-1 text-xs text-muted-foreground">
                           <CalendarDays className="size-3" />
-                          {t('start')}
+                          {t("start")}
                         </p>
-                        <p className="font-medium">{formatDate(rental.startDate, locale)}</p>
+                        <p className="font-medium">
+                          {formatDate(rental.startDate, locale)}
+                        </p>
                       </div>
                       <div>
                         <p className="flex items-center gap-1 text-xs text-muted-foreground">
                           <CalendarDays className="size-3" />
-                          {t('end')}
+                          {t("end")}
                         </p>
-                        <p className="font-medium">{formatDate(rental.endDate, locale)}</p>
+                        <p className="font-medium">
+                          {formatDate(rental.endDate, locale)}
+                        </p>
                       </div>
                     </div>
 
                     <div className="text-sm">
                       <p className="text-xs text-muted-foreground">
-                        {t('dailyLine', {
+                        {t("dailyLine", {
                           days,
                           rate: formatCurrency(rental.car.dailyRate, locale),
                         })}
@@ -122,7 +129,10 @@ export default async function AgentInvoicesPage() {
 
                     <Separator />
 
-                    <NoteDisplay notes={rental.returnNotes} label={t('returnNotes')} />
+                    <NoteDisplay
+                      notes={rental.returnNotes}
+                      label={t("returnNotes")}
+                    />
 
                     <Separator />
 
@@ -141,7 +151,7 @@ export default async function AgentInvoicesPage() {
       <section>
         <h2 className="mb-4 text-xl font-semibold">
           <Receipt className="mr-2 inline-block size-5" />
-          {t('issuedInvoices')}
+          {t("issuedInvoices")}
           <span className="ml-2 text-base font-normal text-muted-foreground">
             ({issuedInvoices.length})
           </span>

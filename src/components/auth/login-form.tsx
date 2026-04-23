@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import {useForm} from 'react-hook-form';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {signIn, getSession} from 'next-auth/react';
-import {Loader2} from 'lucide-react';
-import {useTranslations} from 'next-intl';
-import {toast} from 'sonner';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn, getSession } from "next-auth/react";
+import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
-import {loginSchema, type LoginInput} from '@/lib/validations/auth';
-import {USER_ROLE} from '@/types';
-import {useRouter} from '@/i18n/navigation';
-import {Button} from '@/components/ui/button';
-import {Input} from '@/components/ui/input';
+import { loginSchema, type LoginInput } from "@/lib/validations/auth";
+import { USER_ROLE } from "@/types";
+import { useRouter } from "@/i18n/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -19,31 +19,31 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import {SocialButtons} from '@/components/auth/social-buttons';
+} from "@/components/ui/form";
+import { SocialButtons } from "@/components/auth/social-buttons";
 
 export function LoginForm() {
-  const t = useTranslations('Auth.forms');
+  const t = useTranslations("Auth.forms");
   const router = useRouter();
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
   async function onSubmit(values: LoginInput) {
     try {
-      const result = await signIn('credentials', {
+      const result = await signIn("credentials", {
         email: values.email,
         password: values.password,
         redirect: false,
       });
 
       if (result?.error) {
-        toast.error(t('errors.invalidCredentials'));
+        toast.error(t("errors.invalidCredentials"));
         return;
       }
 
@@ -51,15 +51,15 @@ export function LoginForm() {
       const role = session?.user?.role;
 
       if (role === USER_ROLE.ADMIN) {
-        router.push('/admin');
+        router.push("/admin");
       } else if (role === USER_ROLE.AGENT) {
-        router.push('/agent');
+        router.push("/agent");
       } else {
-        router.push('/dashboard');
+        router.push("/dashboard");
       }
       router.refresh();
     } catch {
-      toast.error(t('errors.generic'));
+      toast.error(t("errors.generic"));
     }
   }
 
@@ -70,9 +70,9 @@ export function LoginForm() {
           <FormField
             control={form.control}
             name="email"
-            render={({field}) => (
+            render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('emailLabel')}</FormLabel>
+                <FormLabel>{t("emailLabel")}</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
@@ -88,9 +88,9 @@ export function LoginForm() {
           <FormField
             control={form.control}
             name="password"
-            render={({field}) => (
+            render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('passwordLabel')}</FormLabel>
+                <FormLabel>{t("passwordLabel")}</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
@@ -108,8 +108,10 @@ export function LoginForm() {
             className="w-full"
             disabled={form.formState.isSubmitting}
           >
-            {form.formState.isSubmitting && <Loader2 className="animate-spin" />}
-            {t('signIn')}
+            {form.formState.isSubmitting && (
+              <Loader2 className="animate-spin" />
+            )}
+            {t("signIn")}
           </Button>
         </form>
       </Form>

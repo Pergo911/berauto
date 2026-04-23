@@ -262,7 +262,9 @@ export function RentalRequestForm({
                     </span>
                   </span>
                 ) : (
-                  <span className="text-muted-foreground">{t("pickStart")}</span>
+                  <span className="text-muted-foreground">
+                    {t("pickStart")}
+                  </span>
                 )}
               </Button>
             </PopoverTrigger>
@@ -271,7 +273,9 @@ export function RentalRequestForm({
               <div className="flex items-center justify-between border-b px-3 py-2">
                 <span className="text-xs text-muted-foreground">
                   {t("phaseClickToSelect", {
-                    phase: t(selectionPhase === "start" ? "phaseStart" : "phaseEnd"),
+                    phase: t(
+                      selectionPhase === "start" ? "phaseStart" : "phaseEnd"
+                    ),
                   })}
                 </span>
                 <Button
@@ -317,7 +321,9 @@ export function RentalRequestForm({
                 : t("justRate", { rate: formatCurrency(dailyRate, locale) })}
             </span>
             <span className="text-base font-semibold text-foreground">
-              {estimatedTotal !== null ? formatCurrency(estimatedTotal, locale) : "—"}
+              {estimatedTotal !== null
+                ? formatCurrency(estimatedTotal, locale)
+                : "—"}
             </span>
           </div>
           <p className="mt-1 text-xs text-muted-foreground">

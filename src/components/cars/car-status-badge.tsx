@@ -62,4 +62,3 @@ export function CarInUseBadge({ className }: { className?: string }) {
     </Badge>
   );
 }
-

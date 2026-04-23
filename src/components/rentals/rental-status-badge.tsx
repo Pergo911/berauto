@@ -7,7 +7,13 @@ import { RENTAL_STATUS } from "@/types";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
-type StatusKey = "pending" | "approved" | "rejected" | "active" | "closed" | "closedInvoiced";
+type StatusKey =
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "active"
+  | "closed"
+  | "closedInvoiced";
 
 const statusVariantConfig: Record<
   RentalStatus,
@@ -61,4 +67,3 @@ export function RentalStatusBadge({ status }: { status: RentalStatus }) {
     </Badge>
   );
 }
-

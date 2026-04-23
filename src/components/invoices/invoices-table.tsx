@@ -104,7 +104,10 @@ export function InvoicesTable({ invoices }: InvoicesTableProps) {
         id: "issuedAt",
         accessorFn: (row) => row.issuedAt,
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title={t("columns.issuedAt")} />
+          <DataTableColumnHeader
+            column={column}
+            title={t("columns.issuedAt")}
+          />
         ),
         cell: ({ row }) => formatDate(row.original.issuedAt, locale),
         sortingFn: "datetime",

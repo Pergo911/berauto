@@ -72,7 +72,9 @@ export function RentalAgentCard({ rental, action }: RentalAgentCardProps) {
               <CalendarDays className="size-3" />
               {t("start")}
             </p>
-            <p className="font-medium">{formatDate(rental.startDate, locale)}</p>
+            <p className="font-medium">
+              {formatDate(rental.startDate, locale)}
+            </p>
           </div>
           <div>
             <p className="flex items-center gap-1 text-xs text-muted-foreground">

@@ -51,7 +51,8 @@ type CarDetailDialogProps = {
 function RentalHistoryItem({ rental }: { rental: RentalDTO }) {
   const t = useTranslations("CarDetailDialog");
   const tCommon = useTranslations("Common");
-  const customerName = rental.userName ?? rental.guestName ?? tCommon("unknown");
+  const customerName =
+    rental.userName ?? rental.guestName ?? tCommon("unknown");
   const isGuest = !!rental.guestName;
 
   return (
@@ -198,7 +199,9 @@ export function CarDetailDialog({
               <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3">
                 <div className="flex items-center justify-between gap-4">
                   <div>
-                    <p className="text-sm font-medium">{t("deleteCarHeading")}</p>
+                    <p className="text-sm font-medium">
+                      {t("deleteCarHeading")}
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       {t("deleteCarDesc")}
                     </p>
@@ -212,7 +215,9 @@ export function CarDetailDialog({
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>{t("deleteConfirmTitle")}</AlertDialogTitle>
+                        <AlertDialogTitle>
+                          {t("deleteConfirmTitle")}
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
                           {t.rich("deleteConfirmDesc", {
                             name: `${car.make} ${car.model}`,

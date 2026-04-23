@@ -63,7 +63,9 @@ export function DeleteCarButton({ carId, carName }: DeleteCarButtonProps) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>{tCommon("cancel")}</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>
+            {tCommon("cancel")}
+          </AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             onClick={handleDelete}
