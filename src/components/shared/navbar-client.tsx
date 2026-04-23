@@ -155,6 +155,65 @@ function ThemeSwitcher() {
   );
 }
 
+function GuestThemeToggle() {
+  const t = useTranslations("Navbar");
+  const { theme, setTheme } = useTheme();
+  const mounted = useIsMounted();
+  const currentTheme = mounted ? (theme ?? "system") : "system";
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon">
+          {currentTheme === "dark" ? (
+            <Moon className="size-4" />
+          ) : currentTheme === "light" ? (
+            <Sun className="size-4" />
+          ) : (
+            <Monitor className="size-4" />
+          )}
+          <span className="sr-only">{t("theme.system")}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onSelect={() => setTheme("light")}>
+          <Sun className="size-4" />
+          {t("theme.light")}
+        </DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => setTheme("dark")}>
+          <Moon className="size-4" />
+          {t("theme.dark")}
+        </DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => setTheme("system")}>
+          <Monitor className="size-4" />
+          {t("theme.system")}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function GuestLanguageToggle() {
+  const locale = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      className="gap-1.5"
+      onClick={() => {
+        const nextLocale = locale === "hu" ? "en" : "hu";
+        router.replace(pathname, { locale: nextLocale });
+      }}
+    >
+      <Globe className="size-4" />
+      <span className="text-xs font-medium uppercase">{locale}</span>
+    </Button>
+  );
+}
+
 function PanelModeIcon({
   panel,
   className,
@@ -266,14 +325,18 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
 
         <div className="flex items-center gap-2">
           {!user ? (
-            !hideLogin && (
-              <Link href="/login">
-                <Button variant="outline" size="sm">
-                  <LogIn className="mr-2 size-4" />
-                  {t("actions.login")}
-                </Button>
-              </Link>
-            )
+            <>
+              <GuestThemeToggle />
+              <GuestLanguageToggle />
+              {!hideLogin && (
+                <Link href="/login">
+                  <Button variant="outline" size="sm">
+                    <LogIn className="mr-2 size-4" />
+                    {t("actions.login")}
+                  </Button>
+                </Link>
+              )}
+            </>
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

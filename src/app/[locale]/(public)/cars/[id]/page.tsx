@@ -71,11 +71,7 @@ export default async function CarDetailPage({
                     </CardDescription>
                   </div>
                 </div>
-                {car.inUse ? (
-                  <CarInUseBadge />
-                ) : (
-                  <CarStatusBadge status={car.status} />
-                )}
+                <CarStatusBadge status={car.status} />
               </div>
             </CardHeader>
             <CardContent className="grid gap-4">

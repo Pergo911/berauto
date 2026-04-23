@@ -25,7 +25,8 @@ const statusVariantConfig: Record<
       "border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-400",
   },
   [CAR_STATUS.UNAVAILABLE]: {
-    variant: "destructive",
+    variant: "outline",
+    className: "border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-400",
   },
 };
 

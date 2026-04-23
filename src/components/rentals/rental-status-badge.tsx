@@ -33,17 +33,18 @@ const statusVariantConfig: Record<
     key: "approved",
     variant: "outline",
     className:
-      "border-blue-500/50 bg-blue-500/10 text-blue-700 dark:text-blue-400",
+      "border-green-500/50 bg-green-500/10 text-green-700 dark:text-green-400",
   },
   [RENTAL_STATUS.REJECTED]: {
     key: "rejected",
-    variant: "destructive",
+    variant: "outline",
+    className: "border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-400",
   },
   [RENTAL_STATUS.ACTIVE]: {
     key: "active",
     variant: "outline",
     className:
-      "border-green-500/50 bg-green-500/10 text-green-700 dark:text-green-400",
+      "border-blue-500/50 bg-blue-500/10 text-blue-700 dark:text-blue-400",
   },
   [RENTAL_STATUS.CLOSED]: {
     key: "closed",
@@ -53,7 +54,9 @@ const statusVariantConfig: Record<
   },
   [RENTAL_STATUS.CLOSED_INVOICED]: {
     key: "closedInvoiced",
-    variant: "secondary",
+    variant: "outline",
+    className:
+      "border-grey-500/50 bg-grey-500/10 text-grey-700 dark:text-grey-400 text-muted-foreground",
   },
 };
 
