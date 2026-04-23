@@ -86,7 +86,7 @@ export async function CarCard({ car, bookable }: CarCardProps) {
             </div>
           </div>
 
-          <div className="mt-auto pb-4 space-y-3">
+          <div className="mt-auto pb-4 space-y-3 self-end">
             <p className="text-lg font-semibold">
               {formatCurrency(car.dailyRate, locale)}
               <span className="text-sm font-normal text-muted-foreground">
