@@ -5,7 +5,6 @@ import {
   eq,
   getTableColumns,
   gt,
-  ilike,
   inArray,
   isNull,
   lt,
@@ -31,6 +30,7 @@ export type CarDTO = {
   status: CarStatus;
   brandId: string | null;
   brandLogoPath: string | null;
+  imageUrl: string | null;
   /** True when at least one ACTIVE or APPROVED rental exists for this car. */
   inUse: boolean;
   createdAt: Date;
@@ -59,6 +59,7 @@ function toCarDTO(
     ...row,
     dailyRate: Number(row.dailyRate),
     brandLogoPath: row.brandLogoPath,
+    imageUrl: row.imageUrl ?? null,
   };
 }
 
@@ -88,12 +89,15 @@ export async function getCars(filters?: {
   }
 
   if (filters?.search) {
-    const term = `%${filters.search}%`;
+    const normalized = filters.search
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    const term = `%${normalized}%`;
     conditions.push(
       or(
-        ilike(cars.make, term),
-        ilike(cars.model, term),
-        ilike(cars.licensePlate, term)
+        sql`unaccent(${cars.make}) ilike ${term}`,
+        sql`unaccent(${cars.model}) ilike ${term}`,
+        sql`unaccent(${cars.licensePlate}) ilike ${term}`
       )!
     );
   }

@@ -7,7 +7,7 @@ A car rental platform built as a school assignment. Supports the complete rental
 ## Getting Started
 
 ```bash
-cp .env.example .env.local   # fill in DATABASE_URL, DATABASE_URL_UNPOOLED, AUTH_SECRET, AUTH_TRUST_HOST=true
+cp .env.example .env.local   # fill in DATABASE_URL, DATABASE_URL_UNPOOLED, AUTH_SECRET, UPLOADTHING_TOKEN,AUTH_TRUST_HOST=true
 pnpm install
 pnpm db:migrate
 pnpm dev                     # http://localhost:3000

@@ -2,6 +2,7 @@
 
 import { useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Resolver } from "react-hook-form";
@@ -80,6 +81,8 @@ export function UserDetailDialog({
   open,
   onOpenChange,
 }: UserDetailDialogProps) {
+  const t = useTranslations("UserDetailDialog");
+  const locale = useLocale();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -112,7 +115,7 @@ export function UserDetailDialog({
     startTransition(async () => {
       const result = await updateUser(user.id, data);
       if (result.success) {
-        toast.success("User updated successfully.");
+        toast.success(t("toastUpdated"));
         router.refresh();
         onOpenChange(false);
       } else {
@@ -133,11 +136,12 @@ export function UserDetailDialog({
               {user.name}
             </DialogTitle>
             <Badge className={ROLE_BADGE_CLASSES[user.role]}>
-              {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+              {t(`roles.${user.role}`)}
             </Badge>
           </div>
           <DialogDescription>
-            {user.email} · Joined {formatDate(user.createdAt)}
+            {user.email} ·{" "}
+            {t("joined", { date: formatDate(user.createdAt, locale) })}
           </DialogDescription>
         </DialogHeader>
 
@@ -152,7 +156,7 @@ export function UserDetailDialog({
                   <FormItem>
                     <FormLabel className="flex items-center gap-1">
                       <User className="size-3" />
-                      Name
+                      {t("formLabels.name")}
                     </FormLabel>
                     <FormControl>
                       <Input {...field} />
@@ -168,7 +172,7 @@ export function UserDetailDialog({
                   <FormItem>
                     <FormLabel className="flex items-center gap-1">
                       <Mail className="size-3" />
-                      Email
+                      {t("formLabels.email")}
                     </FormLabel>
                     <FormControl>
                       <Input type="email" {...field} />
@@ -187,11 +191,11 @@ export function UserDetailDialog({
                   <FormItem>
                     <FormLabel className="flex items-center gap-1">
                       <Phone className="size-3" />
-                      Phone
+                      {t("formLabels.phone")}
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Not provided"
+                        placeholder={t("notProvided")}
                         {...field}
                         value={field.value ?? ""}
                       />
@@ -207,11 +211,11 @@ export function UserDetailDialog({
                   <FormItem>
                     <FormLabel className="flex items-center gap-1">
                       <MapPin className="size-3" />
-                      Address
+                      {t("formLabels.address")}
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Not provided"
+                        placeholder={t("notProvided")}
                         {...field}
                         value={field.value ?? ""}
                       />
@@ -230,7 +234,7 @@ export function UserDetailDialog({
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel>{t("formLabels.role")}</FormLabel>
                   <div className="flex gap-1 rounded-lg border bg-muted/30 p-1">
                     {(
                       Object.entries(ROLE_CONFIG) as [
@@ -252,7 +256,7 @@ export function UserDetailDialog({
                               )
                         )}
                       >
-                        {config.label}
+                        {t(`roles.${role}`)}
                       </button>
                     ))}
                   </div>
@@ -266,7 +270,7 @@ export function UserDetailDialog({
               disabled={isPending}
               className="w-full sm:w-auto"
             >
-              {isPending ? "Saving..." : "Save Changes"}
+              {isPending ? t("saving") : t("saveChanges")}
             </Button>
           </form>
         </Form>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -67,15 +68,6 @@ type AdminCarTableProps = {
   brands: BrandDTO[];
 };
 
-const COLUMN_LABELS: Record<string, string> = {
-  makeModel: "Make / Model",
-  year: "Year",
-  licensePlate: "License Plate",
-  mileageKm: "Mileage",
-  dailyRate: "Daily Rate",
-  status: "Status",
-};
-
 const carGlobalFilterFn: FilterFn<CarDTO> = (_row, _columnId, filterValue) => {
   // handled via getFilteredRowModel + globalFilter applied per-column;
   // return true here — actual logic is in globalFilterFn at table level
@@ -84,13 +76,15 @@ const carGlobalFilterFn: FilterFn<CarDTO> = (_row, _columnId, filterValue) => {
 carGlobalFilterFn.autoRemove = (val: unknown) =>
   !val || String(val).trim() === "";
 
-function getColumns(): ColumnDef<CarDTO>[] {
+type TFn = ReturnType<typeof useTranslations<"AdminCarTable">>;
+
+function getColumns(t: TFn, locale: string): ColumnDef<CarDTO>[] {
   return [
     {
       id: "makeModel",
       accessorFn: (row) => `${row.make} ${row.model}`,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Make / Model" />
+        <DataTableColumnHeader column={column} title={t("columns.makeModel")} />
       ),
       cell: ({ row }) => (
         <div className="flex items-center gap-2 font-medium">
@@ -107,30 +101,30 @@ function getColumns(): ColumnDef<CarDTO>[] {
     {
       accessorKey: "year",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Year" />
+        <DataTableColumnHeader column={column} title={t("columns.year")} />
       ),
     },
     {
       accessorKey: "licensePlate",
-      header: "License Plate",
+      header: t("columns.licensePlate"),
     },
     {
       accessorKey: "mileageKm",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Mileage" />
+        <DataTableColumnHeader column={column} title={t("columns.mileage")} />
       ),
-      cell: ({ row }) => `${row.original.mileageKm.toLocaleString()} km`,
+      cell: ({ row }) => `${row.original.mileageKm.toLocaleString(locale)} km`,
     },
     {
       accessorKey: "dailyRate",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Daily Rate" />
+        <DataTableColumnHeader column={column} title={t("columns.dailyRate")} />
       ),
-      cell: ({ row }) => formatCurrency(row.original.dailyRate),
+      cell: ({ row }) => formatCurrency(row.original.dailyRate, locale),
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: t("columns.status"),
       cell: ({ row }) => (
         <div className="flex flex-wrap items-center gap-1.5">
           <CarStatusBadge status={row.original.status} />
@@ -155,6 +149,10 @@ function getColumns(): ColumnDef<CarDTO>[] {
 }
 
 export function AdminCarTable({ cars, brands }: AdminCarTableProps) {
+  const t = useTranslations("AdminCarTable");
+  const tCommon = useTranslations("Common");
+  const locale = useLocale();
+
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState<CarDTO | null>(null);
 
@@ -163,7 +161,19 @@ export function AdminCarTable({ cars, brands }: AdminCarTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState("");
 
-  const columns = useMemo(() => getColumns(), []);
+  const columns = useMemo(() => getColumns(t, locale), [t, locale]);
+
+  const columnLabels: Record<string, string> = useMemo(
+    () => ({
+      makeModel: t("columns.makeModel"),
+      year: t("columns.year"),
+      licensePlate: t("columns.licensePlate"),
+      mileageKm: t("columns.mileage"),
+      dailyRate: t("columns.dailyRate"),
+      status: t("columns.status"),
+    }),
+    [t]
+  );
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -207,10 +217,8 @@ export function AdminCarTable({ cars, brands }: AdminCarTableProps) {
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Add New Car</DialogTitle>
-            <DialogDescription>
-              Fill in the details to add a new car to the fleet.
-            </DialogDescription>
+            <DialogTitle>{t("addNewCarTitle")}</DialogTitle>
+            <DialogDescription>{t("addNewCarDesc")}</DialogDescription>
           </DialogHeader>
           <CarForm brands={brands} onSuccess={() => setCreateOpen(false)} />
         </DialogContent>
@@ -231,7 +239,7 @@ export function AdminCarTable({ cars, brands }: AdminCarTableProps) {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 py-4">
         <Input
-          placeholder="Search by make, model, or plate…"
+          placeholder={t("searchPlaceholder")}
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
@@ -245,13 +253,17 @@ export function AdminCarTable({ cars, brands }: AdminCarTableProps) {
           }
         >
           <SelectTrigger className="w-[160px]">
-            <SelectValue placeholder="All statuses" />
+            <SelectValue placeholder={t("allStatuses")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
-            <SelectItem value="AVAILABLE">Available</SelectItem>
-            <SelectItem value="MAINTENANCE">Maintenance</SelectItem>
-            <SelectItem value="UNAVAILABLE">Unavailable</SelectItem>
+            <SelectItem value="all">{t("allStatuses")}</SelectItem>
+            <SelectItem value="AVAILABLE">{t("statusAvailable")}</SelectItem>
+            <SelectItem value="MAINTENANCE">
+              {t("statusMaintenance")}
+            </SelectItem>
+            <SelectItem value="UNAVAILABLE">
+              {t("statusUnavailable")}
+            </SelectItem>
           </SelectContent>
         </Select>
 
@@ -264,11 +276,11 @@ export function AdminCarTable({ cars, brands }: AdminCarTableProps) {
                 className="hidden h-8 lg:flex"
               >
                 <Settings2 className="mr-2 h-4 w-4" />
-                View
+                {tCommon("view")}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-              <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+              <DropdownMenuLabel>{tCommon("toggleColumns")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {table
                 .getAllColumns()
@@ -280,7 +292,7 @@ export function AdminCarTable({ cars, brands }: AdminCarTableProps) {
                     checked={col.getIsVisible()}
                     onCheckedChange={(value) => col.toggleVisibility(!!value)}
                   >
-                    {COLUMN_LABELS[col.id] ?? col.id}
+                    {columnLabels[col.id] ?? col.id}
                   </DropdownMenuCheckboxItem>
                 ))}
             </DropdownMenuContent>
@@ -288,14 +300,14 @@ export function AdminCarTable({ cars, brands }: AdminCarTableProps) {
 
           <Button onClick={() => setCreateOpen(true)}>
             <Plus className="size-4" />
-            Add New Car
+            {t("addNewCar")}
           </Button>
         </div>
       </div>
 
       {/* Table */}
       {cars.length === 0 ? (
-        <EmptyState message="No cars found. Add your first car to get started." />
+        <EmptyState message={t("noCars")} />
       ) : (
         <>
           <div className="overflow-hidden rounded-md border">
@@ -340,7 +352,7 @@ export function AdminCarTable({ cars, brands }: AdminCarTableProps) {
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      {tCommon("noResults")}
                     </TableCell>
                   </TableRow>
                 )}

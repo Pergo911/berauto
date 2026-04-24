@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { CalendarDays, Car, Eye, Loader2, Trash2, User } from "lucide-react";
 import { toast } from "sonner";
 
@@ -11,6 +12,7 @@ import type { BrandDTO } from "@/lib/data/brands";
 import { BrandLogo } from "@/components/cars/brand-logo";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { deleteCar, getCarRentalHistory } from "@/actions/cars";
+import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -48,7 +50,10 @@ type CarDetailDialogProps = {
 };
 
 function RentalHistoryItem({ rental }: { rental: RentalDTO }) {
-  const customerName = rental.userName ?? rental.guestName ?? "Unknown";
+  const t = useTranslations("CarDetailDialog");
+  const tCommon = useTranslations("Common");
+  const customerName =
+    rental.userName ?? rental.guestName ?? tCommon("unknown");
   const isGuest = !!rental.guestName;
 
   return (
@@ -64,7 +69,7 @@ function RentalHistoryItem({ rental }: { rental: RentalDTO }) {
               variant="outline"
               className="border-amber-500/50 bg-amber-500/10 text-xs text-amber-700 dark:text-amber-400"
             >
-              Guest
+              {t("guestBadge")}
             </Badge>
           )}
           <RentalStatusBadge status={rental.status} />
@@ -97,6 +102,8 @@ export function CarDetailDialog({
   onOpenChange,
 }: CarDetailDialogProps) {
   const router = useRouter();
+  const t = useTranslations("CarDetailDialog");
+  const tCommon = useTranslations("Common");
   const [rentalHistory, setRentalHistory] = useState<{
     carId: string;
     data: RentalDTO[];
@@ -137,35 +144,51 @@ export function CarDetailDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
-          <div className="flex items-center gap-2">
-            <DialogTitle className="flex items-center gap-2">
-              {car.brandLogoPath ? (
-                <BrandLogo
-                  logoPath={car.brandLogoPath}
-                  brandName={car.make}
-                  size={20}
+          <div className="flex items-start gap-3">
+            {/* Small square thumbnail */}
+            {car.imageUrl && (
+              <div className="relative size-14 shrink-0 overflow-hidden rounded-md bg-muted border">
+                <Image
+                  src={car.imageUrl}
+                  alt={`${car.make} ${car.model}`}
+                  fill
+                  className="object-cover"
+                  sizes="56px"
                 />
-              ) : (
-                <Car className="size-5 text-muted-foreground" />
-              )}
-              {car.make} {car.model}
-            </DialogTitle>
-            <CarStatusBadge status={car.status} />
-            {car.inUse && <CarInUseBadge />}
+              </div>
+            )}
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <DialogTitle className="flex items-center gap-2">
+                  {car.brandLogoPath ? (
+                    <BrandLogo
+                      logoPath={car.brandLogoPath}
+                      brandName={car.make}
+                      size={20}
+                    />
+                  ) : (
+                    <Car className="size-5 text-muted-foreground" />
+                  )}
+                  {car.make} {car.model}
+                </DialogTitle>
+                <CarStatusBadge status={car.status} />
+                {car.inUse && <CarInUseBadge />}
+              </div>
+              <DialogDescription>
+                {car.licensePlate} · {car.year} ·{" "}
+                {car.mileageKm.toLocaleString()} km
+              </DialogDescription>
+            </div>
           </div>
-          <DialogDescription>
-            {car.licensePlate} · {car.year} · {car.mileageKm.toLocaleString()}{" "}
-            km
-          </DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue="details">
           <TabsList className="w-full">
             <TabsTrigger value="details" className="flex-1">
-              Details
+              {t("tabDetails")}
             </TabsTrigger>
             <TabsTrigger value="history" className="flex-1">
-              Rental History
+              {t("tabRentalHistory")}
               {rentalHistory?.carId === car.id && (
                 <Badge variant="secondary" className="ml-1.5 text-xs">
                   {rentalHistory.data.length}
@@ -188,45 +211,47 @@ export function CarDetailDialog({
             {/* Danger Zone */}
             <div className="space-y-3">
               <h4 className="text-sm font-semibold text-destructive">
-                Danger Zone
+                {t("dangerZone")}
               </h4>
               <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3">
                 <div className="flex items-center justify-between gap-4">
                   <div>
-                    <p className="text-sm font-medium">Delete this car</p>
+                    <p className="text-sm font-medium">
+                      {t("deleteCarHeading")}
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      This action cannot be undone. Cars with active or pending
-                      rentals cannot be deleted.
+                      {t("deleteCarDesc")}
                     </p>
                   </div>
                   <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
                     <AlertDialogTrigger asChild>
                       <Button variant="destructive" size="sm">
                         <Trash2 className="size-3.5" />
-                        Delete
+                        {t("deleteButton")}
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Car</AlertDialogTitle>
+                        <AlertDialogTitle>
+                          {t("deleteConfirmTitle")}
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                          Are you sure you want to delete{" "}
-                          <strong>
-                            {car.make} {car.model}
-                          </strong>
-                          ? This action cannot be undone.
+                          {t.rich("deleteConfirmDesc", {
+                            name: `${car.make} ${car.model}`,
+                            strong: (chunks) => <strong>{chunks}</strong>,
+                          })}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel disabled={isDeleting}>
-                          Cancel
+                          {tCommon("cancel")}
                         </AlertDialogCancel>
                         <AlertDialogAction
                           variant="destructive"
                           onClick={handleDelete}
                           disabled={isDeleting}
                         >
-                          {isDeleting ? "Deleting..." : "Delete"}
+                          {isDeleting ? t("deletingButton") : t("deleteButton")}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
@@ -251,7 +276,7 @@ export function CarDetailDialog({
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <Car className="mb-2 size-8 text-muted-foreground/40" />
                 <p className="text-sm text-muted-foreground">
-                  No rental history for this car.
+                  {t("noHistory")}
                 </p>
               </div>
             )}

@@ -1,0 +1,582 @@
+{
+  "Navbar": {
+    "companyLogoAlt": "Company logo",
+    "panel": {
+      "userMode": "User Mode",
+      "agentMode": "Agent Mode",
+      "adminMode": "Admin Mode"
+    },
+    "routes": {
+      "home": "Home",
+      "dashboard": "Dashboard",
+      "overview": "Overview",
+      "requests": "Requests",
+      "activeRentals": "Active Rentals",
+      "invoices": "Invoices",
+      "cars": "Cars",
+      "users": "Users"
+    },
+    "actions": {
+      "login": "Login",
+      "signOut": "Sign Out"
+    },
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "language": {
+      "label": "Language",
+      "hu": "Hungarian",
+      "en": "English"
+    }
+  },
+  "HomePage": {
+    "hero": {
+      "badge": "Fresh rides for workdays and getaways",
+      "title": "Catch the road in a car that feels chosen, not just booked.",
+      "description": "BerAuto keeps rental browsing fast and polished, with a fleet you can filter in seconds and request without friction.",
+      "exploreButton": "Explore the fleet",
+      "openDashboardButton": "Open dashboard",
+      "createAccountButton": "Create an account"
+    },
+    "stats": {
+      "carsShown": "cars shown",
+      "live": "Live",
+      "fast": "Fast",
+      "fastDescription": "search, sort, request",
+      "fleetFull": "entire fleet visible",
+      "fleetAvailableOnly": "available cars only"
+    },
+    "promo": {
+      "whyLabel": "Why BerAuto clicks",
+      "title": "A cleaner way to pick your next ride.",
+      "badge": "On demand"
+    },
+    "highlights": {
+      "cityLineup": {
+        "title": "City-smart lineup",
+        "description": "Compact commuters, roomy SUVs, and polished daily drivers."
+      },
+      "simpleBooking": {
+        "title": "Simple booking flow",
+        "description": "Pick a car, send a request, and keep everything in one place."
+      },
+      "clearDetails": {
+        "title": "Clear rental details",
+        "description": "Transparent rates and vehicle status before you commit."
+      }
+    },
+    "fleet": {
+      "label": "Fleet selection",
+      "title": "Available cars",
+      "description": "Narrow the list by model, price, mileage, or availability.",
+      "empty": "No cars found matching your criteria."
+    },
+    "footer": "BerAuto Car Rental {year}"
+  },
+  "Auth": {
+    "loginPage": {
+      "title": "Welcome back",
+      "description": "Sign in to your account to manage rentals",
+      "noAccount": "Don't have an account?",
+      "register": "Register"
+    },
+    "registerPage": {
+      "title": "Create an account",
+      "description": "Register to start renting cars",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "forms": {
+      "nameLabel": "Name",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm password",
+      "signIn": "Sign in",
+      "createAccount": "Create account",
+      "errors": {
+        "invalidCredentials": "Invalid email or password",
+        "generic": "Something went wrong. Please try again."
+      }
+    }
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "welcomeBack": "Welcome back, {name}",
+    "rentButton": "Rent a Car",
+    "myRentals": "My Rentals",
+    "stats": {
+      "totalRentals": {
+        "title": "Total Rentals",
+        "description": "Your complete rental history."
+      },
+      "activeRentals": {
+        "title": "Active Rentals",
+        "description": "Currently active rentals."
+      },
+      "pendingRequests": {
+        "title": "Pending Requests",
+        "description": "Rentals awaiting approval."
+      }
+    }
+  },
+  "Agent": {
+    "dashboard": {
+      "title": "Agent Dashboard",
+      "rentalHistory": "Rental History",
+      "cards": {
+        "requests": {
+          "title": "Requests",
+          "description": "Manage rental requests",
+          "subLabel": "pending now"
+        },
+        "rentals": {
+          "title": "Rentals",
+          "description": "Manage active rentals",
+          "subLabel": "active rentals"
+        },
+        "invoices": {
+          "title": "Invoices",
+          "description": "View and manage rental invoices",
+          "subLabel": "uninvoiced rentals"
+        }
+      }
+    },
+    "requests": {
+      "backToDashboard": "Back to Dashboard",
+      "title": "Rental Requests",
+      "emptyPending": "No pending requests",
+      "pastRequests": "Past Requests"
+    },
+    "active": {
+      "backToDashboard": "Back to Dashboard",
+      "title": "Active Rentals",
+      "awaitingHandover": "Awaiting Handover",
+      "emptyAwaiting": "No rentals awaiting handover",
+      "currentlyActive": "Currently Active",
+      "emptyActive": "No active rentals",
+      "pastRentals": "Past Rentals"
+    },
+    "invoices": {
+      "backToDashboard": "Back to Dashboard",
+      "title": "Invoices",
+      "awaitingInvoice": "Awaiting Invoice",
+      "allInvoiced": "All closed rentals have been invoiced",
+      "issuedInvoices": "Issued Invoices",
+      "guest": "Guest",
+      "start": "Start",
+      "end": "End",
+      "dailyLine": "{days, plural, one {# day} other {# days}} × {rate}/day",
+      "returnNotes": "Return Notes"
+    }
+  },
+  "Admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "overview": "Overview",
+      "navCards": {
+        "cars": {
+          "title": "Cars",
+          "description": "Manage the vehicle fleet",
+          "subLabel": "total vehicles"
+        },
+        "users": {
+          "title": "Users",
+          "description": "Manage users and agents",
+          "subLabel": "registered users"
+        }
+      },
+      "stats": {
+        "totalCars": {
+          "title": "Total Cars",
+          "description": "Vehicles in the fleet"
+        },
+        "availableCars": {
+          "title": "Available Cars",
+          "description": "Ready for rental"
+        },
+        "maintenance": {
+          "title": "Maintenance",
+          "description": "Cars under maintenance"
+        },
+        "totalRentals": {
+          "title": "Total Rentals",
+          "description": "All-time rentals"
+        },
+        "pendingRentals": {
+          "title": "Pending Rentals",
+          "description": "Awaiting approval"
+        },
+        "activeRentals": {
+          "title": "Active Rentals",
+          "description": "Currently ongoing"
+        },
+        "totalInvoices": {
+          "title": "Total Invoices",
+          "description": "Invoices issued"
+        },
+        "revenue": {
+          "title": "Revenue",
+          "description": "Total invoiced amount"
+        },
+        "users": {
+          "title": "Users",
+          "description": "Registered users"
+        },
+        "agents": {
+          "title": "Agents",
+          "description": "Agent accounts"
+        }
+      }
+    },
+    "carsPage": {
+      "backToDashboard": "Back to Dashboard",
+      "title": "Car Management"
+    },
+    "usersPage": {
+      "backToDashboard": "Back to Dashboard",
+      "title": "User Management",
+      "staffTitle": "Staff (Admins & Agents)",
+      "members": "{count, plural, one {# member} other {# members}}",
+      "usersTitle": "Users",
+      "usersCount": "{count, plural, one {# user} other {# users}}"
+    }
+  },
+  "CarDetail": {
+    "backToCars": "Back to all cars",
+    "modelYear": "{year} model",
+    "fields": {
+      "make": "Make",
+      "model": "Model",
+      "year": "Year",
+      "licensePlate": "License plate",
+      "mileage": "Mileage",
+      "added": "Added",
+      "dailyRate": "Daily rate"
+    },
+    "perDay": "/day",
+    "request": {
+      "title": "Rental Request",
+      "available": "Submit a rental request for this vehicle.",
+      "unavailable": "This vehicle is currently not available for rental.",
+      "currently": "This car is currently",
+      "underMaintenance": "under maintenance",
+      "unavailableStatus": "unavailable",
+      "checkBack": "Please check back later or browse other available vehicles.",
+      "browseCars": "Browse Available Cars"
+    }
+  },
+  "Common": {
+    "notFound": {
+      "errorCode": "Error 404",
+      "title": "Not found",
+      "description": "The page you're looking for doesn't exist or has been moved. Let's get you back on the road.",
+      "backHome": "Back to Home"
+    },
+    "noResults": "No results.",
+    "toggleColumns": "Toggle columns",
+    "view": "View",
+    "optional": "(optional)",
+    "cancel": "Cancel",
+    "reset": "Reset",
+    "saving": "Saving...",
+    "notProvided": "Not provided",
+    "guest": "Guest",
+    "unknown": "Unknown"
+  },
+  "CarStatusBadge": {
+    "available": "Available",
+    "maintenance": "Maintenance",
+    "unavailable": "Unavailable",
+    "inUse": "In use"
+  },
+  "RentalStatusBadge": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "active": "Active",
+    "closed": "Closed",
+    "closedInvoiced": "Closed – Invoiced"
+  },
+  "CarFilters": {
+    "searchPlaceholder": "Search by make, model, or plate...",
+    "sortPlaceholder": "Sort by",
+    "sortOptions": {
+      "newest": "Newest",
+      "priceAsc": "Price ↑",
+      "priceDesc": "Price ↓",
+      "yearAsc": "Year ↑",
+      "yearDesc": "Year ↓",
+      "mileageAsc": "Mileage ↑",
+      "mileageDesc": "Mileage ↓"
+    },
+    "showUnavailable": "Show unavailable"
+  },
+  "RentalTable": {
+    "columns": {
+      "car": "Car",
+      "customer": "Customer",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "status": "Status",
+      "createdAt": "Created"
+    },
+    "searchByCar": "Search by car…",
+    "searchByCarOrCustomer": "Search by car or customer…",
+    "allStatuses": "All statuses",
+    "noRentals": "No rentals found.",
+    "statuses": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected",
+      "ACTIVE": "Active",
+      "CLOSED": "Closed",
+      "CLOSED_INVOICED": "Closed – Invoiced"
+    }
+  },
+  "AdminCarTable": {
+    "columns": {
+      "makeModel": "Make / Model",
+      "year": "Year",
+      "licensePlate": "License Plate",
+      "mileage": "Mileage",
+      "dailyRate": "Daily Rate",
+      "status": "Status"
+    },
+    "searchPlaceholder": "Search by make, model, or plate…",
+    "allStatuses": "All statuses",
+    "statusAvailable": "Available",
+    "statusMaintenance": "Maintenance",
+    "statusUnavailable": "Unavailable",
+    "addNewCar": "Add New Car",
+    "addNewCarTitle": "Add New Car",
+    "addNewCarDesc": "Fill in the details to add a new car to the fleet.",
+    "noCars": "No cars found. Add your first car to get started."
+  },
+  "UsersTable": {
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "phone": "Phone",
+      "address": "Address",
+      "createdAt": "Created"
+    },
+    "searchPlaceholder": "Search by name or email…",
+    "allRoles": "All roles",
+    "roles": {
+      "admin": "Admin",
+      "agent": "Agent",
+      "user": "User"
+    },
+    "noUsers": "No users found."
+  },
+  "InvoicesTable": {
+    "columns": {
+      "car": "Car",
+      "amount": "Amount",
+      "issuedAt": "Issued Date",
+      "issuedBy": "Issued By"
+    },
+    "searchPlaceholder": "Search by car or issuer…",
+    "noInvoices": "No invoices issued yet"
+  },
+  "ApproveRejectActions": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "processing": "Processing…",
+    "approving": "Approving…",
+    "rejecting": "Rejecting…",
+    "cancel": "Cancel",
+    "approveTitle": "Approve Rental Request",
+    "checkingConflicts": "Checking for conflicting requests…",
+    "approveDescNoConflict": "Are you sure you want to approve this rental request?",
+    "approveDescConflicts": "Approving this request will automatically reject {count, plural, one {# conflicting pending request} other {# conflicting pending requests}}.",
+    "reasonLabel": "Reason",
+    "reasonOptional": "(optional)",
+    "approveNotePlaceholder": "Add a note for the approval…",
+    "conflictsSectionTitle": "Requests that will be rejected",
+    "rejectTitle": "Reject Rental Request",
+    "rejectDesc": "Please provide a reason for rejecting this rental request. This will be recorded in the rental history.",
+    "rejectNotePlaceholder": "Reason for rejection…",
+    "rejectionMessagePlaceholder": "Rejection message…",
+    "defaultConflictNote": "Sorry, this request was automatically rejected because another rental was approved for the same dates.",
+    "toastApproved": "Rental approved",
+    "toastRejected": "Rental rejected",
+    "toastNeedReason": "Please provide a rejection reason"
+  },
+  "HandoverReturnActions": {
+    "recordHandover": "Record Handover",
+    "recordReturn": "Record Return",
+    "mileageLabel": "Mileage (km)",
+    "lastRecorded": "Last recorded:",
+    "noteLabel": "Note",
+    "noteOptional": "(optional)",
+    "observationsPlaceholder": "Any observations or remarks…",
+    "saving": "Saving…",
+    "toastHandover": "Handover recorded",
+    "toastReturn": "Return recorded",
+    "validMileageError": "Please enter a valid mileage"
+  },
+  "IssueInvoiceButton": {
+    "amountLabel": "Amount (HUF)",
+    "computed": "Computed: {amount}",
+    "issueInvoice": "Issue Invoice",
+    "issuing": "Issuing…",
+    "toastIssued": "Invoice issued"
+  },
+  "RentalRequestForm": {
+    "rentalPeriod": "Rental Period",
+    "pickStart": "Pick start date",
+    "pickEnd": " – Pick end date",
+    "phaseStart": "start",
+    "phaseEnd": "end",
+    "phaseClickToSelect": "Click to select {phase} date",
+    "resetButton": "Reset",
+    "perDay": "/day",
+    "estimatedTotal": "Estimated total cost",
+    "daysLine": "{days, plural, one {# day} other {# days}} × {rate}/day",
+    "justRate": "{rate}/day",
+    "fullName": "Full Name",
+    "guestNamePlaceholder": "John Doe",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "phone": "Phone",
+    "phonePlaceholder": "+36 30 123 4567",
+    "notes": "Notes",
+    "notesPlaceholder": "Any special requests or notes for the agent… (optional)",
+    "submitButton": "Submit Rental Request",
+    "successTitle": "Rental request submitted!",
+    "successDescription": "Your request has been received. An agent will review it shortly and you will be notified of the decision."
+  },
+  "RentalDetailDialog": {
+    "sections": {
+      "rentalDetails": "Rental Details",
+      "customerInfo": "Customer Info",
+      "statusHistory": "Status History",
+      "invoice": "Invoice"
+    },
+    "fields": {
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "duration": "Duration",
+      "estimatedCost": "Estimated Cost"
+    },
+    "days": "{days, plural, one {# day} other {# days}}",
+    "assignedAgentUser": "Your assigned agent",
+    "assignedAgentAdmin": "Current assigned agent",
+    "noAgent": "No agent assigned yet.",
+    "guestBadge": "Guest",
+    "notProvided": "Not provided",
+    "noEvents": "No events recorded.",
+    "loadingInvoice": "Loading invoice…",
+    "invoiceUnavailable": "Invoice data unavailable.",
+    "issued": "Issued {date}",
+    "downloadPdf": "Download PDF",
+    "by": "by {name}",
+    "mileageKm": "Mileage: {mileage} km",
+    "fieldName": "Name",
+    "fieldEmail": "Email",
+    "fieldPhone": "Phone",
+    "eventTypes": {
+      "REQUEST": "Request",
+      "APPROVE": "Approved",
+      "REJECT": "Rejected",
+      "HANDOVER": "Handover",
+      "RETURN": "Return"
+    }
+  },
+  "UserDetailDialog": {
+    "formLabels": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "role": "Role"
+    },
+    "notProvided": "Not provided",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "toastUpdated": "User updated successfully.",
+    "joined": "Joined {date}",
+    "roles": {
+      "user": "User",
+      "agent": "Agent",
+      "admin": "Admin"
+    }
+  },
+  "NoteDisplay": {
+    "defaultLabel": "Notes",
+    "noNotes": "No notes provided."
+  },
+  "RentalAgentCard": {
+    "guest": "Guest",
+    "start": "Start",
+    "end": "End"
+  },
+  "CarCard": {
+    "year": "Year",
+    "mileage": "Mileage",
+    "license": "License",
+    "perDay": "/day",
+    "viewDetails": "View Details"
+  },
+  "DataTablePagination": {
+    "rowsSummary": "{filtered} of {total} row(s)",
+    "rowsPerPage": "Rows per page",
+    "pageOf": "Page {page} of {total}",
+    "goToFirstPage": "Go to first page",
+    "goToPreviousPage": "Go to previous page",
+    "goToNextPage": "Go to next page",
+    "goToLastPage": "Go to last page"
+  },
+  "CarDetailDialog": {
+    "tabDetails": "Details",
+    "tabRentalHistory": "Rental History",
+    "dangerZone": "Danger Zone",
+    "deleteCarHeading": "Delete this car",
+    "deleteCarDesc": "This action cannot be undone. Cars with active or pending rentals cannot be deleted.",
+    "deleteButton": "Delete",
+    "deletingButton": "Deleting...",
+    "deleteConfirmTitle": "Delete Car",
+    "deleteConfirmDesc": "Are you sure you want to delete <strong>{name}</strong>? This action cannot be undone.",
+    "guestBadge": "Guest",
+    "noHistory": "No rental history for this car."
+  },
+  "SocialButtons": {
+    "orContinueWith": "Or continue with",
+    "comingSoon": "Social login coming soon"
+  },
+  "CarForm": {
+    "brandLabel": "Brand",
+    "brandPlaceholder": "Select…",
+    "makeLabel": "Make",
+    "makePlaceholder": "e.g. Toyota",
+    "modelLabel": "Model",
+    "modelPlaceholder": "e.g. Corolla",
+    "yearLabel": "Year",
+    "licensePlateLabel": "License Plate",
+    "licensePlatePlaceholder": "e.g. ABC-123",
+    "mileageLabel": "Mileage (km)",
+    "dailyRateLabel": "Daily Rate (HUF)",
+    "statusLabel": "Status",
+    "statusPlaceholder": "Select status",
+    "statusAvailable": "Available",
+    "statusMaintenance": "Maintenance",
+    "statusUnavailable": "Unavailable",
+    "createButton": "Create Car",
+    "updateButton": "Update Car",
+    "creatingButton": "Creating...",
+    "updatingButton": "Updating...",
+    "toastCreated": "Car created successfully.",
+    "toastUpdated": "Car updated successfully.",
+    "imageLabel": "Car Photo",
+    "imageUpload": "Click or drag & drop to upload",
+    "imageDragActive": "Drop image here",
+    "imageHint": "JPG, PNG, WebP or GIF · max 4 MB",
+    "imageReplace": "Replace photo",
+    "imageRemove": "Remove",
+    "imageUploading": "Uploading..."
+  }
+}

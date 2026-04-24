@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { FileText } from "lucide-react";
 import { toast } from "sonner";
 
@@ -19,6 +20,8 @@ export function IssueInvoiceButton({
   computedAmount: number;
 }) {
   const router = useRouter();
+  const t = useTranslations("IssueInvoiceButton");
+  const locale = useLocale();
   const [isPending, startTransition] = useTransition();
   const [rawAmount, setRawAmount] = useState(String(computedAmount));
 
@@ -31,7 +34,7 @@ export function IssueInvoiceButton({
     startTransition(async () => {
       const result = await issueInvoice(rentalId, parsedAmount);
       if (result.success) {
-        toast.success("Invoice issued");
+        toast.success(t("toastIssued"));
         router.refresh();
       } else {
         toast.error(result.error);
@@ -44,11 +47,13 @@ export function IssueInvoiceButton({
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
           <Label htmlFor={`amount-${rentalId}`} className="text-sm font-medium">
-            Amount (HUF)
+            {t("amountLabel")}
           </Label>
           {isCustom && (
             <span className="text-xs text-muted-foreground">
-              Computed: {formatCurrency(computedAmount)}
+              {t("computed", {
+                amount: formatCurrency(computedAmount, locale),
+              })}
             </span>
           )}
         </div>
@@ -70,7 +75,7 @@ export function IssueInvoiceButton({
         disabled={isPending || !isValid}
       >
         <FileText className="size-3.5" />
-        {isPending ? "Issuing…" : "Issue Invoice"}
+        {isPending ? t("issuing") : t("issueInvoice")}
       </Button>
     </div>
   );

@@ -4,6 +4,7 @@ import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 import { deleteCar } from "@/actions/cars";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,8 @@ type DeleteCarButtonProps = {
 
 export function DeleteCarButton({ carId, carName }: DeleteCarButtonProps) {
   const router = useRouter();
+  const t = useTranslations("CarDetailDialog");
+  const tCommon = useTranslations("Common");
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 
@@ -46,25 +49,29 @@ export function DeleteCarButton({ carId, carName }: DeleteCarButtonProps) {
       <AlertDialogTrigger asChild>
         <Button variant="destructive" size="sm">
           <Trash2 className="size-3.5" />
-          Delete
+          {t("deleteButton")}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Car</AlertDialogTitle>
+          <AlertDialogTitle>{t("deleteConfirmTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete <strong>{carName}</strong>? This
-            action cannot be undone.
+            {t.rich("deleteConfirmDesc", {
+              name: carName,
+              strong: (chunks) => <strong>{chunks}</strong>,
+            })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>
+            {tCommon("cancel")}
+          </AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             onClick={handleDelete}
             disabled={isPending}
           >
-            {isPending ? "Deleting..." : "Delete"}
+            {isPending ? t("deletingButton") : t("deleteButton")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

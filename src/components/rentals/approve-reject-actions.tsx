@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { AlertTriangle, Check, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 
@@ -24,9 +25,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { formatDate } from "@/lib/utils";
 
-const DEFAULT_CONFLICT_NOTE =
-  "Sorry, this request was automatically rejected because another rental was approved for the same dates.";
-
 type ConflictItem = {
   id: string;
   startDate: Date;
@@ -35,6 +33,9 @@ type ConflictItem = {
 };
 
 export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
+  const t = useTranslations("ApproveRejectActions");
+  const tCommon = useTranslations("Common");
+  const locale = useLocale();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [approveOpen, setApproveOpen] = useState(false);
@@ -58,7 +59,7 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
     // Pre-populate conflict notes with the default message
     const initial: Record<string, string> = {};
     for (const c of fetchedConflicts) {
-      initial[c.id] = DEFAULT_CONFLICT_NOTE;
+      initial[c.id] = t("defaultConflictNote");
     }
     setConflictNotes(initial);
     setConflictsLoading(false);
@@ -72,7 +73,7 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
         conflictNotes,
       });
       if (result.success) {
-        toast.success("Rental approved");
+        toast.success(t("toastApproved"));
         setApproveOpen(false);
         router.refresh();
       } else {
@@ -84,13 +85,13 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
 
   function handleReject() {
     if (!reason.trim()) {
-      toast.error("Please provide a rejection reason");
+      toast.error(t("toastNeedReason"));
       return;
     }
     startTransition(async () => {
       const result = await rejectRental(rentalId, { reason: reason.trim() });
       if (result.success) {
-        toast.success("Rental rejected");
+        toast.success(t("toastRejected"));
         setRejectOpen(false);
         setReason("");
         router.refresh();
@@ -111,7 +112,7 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
         disabled={isPending || conflictsLoading}
       >
         <Check className="size-4" />
-        {isPending ? "Processing…" : "Approve"}
+        {isPending ? t("processing") : t("approve")}
       </Button>
       <Button
         size="sm"
@@ -120,7 +121,7 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
         disabled={isPending}
       >
         <X className="size-4" />
-        Reject
+        {t("reject")}
       </Button>
 
       {/* Approve Confirmation */}
@@ -138,13 +139,13 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
       >
         <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
           <AlertDialogHeader>
-            <AlertDialogTitle>Approve Rental Request</AlertDialogTitle>
+            <AlertDialogTitle>{t("approveTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
               {conflictsLoading
-                ? "Checking for conflicting requests…"
+                ? t("checkingConflicts")
                 : conflictCount > 0
-                  ? `Approving this request will automatically reject ${conflictCount} conflicting pending request${conflictCount > 1 ? "s" : ""}.`
-                  : "Are you sure you want to approve this rental request?"}
+                  ? t("approveDescConflicts", { count: conflictCount })
+                  : t("approveDescNoConflict")}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -158,13 +159,13 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
             <>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">
-                  Reason{" "}
+                  {t("reasonLabel")}{" "}
                   <span className="font-normal text-muted-foreground">
-                    (optional)
+                    {t("reasonOptional")}
                   </span>
                 </label>
                 <Textarea
-                  placeholder="Add a note for the approval…"
+                  placeholder={t("approveNotePlaceholder")}
                   value={approveNotes}
                   onChange={(e) => setApproveNotes(e.target.value)}
                   className="min-h-[80px]"
@@ -176,21 +177,21 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
                 <div className="space-y-3 rounded-md border border-destructive/30 bg-destructive/10 p-3">
                   <div className="flex items-center gap-2 text-sm font-medium text-destructive">
                     <AlertTriangle className="size-4" />
-                    Requests that will be rejected
+                    {t("conflictsSectionTitle")}
                   </div>
                   <ul className="space-y-3">
                     {conflicts.map((conflict) => (
                       <li key={conflict.id} className="space-y-1.5">
                         <p className="text-sm text-muted-foreground">
                           <span className="font-medium text-foreground">
-                            {conflict.renterName ?? "Unknown"}
+                            {conflict.renterName ?? tCommon("unknown")}
                           </span>
                           {" · "}
-                          {formatDate(conflict.startDate)} –{" "}
-                          {formatDate(conflict.endDate)}
+                          {formatDate(conflict.startDate, locale)} –{" "}
+                          {formatDate(conflict.endDate, locale)}
                         </p>
                         <Textarea
-                          placeholder="Rejection message…"
+                          placeholder={t("rejectionMessagePlaceholder")}
                           value={conflictNotes[conflict.id] ?? ""}
                           onChange={(e) =>
                             setConflictNotes((prev) => ({
@@ -211,13 +212,13 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isPending || conflictsLoading}>
-              Cancel
+              {t("cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleApprove}
               disabled={isPending || conflictsLoading}
             >
-              {isPending ? "Approving…" : "Approve"}
+              {isPending ? t("approving") : t("approve")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -233,27 +234,26 @@ export function ApproveRejectActions({ rentalId }: { rentalId: string }) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Reject Rental Request</AlertDialogTitle>
-            <AlertDialogDescription>
-              Please provide a reason for rejecting this rental request. This
-              will be recorded in the rental history.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("rejectTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("rejectDesc")}</AlertDialogDescription>
           </AlertDialogHeader>
           <Textarea
-            placeholder="Reason for rejection…"
+            placeholder={t("rejectNotePlaceholder")}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             className="min-h-[80px]"
             disabled={isPending}
           />
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isPending}>
+              {t("cancel")}
+            </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={handleReject}
               disabled={isPending || !reason.trim()}
             >
-              {isPending ? "Rejecting…" : "Reject"}
+              {isPending ? t("rejecting") : t("reject")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -7,6 +7,9 @@ import { db } from "@/db";
 import { users } from "@/db/schema";
 
 import type { UserRole } from "@/types";
+import { hasLocale } from "next-intl";
+
+import { routing } from "@/i18n/routing";
 
 declare module "next-auth" {
   interface User {
@@ -28,6 +31,38 @@ declare module "next-auth" {
     id: string;
     role: UserRole;
   }
+}
+
+function getLocaleFromPath(pathname: string) {
+  if (!pathname || pathname === "/") {
+    return routing.defaultLocale;
+  }
+
+  const segment = pathname.split("/")[1];
+
+  if (!segment) {
+    return routing.defaultLocale;
+  }
+
+  return hasLocale(routing.locales, segment) ? segment : routing.defaultLocale;
+}
+
+function stripLocalePrefix(pathname: string) {
+  const locale = getLocaleFromPath(pathname);
+  const prefixed = `/${locale}`;
+
+  if (pathname === prefixed) return "/";
+  if (pathname.startsWith(`${prefixed}/`)) {
+    return pathname.slice(prefixed.length);
+  }
+
+  // Pathname does not start with a known locale prefix; return as-is.
+  return pathname;
+}
+
+function localizedPath(path: string, locale: string) {
+  if (path === "/") return `/${locale}`;
+  return `/${locale}${path}`;
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -97,42 +132,55 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const path = nextUrl.pathname;
+      const locale = getLocaleFromPath(nextUrl.pathname);
+      const path = stripLocalePrefix(nextUrl.pathname);
 
-      // Agent routes require agent or admin role
+      const loginUrl = localizedPath("/login", locale);
+
       if (path.startsWith("/agent")) {
-        return (
-          isLoggedIn &&
-          (auth.user.role === "agent" || auth.user.role === "admin")
-        );
+        if (!isLoggedIn) {
+          return Response.redirect(new URL(loginUrl, nextUrl));
+        }
+
+        return auth.user.role === "agent" || auth.user.role === "admin";
       }
 
-      // Admin routes require admin role
       if (path.startsWith("/admin")) {
-        return isLoggedIn && auth.user.role === "admin";
+        if (!isLoggedIn) {
+          return Response.redirect(new URL(loginUrl, nextUrl));
+        }
+
+        return auth.user.role === "admin";
       }
 
-      // Dashboard requires any authenticated user
       if (path.startsWith("/dashboard")) {
-        return isLoggedIn;
+        if (!isLoggedIn) {
+          return Response.redirect(new URL(loginUrl, nextUrl));
+        }
+
+        return true;
       }
 
-      // Auth pages should redirect logged-in users to their role dashboard
       if (path.startsWith("/login") || path.startsWith("/register")) {
         if (isLoggedIn) {
           const role = auth.user.role;
           if (role === "admin") {
-            return Response.redirect(new URL("/admin", nextUrl));
+            return Response.redirect(
+              new URL(localizedPath("/admin", locale), nextUrl)
+            );
           }
           if (role === "agent") {
-            return Response.redirect(new URL("/agent", nextUrl));
+            return Response.redirect(
+              new URL(localizedPath("/agent", locale), nextUrl)
+            );
           }
-          return Response.redirect(new URL("/dashboard", nextUrl));
+          return Response.redirect(
+            new URL(localizedPath("/dashboard", locale), nextUrl)
+          );
         }
         return true;
       }
 
-      // Public routes
       return true;
     },
   },

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { differenceInCalendarDays, format, startOfDay } from "date-fns";
@@ -57,6 +58,8 @@ export function RentalRequestForm({
   bookedIntervals,
 }: RentalRequestFormProps) {
   "use no memo";
+  const t = useTranslations("RentalRequestForm");
+  const locale = useLocale();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [selectionPhase, setSelectionPhase] = useState<SelectionPhase>("start");
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -220,12 +223,11 @@ export function RentalRequestForm({
         <div className="flex items-center gap-2">
           <CircleCheck className="size-4 shrink-0 text-green-600 dark:text-green-400" />
           <p className="text-sm font-medium text-green-800 dark:text-green-200">
-            Rental request submitted!
+            {t("successTitle")}
           </p>
         </div>
         <p className="mt-1 text-sm text-green-700 dark:text-green-300">
-          Your request has been received. An agent will review it shortly and
-          you will be notified of the decision.
+          {t("successDescription")}
         </p>
       </div>
     );
@@ -238,7 +240,7 @@ export function RentalRequestForm({
 
         {/* Single range date picker */}
         <div className="flex flex-col gap-2">
-          <FormLabel>Rental Period</FormLabel>
+          <FormLabel>{t("rentalPeriod")}</FormLabel>
           <Popover open={calendarOpen} onOpenChange={handleOpenChange}>
             <PopoverTrigger asChild>
               <Button
@@ -256,11 +258,13 @@ export function RentalRequestForm({
                   <span>
                     {format(new Date(startDateValue + "T00:00:00"), "PPP")}
                     <span className={cn("text-muted-foreground")}>
-                      {" \u2013 Pick end date"}
+                      {t("pickEnd")}
                     </span>
                   </span>
                 ) : (
-                  <span className="text-muted-foreground">Pick start date</span>
+                  <span className="text-muted-foreground">
+                    {t("pickStart")}
+                  </span>
                 )}
               </Button>
             </PopoverTrigger>
@@ -268,11 +272,11 @@ export function RentalRequestForm({
               {/* Phase indicator */}
               <div className="flex items-center justify-between border-b px-3 py-2">
                 <span className="text-xs text-muted-foreground">
-                  Click to select{" "}
-                  <strong>
-                    {selectionPhase === "start" ? "start" : "end"}
-                  </strong>{" "}
-                  date
+                  {t("phaseClickToSelect", {
+                    phase: t(
+                      selectionPhase === "start" ? "phaseStart" : "phaseEnd"
+                    ),
+                  })}
                 </span>
                 <Button
                   type="button"
@@ -282,7 +286,7 @@ export function RentalRequestForm({
                   onClick={handleReset}
                 >
                   <RotateCcw className="size-3" />
-                  Reset
+                  {t("resetButton")}
                 </Button>
               </div>
               <Calendar
@@ -310,15 +314,20 @@ export function RentalRequestForm({
           <div className="flex items-center justify-between gap-2 text-sm text-muted-foreground">
             <span>
               {estimatedDays !== null
-                ? `${estimatedDays} ${estimatedDays === 1 ? "day" : "days"} \u00d7 ${formatCurrency(dailyRate)}/day`
-                : `${formatCurrency(dailyRate)}/day`}
+                ? t("daysLine", {
+                    days: estimatedDays,
+                    rate: formatCurrency(dailyRate, locale),
+                  })
+                : t("justRate", { rate: formatCurrency(dailyRate, locale) })}
             </span>
             <span className="text-base font-semibold text-foreground">
-              {estimatedTotal !== null ? formatCurrency(estimatedTotal) : "—"}
+              {estimatedTotal !== null
+                ? formatCurrency(estimatedTotal, locale)
+                : "—"}
             </span>
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            Estimated total cost
+            {t("estimatedTotal")}
           </p>
         </div>
 
@@ -329,10 +338,10 @@ export function RentalRequestForm({
               name="guestName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel>{t("fullName")}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="John Doe"
+                      placeholder={t("guestNamePlaceholder")}
                       {...field}
                       value={field.value ?? ""}
                     />
@@ -347,11 +356,11 @@ export function RentalRequestForm({
               name="guestEmail"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t("email")}</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="you@example.com"
+                      placeholder={t("emailPlaceholder")}
                       {...field}
                       value={field.value ?? ""}
                     />
@@ -366,11 +375,11 @@ export function RentalRequestForm({
               name="guestPhone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone</FormLabel>
+                  <FormLabel>{t("phone")}</FormLabel>
                   <FormControl>
                     <Input
                       type="tel"
-                      placeholder="+36 30 123 4567"
+                      placeholder={t("phonePlaceholder")}
                       {...field}
                       value={field.value ?? ""}
                     />
@@ -387,10 +396,10 @@ export function RentalRequestForm({
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Notes</FormLabel>
+              <FormLabel>{t("notes")}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Any special requests or notes for the agent… (optional)"
+                  placeholder={t("notesPlaceholder")}
                   className="min-h-[80px] resize-none"
                   {...field}
                   value={field.value ?? ""}
@@ -411,7 +420,7 @@ export function RentalRequestForm({
           ) : (
             <Send className="size-4" />
           )}
-          Submit Rental Request
+          {t("submitButton")}
         </Button>
       </form>
     </Form>

@@ -1,9 +1,8 @@
 "use client";
 
 import { useSyncExternalStore, useTransition, useState, useRef } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useLocale, useTranslations } from "next-intl";
 import type { LucideIcon } from "lucide-react";
 import {
   BarChart3,
@@ -22,9 +21,12 @@ import {
   User,
   ShieldUser,
 } from "lucide-react";
+import Image from "next/image";
 
 import type { UserRole } from "@/types";
 import { cn } from "@/lib/utils";
+import { routing } from "@/i18n/routing";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { signOutAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,9 +39,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Image from "next/image";
-
-// ---------- Types ----------
 
 export type Panel = "public" | "dashboard" | "agent" | "admin";
 
@@ -56,43 +55,42 @@ export type NavbarClientProps = {
 };
 
 type NavRoute = {
-  label: string;
+  labelKey: string;
   href: string;
   icon: LucideIcon;
 };
 
 type PanelOption = {
-  label: string;
+  labelKey: string;
   value: Panel;
   href: string;
 };
 
-// ---------- Route Config ----------
-
-// Home is always the first entry so it appears at the top of the dropdown.
-// Public panel shows identical routes for every role (Home + Dashboard).
-// Authenticated panel routes include Home so it is always reachable from the dropdown.
 const PANEL_ROUTES: Record<Panel, NavRoute[]> = {
   public: [
-    { label: "Home", href: "/", icon: Home },
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { labelKey: "routes.home", href: "/", icon: Home },
+    { labelKey: "routes.dashboard", href: "/dashboard", icon: LayoutDashboard },
   ],
   dashboard: [
-    { label: "Home", href: "/", icon: Home },
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { labelKey: "routes.home", href: "/", icon: Home },
+    { labelKey: "routes.dashboard", href: "/dashboard", icon: LayoutDashboard },
   ],
   agent: [
-    { label: "Home", href: "/", icon: Home },
-    { label: "Overview", href: "/agent", icon: BarChart3 },
-    { label: "Requests", href: "/agent/requests", icon: ClipboardList },
-    { label: "Active Rentals", href: "/agent/active", icon: Car },
-    { label: "Invoices", href: "/agent/invoices", icon: FileText },
+    { labelKey: "routes.home", href: "/", icon: Home },
+    { labelKey: "routes.overview", href: "/agent", icon: BarChart3 },
+    {
+      labelKey: "routes.requests",
+      href: "/agent/requests",
+      icon: ClipboardList,
+    },
+    { labelKey: "routes.activeRentals", href: "/agent/active", icon: Car },
+    { labelKey: "routes.invoices", href: "/agent/invoices", icon: FileText },
   ],
   admin: [
-    { label: "Home", href: "/", icon: Home },
-    { label: "Overview", href: "/admin", icon: BarChart3 },
-    { label: "Cars", href: "/admin/cars", icon: Car },
-    { label: "Users", href: "/admin/users", icon: ShieldUser },
+    { labelKey: "routes.home", href: "/", icon: Home },
+    { labelKey: "routes.overview", href: "/admin", icon: BarChart3 },
+    { labelKey: "routes.cars", href: "/admin/cars", icon: Car },
+    { labelKey: "routes.users", href: "/admin/users", icon: ShieldUser },
   ],
 };
 
@@ -100,14 +98,14 @@ function getAvailablePanels(role: UserRole): PanelOption[] {
   switch (role) {
     case "admin":
       return [
-        { label: "User Mode", value: "public", href: "/" },
-        { label: "Agent Mode", value: "agent", href: "/agent" },
-        { label: "Admin Mode", value: "admin", href: "/admin" },
+        { labelKey: "panel.userMode", value: "public", href: "/" },
+        { labelKey: "panel.agentMode", value: "agent", href: "/agent" },
+        { labelKey: "panel.adminMode", value: "admin", href: "/admin" },
       ];
     case "agent":
       return [
-        { label: "User Mode", value: "public", href: "/" },
-        { label: "Agent Mode", value: "agent", href: "/agent" },
+        { labelKey: "panel.userMode", value: "public", href: "/" },
+        { labelKey: "panel.agentMode", value: "agent", href: "/agent" },
       ];
     default:
       return [];
@@ -115,13 +113,11 @@ function getAvailablePanels(role: UserRole): PanelOption[] {
 }
 
 const PANEL_LABELS: Record<Panel, string> = {
-  public: "User Mode",
-  dashboard: "User Mode",
-  agent: "Agent Mode",
-  admin: "Admin Mode",
+  public: "panel.userMode",
+  dashboard: "panel.userMode",
+  agent: "panel.agentMode",
+  admin: "panel.adminMode",
 };
-
-// ---------- Helpers ----------
 
 function useIsMounted() {
   return useSyncExternalStore(
@@ -131,9 +127,8 @@ function useIsMounted() {
   );
 }
 
-// ---------- Sub-components ----------
-
 function ThemeSwitcher() {
+  const t = useTranslations("Navbar");
   const { theme, setTheme } = useTheme();
   const mounted = useIsMounted();
   const currentTheme = mounted ? (theme ?? "system") : "system";
@@ -144,19 +139,78 @@ function ThemeSwitcher() {
         <TabsList className="w-full">
           <TabsTrigger value="light" className="flex-1">
             <Sun className="size-4" />
-            <span className="sr-only">Light</span>
+            <span className="sr-only">{t("theme.light")}</span>
           </TabsTrigger>
           <TabsTrigger value="dark" className="flex-1">
             <Moon className="size-4" />
-            <span className="sr-only">Dark</span>
+            <span className="sr-only">{t("theme.dark")}</span>
           </TabsTrigger>
           <TabsTrigger value="system" className="flex-1">
             <Monitor className="size-4" />
-            <span className="sr-only">System</span>
+            <span className="sr-only">{t("theme.system")}</span>
           </TabsTrigger>
         </TabsList>
       </Tabs>
     </div>
+  );
+}
+
+function GuestThemeToggle() {
+  const t = useTranslations("Navbar");
+  const { theme, setTheme } = useTheme();
+  const mounted = useIsMounted();
+  const currentTheme = mounted ? (theme ?? "system") : "system";
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon">
+          {currentTheme === "dark" ? (
+            <Moon className="size-4" />
+          ) : currentTheme === "light" ? (
+            <Sun className="size-4" />
+          ) : (
+            <Monitor className="size-4" />
+          )}
+          <span className="sr-only">{t("theme.system")}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onSelect={() => setTheme("light")}>
+          <Sun className="size-4" />
+          {t("theme.light")}
+        </DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => setTheme("dark")}>
+          <Moon className="size-4" />
+          {t("theme.dark")}
+        </DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => setTheme("system")}>
+          <Monitor className="size-4" />
+          {t("theme.system")}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function GuestLanguageToggle() {
+  const locale = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      className="gap-1.5"
+      onClick={() => {
+        const nextLocale = locale === "hu" ? "en" : "hu";
+        router.replace(pathname, { locale: nextLocale });
+      }}
+    >
+      <Globe className="size-4" />
+      <span className="text-xs font-medium uppercase">{locale}</span>
+    </Button>
   );
 }
 
@@ -179,6 +233,7 @@ function PanelSwitcher({
   panel: Panel;
   panels: PanelOption[];
 }) {
+  const t = useTranslations("Navbar");
   const [open, setOpen] = useState(false);
   const openedAt = useRef<number>(0);
   const router = useRouter();
@@ -199,7 +254,7 @@ function PanelSwitcher({
           className="gap-1 text-muted-foreground"
         >
           <PanelModeIcon panel={panel} className="size-3.5" />
-          {PANEL_LABELS[panel]}
+          {t(PANEL_LABELS[panel])}
           <ChevronDown className="size-3" />
         </Button>
       </DropdownMenuTrigger>
@@ -217,7 +272,7 @@ function PanelSwitcher({
             }}
           >
             <PanelModeIcon panel={p.value} className="size-4" />
-            {p.label}
+            {t(p.labelKey)}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
@@ -225,27 +280,23 @@ function PanelSwitcher({
   );
 }
 
-// ---------- Helpers ----------
-
 function RoleIcon({ role, className }: { role: UserRole; className?: string }) {
   if (role === "admin") return <ShieldUser className={className} />;
   if (role === "agent") return <ClipboardList className={className} />;
   return <User className={className} />;
 }
 
-// ---------- Main Component ----------
-
 export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
+  const t = useTranslations("Navbar");
+  const locale = useLocale();
   const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
+  const router = useRouter();
 
   const panels = user ? getAvailablePanels(user.role) : [];
   const showPanelSwitcher = panels.length > 1;
-
-  // For logged-in users show context routes based on the current panel.
   const routes: NavRoute[] = user ? PANEL_ROUTES[panel] : [];
 
-  // Exact match for "/" to avoid false positives on sub-routes.
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
     return pathname === href;
@@ -254,12 +305,11 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/40 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Left: Logo + Panel Switcher */}
         <div className="flex items-center gap-1">
           <Link href="/" className="text-xl font-bold flex items-center gap-4">
             <Image
               src="/com-logo.png"
-              alt="Company logo"
+              alt={t("companyLogoAlt")}
               width={42}
               height={42}
             />
@@ -268,24 +318,25 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
           {showPanelSwitcher && (
             <>
               <span className="mx-1 text-lg text-muted-foreground/40">/</span>
-              {/* user is non-null here: showPanelSwitcher is only true when panels.length > 1,
-                  which requires user to be defined (panels = user ? getAvailablePanels(...) : []) */}
               <PanelSwitcher panel={panel} panels={panels} />
             </>
           )}
         </div>
 
-        {/* Right: Login (logged out) or Profile dropdown (logged in) */}
         <div className="flex items-center gap-2">
           {!user ? (
-            !hideLogin && (
-              <Link href="/login">
-                <Button variant="outline" size="sm">
-                  <LogIn className="mr-2 size-4" />
-                  Login
-                </Button>
-              </Link>
-            )
+            <>
+              <GuestThemeToggle />
+              <GuestLanguageToggle />
+              {!hideLogin && (
+                <Link href="/login">
+                  <Button variant="outline" size="sm">
+                    <LogIn className="mr-2 size-4" />
+                    {t("actions.login")}
+                  </Button>
+                </Link>
+              )}
+            </>
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -296,7 +347,6 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                {/* User info */}
                 <DropdownMenuLabel className="font-normal flex gap-2">
                   <RoleIcon role={user.role} className="size-4" />
                   <div className="flex flex-col space-y-1">
@@ -309,7 +359,6 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
                   </div>
                 </DropdownMenuLabel>
 
-                {/* Navigation routes */}
                 {routes.length > 0 && (
                   <>
                     <DropdownMenuSeparator />
@@ -328,7 +377,7 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
                           >
                             <Link href={route.href}>
                               <Icon className="size-4" />
-                              {route.label}
+                              {t(route.labelKey)}
                             </Link>
                           </DropdownMenuItem>
                         );
@@ -339,21 +388,25 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
 
                 <DropdownMenuSeparator />
 
-                {/* Theme switcher (icon-only tabs) */}
                 <ThemeSwitcher />
 
-                {/* Language (greyed out for future localization) */}
-                <DropdownMenuItem disabled>
+                <DropdownMenuItem
+                  onSelect={() => {
+                    const nextLocale = locale === "hu" ? "en" : "hu";
+                    router.replace(pathname, { locale: nextLocale });
+                  }}
+                >
                   <Globe className="size-4" />
-                  Language
+                  {t("language.label")}
                   <span className="ml-auto text-xs text-muted-foreground">
-                    Soon
+                    {t(
+                      `language.${locale as (typeof routing.locales)[number]}`
+                    )}
                   </span>
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
 
-                {/* Sign out */}
                 <DropdownMenuItem
                   disabled={isPending}
                   onSelect={() => {
@@ -361,7 +414,7 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
                   }}
                 >
                   <LogOut className="size-4" />
-                  Sign Out
+                  {t("actions.signOut")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

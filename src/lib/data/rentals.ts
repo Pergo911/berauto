@@ -23,6 +23,7 @@ export type RentalDTO = {
     licensePlate: string;
     dailyRate: number;
     brandLogoPath: string | null;
+    imageUrl: string | null;
   };
   userId: string | null;
   userName: string | null;
@@ -65,6 +66,7 @@ type RentalRow = {
   carDailyRate: string | null;
   carMileageKm: number;
   carBrandLogoPath: string | null;
+  carImageUrl: string | null;
   lastEventMileageKm: number | null;
   requestNotes: string | null;
   userName: string | null;
@@ -83,6 +85,7 @@ function toRentalDTO(row: RentalRow): RentalDTO {
       licensePlate: row.carLicensePlate ?? "",
       dailyRate: Number(row.carDailyRate ?? 0),
       brandLogoPath: row.carBrandLogoPath ?? null,
+      imageUrl: row.carImageUrl ?? null,
     },
     userId: row.rental.userId,
     userName: row.userName,
@@ -140,6 +143,7 @@ export async function getRentals(filters?: {
       carDailyRate: cars.dailyRate,
       carMileageKm: cars.mileageKm,
       carBrandLogoPath: brands.logoPath,
+      carImageUrl: cars.imageUrl,
       lastEventMileageKm: sql<number | null>`(
         SELECT mileage_km FROM rental_events
         WHERE rental_id = ${rentals.id}
@@ -180,6 +184,7 @@ export async function getRentalById(id: string): Promise<RentalDTO | null> {
       carDailyRate: cars.dailyRate,
       carMileageKm: cars.mileageKm,
       carBrandLogoPath: brands.logoPath,
+      carImageUrl: cars.imageUrl,
       lastEventMileageKm: sql<number | null>`(
         SELECT mileage_km FROM rental_events
         WHERE rental_id = ${rentals.id}

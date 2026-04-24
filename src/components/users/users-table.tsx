@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -55,96 +56,114 @@ type UsersTableProps = {
   showRoleFilter?: boolean;
 };
 
-const COLUMN_LABELS: Record<string, string> = {
-  name: "Name",
-  email: "Email",
-  role: "Role",
-  phone: "Phone",
-  address: "Address",
-  createdAt: "Created",
-};
-
 const ROLE_BADGE_CLASSES: Record<UserRole, string> = {
   admin: "bg-red-600 text-white",
   agent: "bg-blue-600 text-white",
   user: "bg-gray-600 text-white",
 };
 
-const USER_ROLES: { value: UserRole; label: string }[] = [
-  { value: "admin", label: "Admin" },
-  { value: "agent", label: "Agent" },
-  { value: "user", label: "User" },
-];
-
-const columns: ColumnDef<UserDTO>[] = [
-  {
-    id: "name",
-    accessorFn: (row) => row.name,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
-    ),
-    cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "role",
-    header: "Role",
-    cell: ({ row }) => {
-      const role = row.original.role;
-      return (
-        <Badge className={ROLE_BADGE_CLASSES[role] ?? ""}>
-          {role.charAt(0).toUpperCase() + role.slice(1)}
-        </Badge>
-      );
-    },
-    filterFn: "equals",
-    enableSorting: false,
-  },
-  {
-    accessorKey: "phone",
-    header: "Phone",
-    cell: ({ row }) => row.original.phone ?? "—",
-  },
-  {
-    accessorKey: "address",
-    header: "Address",
-    cell: ({ row }) => row.original.address ?? "—",
-  },
-  {
-    id: "createdAt",
-    accessorFn: (row) => row.createdAt,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created" />
-    ),
-    cell: ({ row }) => (
-      <span className="text-muted-foreground">
-        {formatDate(row.original.createdAt)}
-      </span>
-    ),
-    sortingFn: "datetime",
-  },
-  {
-    id: "detail",
-    header: () => null,
-    cell: () => (
-      <span className="flex items-center justify-end opacity-0 transition-opacity group-hover/row:opacity-100">
-        <Eye className="size-4 text-muted-foreground" />
-      </span>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-];
-
 export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
+  const t = useTranslations("UsersTable");
+  const tCommon = useTranslations("Common");
+  const locale = useLocale();
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState("");
   const [selectedUser, setSelectedUser] = useState<UserDTO | null>(null);
+
+  const userRoles: { value: UserRole; label: string }[] = useMemo(
+    () => [
+      { value: "admin", label: t("roles.admin") },
+      { value: "agent", label: t("roles.agent") },
+      { value: "user", label: t("roles.user") },
+    ],
+    [t]
+  );
+
+  const columnLabels: Record<string, string> = useMemo(
+    () => ({
+      name: t("columns.name"),
+      email: t("columns.email"),
+      role: t("columns.role"),
+      phone: t("columns.phone"),
+      address: t("columns.address"),
+      createdAt: t("columns.createdAt"),
+    }),
+    [t]
+  );
+
+  const columns: ColumnDef<UserDTO>[] = useMemo(
+    () => [
+      {
+        id: "name",
+        accessorFn: (row) => row.name,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t("columns.name")} />
+        ),
+        cell: ({ row }) => (
+          <span className="font-medium">{row.original.name}</span>
+        ),
+      },
+      {
+        accessorKey: "email",
+        header: t("columns.email"),
+      },
+      {
+        accessorKey: "role",
+        header: t("columns.role"),
+        cell: ({ row }) => {
+          const role = row.original.role;
+          return (
+            <Badge className={ROLE_BADGE_CLASSES[role] ?? ""}>
+              {t(`roles.${role}`)}
+            </Badge>
+          );
+        },
+        filterFn: "equals",
+        enableSorting: false,
+      },
+      {
+        accessorKey: "phone",
+        header: t("columns.phone"),
+        cell: ({ row }) => row.original.phone ?? "—",
+      },
+      {
+        accessorKey: "address",
+        header: t("columns.address"),
+        cell: ({ row }) => row.original.address ?? "—",
+      },
+      {
+        id: "createdAt",
+        accessorFn: (row) => row.createdAt,
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t("columns.createdAt")}
+          />
+        ),
+        cell: ({ row }) => (
+          <span className="text-muted-foreground">
+            {formatDate(row.original.createdAt, locale)}
+          </span>
+        ),
+        sortingFn: "datetime",
+      },
+      {
+        id: "detail",
+        header: () => null,
+        cell: () => (
+          <span className="flex items-center justify-end opacity-0 transition-opacity group-hover/row:opacity-100">
+            <Eye className="size-4 text-muted-foreground" />
+          </span>
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      },
+    ],
+    [t, locale]
+  );
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -185,7 +204,7 @@ export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 py-4">
         <Input
-          placeholder="Search by name or email…"
+          placeholder={t("searchPlaceholder")}
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
@@ -200,11 +219,11 @@ export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
             }
           >
             <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="All roles" />
+              <SelectValue placeholder={t("allRoles")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All roles</SelectItem>
-              {USER_ROLES.map((r) => (
+              <SelectItem value="all">{t("allRoles")}</SelectItem>
+              {userRoles.map((r) => (
                 <SelectItem key={r.value} value={r.value}>
                   {r.label}
                 </SelectItem>
@@ -222,11 +241,11 @@ export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
                 className="hidden h-8 lg:flex"
               >
                 <Settings2 className="mr-2 h-4 w-4" />
-                View
+                {tCommon("view")}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-              <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+              <DropdownMenuLabel>{tCommon("toggleColumns")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {table
                 .getAllColumns()
@@ -238,7 +257,7 @@ export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
                     checked={col.getIsVisible()}
                     onCheckedChange={(value) => col.toggleVisibility(!!value)}
                   >
-                    {COLUMN_LABELS[col.id] ?? col.id}
+                    {columnLabels[col.id] ?? col.id}
                   </DropdownMenuCheckboxItem>
                 ))}
             </DropdownMenuContent>
@@ -248,7 +267,7 @@ export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
 
       {/* Table */}
       {users.length === 0 ? (
-        <EmptyState message="No users found." />
+        <EmptyState message={t("noUsers")} />
       ) : (
         <>
           <div className="overflow-hidden rounded-md border">
@@ -293,7 +312,7 @@ export function UsersTable({ users, showRoleFilter = false }: UsersTableProps) {
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      {tCommon("noResults")}
                     </TableCell>
                   </TableRow>
                 )}

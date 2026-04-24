@@ -1,20 +1,38 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+import { hasLocale } from "next-intl";
+
+import { routing } from "@/i18n/routing";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatDate(date: Date | string): string {
-  return new Intl.DateTimeFormat("hu-HU", {
+export function toIntlLocale(locale: string): string {
+  const normalized = hasLocale(routing.locales, locale)
+    ? locale
+    : routing.defaultLocale;
+
+  return normalized === "en" ? "en-US" : "hu-HU";
+}
+
+export function formatDate(
+  date: Date | string,
+  locale: string = routing.defaultLocale
+): string {
+  return new Intl.DateTimeFormat(toIntlLocale(locale), {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
   }).format(new Date(date));
 }
 
-export function formatDateTime(date: Date | string): string {
-  return new Intl.DateTimeFormat("hu-HU", {
+export function formatDateTime(
+  date: Date | string,
+  locale: string = routing.defaultLocale
+): string {
+  return new Intl.DateTimeFormat(toIntlLocale(locale), {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -23,8 +41,11 @@ export function formatDateTime(date: Date | string): string {
   }).format(new Date(date));
 }
 
-export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("hu-HU", {
+export function formatCurrency(
+  amount: number,
+  locale: string = routing.defaultLocale
+): string {
+  return new Intl.NumberFormat(toIntlLocale(locale), {
     style: "currency",
     currency: "HUF",
     maximumFractionDigits: 0,

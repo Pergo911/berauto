@@ -1,14 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn, getSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { USER_ROLE } from "@/types";
+import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -22,6 +23,7 @@ import {
 import { SocialButtons } from "@/components/auth/social-buttons";
 
 export function LoginForm() {
+  const t = useTranslations("Auth.forms");
   const router = useRouter();
 
   const form = useForm<LoginInput>({
@@ -41,7 +43,7 @@ export function LoginForm() {
       });
 
       if (result?.error) {
-        toast.error("Invalid email or password");
+        toast.error(t("errors.invalidCredentials"));
         return;
       }
 
@@ -57,7 +59,7 @@ export function LoginForm() {
       }
       router.refresh();
     } catch {
-      toast.error("Something went wrong. Please try again.");
+      toast.error(t("errors.generic"));
     }
   }
 
@@ -70,7 +72,7 @@ export function LoginForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>{t("emailLabel")}</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
@@ -88,7 +90,7 @@ export function LoginForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>{t("passwordLabel")}</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
@@ -109,7 +111,7 @@ export function LoginForm() {
             {form.formState.isSubmitting && (
               <Loader2 className="animate-spin" />
             )}
-            Sign In
+            {t("signIn")}
           </Button>
         </form>
       </Form>

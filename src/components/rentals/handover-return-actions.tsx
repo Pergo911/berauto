@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Gauge, KeyRound, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 
@@ -20,12 +21,13 @@ export function HandoverReturnActions({
   lastMileageKm?: number | null;
 }) {
   const router = useRouter();
+  const t = useTranslations("HandoverReturnActions");
   const [isPending, startTransition] = useTransition();
   const [mileage, setMileage] = useState("");
   const [note, setNote] = useState("");
 
   const isHandover = type === "handover";
-  const label = isHandover ? "Record Handover" : "Record Return";
+  const label = t(isHandover ? "recordHandover" : "recordReturn");
   const action = isHandover ? handoverRental : returnRental;
   const Icon = isHandover ? KeyRound : RotateCcw;
 
@@ -34,7 +36,7 @@ export function HandoverReturnActions({
 
     const mileageKm = Number(mileage);
     if (!mileage || isNaN(mileageKm) || mileageKm < 0) {
-      toast.error("Please enter a valid mileage");
+      toast.error(t("validMileageError"));
       return;
     }
 
@@ -44,7 +46,7 @@ export function HandoverReturnActions({
         notes: note.trim() || undefined,
       });
       if (result.success) {
-        toast.success(isHandover ? "Handover recorded" : "Return recorded");
+        toast.success(t(isHandover ? "toastHandover" : "toastReturn"));
         setMileage("");
         setNote("");
         router.refresh();
@@ -63,11 +65,11 @@ export function HandoverReturnActions({
             className="mb-1 flex items-center gap-1 text-xs font-medium text-muted-foreground"
           >
             <Gauge className="size-3.5" />
-            Mileage (km)
+            {t("mileageLabel")}
           </label>
           {lastMileageKm != null && (
             <p className="mb-2 text-xs text-muted-foreground">
-              Last recorded:{" "}
+              {t("lastRecorded")}{" "}
               <span className="font-medium text-foreground">
                 {lastMileageKm.toLocaleString()} km
               </span>
@@ -85,7 +87,7 @@ export function HandoverReturnActions({
         </div>
         <Button size="sm" type="submit" disabled={isPending}>
           <Icon className="size-3.5" />
-          {isPending ? "Saving…" : label}
+          {isPending ? t("saving") : label}
         </Button>
       </div>
 
@@ -94,11 +96,12 @@ export function HandoverReturnActions({
           htmlFor={`note-${rentalId}`}
           className="mb-1 block text-xs font-medium text-muted-foreground"
         >
-          Note <span className="font-normal">(optional)</span>
+          {t("noteLabel")}{" "}
+          <span className="font-normal">{t("noteOptional")}</span>
         </label>
         <Textarea
           id={`note-${rentalId}`}
-          placeholder="Any observations or remarks…"
+          placeholder={t("observationsPlaceholder")}
           value={note}
           onChange={(e) => setNote(e.target.value)}
           className="min-h-[60px] resize-none text-sm"

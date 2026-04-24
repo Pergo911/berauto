@@ -45,6 +45,7 @@ export type ClosedRentalWithoutInvoiceDTO = {
     licensePlate: string;
     dailyRate: number;
     brandLogoPath: string | null;
+    imageUrl: string | null;
   };
   userId: string | null;
   userName: string | null;
@@ -144,6 +145,7 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
       carLicensePlate: cars.licensePlate,
       carDailyRate: cars.dailyRate,
       carBrandLogoPath: brands.logoPath,
+      carImageUrl: cars.imageUrl,
       invoiceId: invoices.id,
       userName: users.name,
       userEmail: users.email,
@@ -172,6 +174,7 @@ export async function getClosedRentalsWithoutInvoice(): Promise<
       licensePlate: r.carLicensePlate,
       dailyRate: Number(r.carDailyRate),
       brandLogoPath: r.carBrandLogoPath ?? null,
+      imageUrl: r.carImageUrl ?? null,
     },
     userId: r.rental.userId,
     userName: r.userName ?? null,

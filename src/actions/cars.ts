@@ -7,6 +7,7 @@ import { db } from "@/db";
 import { cars, rentals } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { getRentals } from "@/lib/data/rentals";
+import { utapi } from "@/app/api/uploadthing/core";
 import { createCarSchema, updateCarSchema } from "@/lib/validations/cars";
 import { idSchema } from "@/lib/validations/rentals";
 
@@ -38,6 +39,7 @@ export async function createCar(
     dailyRate,
     status,
     brandId,
+    imageUrl,
   } = parsed.data;
 
   const [car] = await db
@@ -51,6 +53,7 @@ export async function createCar(
       dailyRate: dailyRate.toString(),
       status,
       brandId: brandId ?? null,
+      imageUrl: imageUrl ?? null,
     })
     .returning({ id: cars.id });
 
@@ -86,6 +89,11 @@ export async function updateCar(
 
   if (parsed.data.dailyRate !== undefined) {
     updateData.dailyRate = parsed.data.dailyRate.toString();
+  }
+
+  // Allow explicitly setting imageUrl to null (image removal)
+  if ("imageUrl" in parsed.data) {
+    updateData.imageUrl = parsed.data.imageUrl ?? null;
   }
 
   const [car] = await db
@@ -170,4 +178,33 @@ export async function getCarRentalHistory(
 
   const rentalList = await getRentals({ carId, sort: "newest" });
   return { success: true, data: rentalList };
+}
+
+// ── Delete UploadThing image file ──────────────────────
+
+/** Extract the UploadThing file key from a ufs URL (e.g. https://utfs.io/f/<key> or https://<app>.ufs.sh/f/<key>). */
+function extractFileKey(url: string): string | null {
+  try {
+    const { pathname } = new URL(url);
+    const parts = pathname.split("/");
+    const fIndex = parts.indexOf("f");
+    return fIndex !== -1 && parts[fIndex + 1] ? parts[fIndex + 1] : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function deleteUploadthingFile(
+  url: string
+): Promise<ActionResult<void>> {
+  const session = await auth();
+  if (session?.user.role !== "admin") {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const key = extractFileKey(url);
+  if (!key) return { success: false, error: "Invalid file URL" };
+
+  await utapi.deleteFiles(key);
+  return { success: true, data: undefined };
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   CalendarDays,
   Car,
@@ -33,6 +34,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { BrandLogo } from "@/components/cars/brand-logo";
 import { RentalStatusBadge } from "@/components/rentals/rental-status-badge";
+import Image from "next/image";
 
 // ── Types ──────────────────────────────────────────────
 
@@ -61,39 +63,42 @@ type DetailData = {
 
 // ── Event type config ──────────────────────────────────
 
+type EventTypeKey = "REQUEST" | "APPROVE" | "REJECT" | "HANDOVER" | "RETURN";
+const KNOWN_EVENT_TYPES = new Set<string>([
+  "REQUEST",
+  "APPROVE",
+  "REJECT",
+  "HANDOVER",
+  "RETURN",
+]);
+
 const EVENT_TYPE_CONFIG: Record<
   string,
   {
-    label: string;
     icon: typeof CheckCircle2;
     className: string;
   }
 > = {
   REQUEST: {
-    label: "Request",
     icon: MessageSquare,
     className:
       "border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-400",
   },
   APPROVE: {
-    label: "Approved",
     icon: CheckCircle2,
     className:
       "border-green-500/50 bg-green-500/10 text-green-700 dark:text-green-400",
   },
   REJECT: {
-    label: "Rejected",
     icon: XCircle,
     className: "border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-400",
   },
   HANDOVER: {
-    label: "Handover",
     icon: Car,
     className:
       "border-blue-500/50 bg-blue-500/10 text-blue-700 dark:text-blue-400",
   },
   RETURN: {
-    label: "Return",
     icon: Car,
     className:
       "border-purple-500/50 bg-purple-500/10 text-purple-700 dark:text-purple-400",
@@ -151,6 +156,7 @@ function ContactSection({
   email: string;
   phone: string | null;
 }) {
+  const t = useTranslations("RentalDetailDialog");
   return (
     <div className="space-y-2">
       <h4 className="flex items-center gap-1.5 text-sm font-semibold">
@@ -158,9 +164,13 @@ function ContactSection({
         {title}
       </h4>
       <div className="rounded-lg border bg-muted/30 p-3 space-y-1.5">
-        <DetailRow icon={User} label="Name" value={name} />
-        <DetailRow icon={Mail} label="Email" value={email} />
-        <DetailRow icon={Phone} label="Phone" value={phone ?? "Not provided"} />
+        <DetailRow icon={User} label={t("fieldName")} value={name} />
+        <DetailRow icon={Mail} label={t("fieldEmail")} value={email} />
+        <DetailRow
+          icon={Phone}
+          label={t("fieldPhone")}
+          value={phone ?? t("notProvided")}
+        />
       </div>
     </div>
   );
@@ -173,10 +183,15 @@ function EventItem({
   event: RentalEventDTO;
   variant: "user" | "agent";
 }) {
+  const t = useTranslations("RentalDetailDialog");
+  const locale = useLocale();
   const config =
     EVENT_TYPE_CONFIG[event.eventType] ?? EVENT_TYPE_CONFIG.REQUEST;
   const Icon = config.icon;
   const showNotes = shouldShowNotes(event.eventType, variant);
+  const eventTypeKey = KNOWN_EVENT_TYPES.has(event.eventType)
+    ? (`eventTypes.${event.eventType}` as `eventTypes.${EventTypeKey}`)
+    : ("eventTypes.REQUEST" as const);
 
   return (
     <div className="relative flex gap-3 pb-4 last:pb-0">
@@ -197,18 +212,22 @@ function EventItem({
       <div className="flex-1 space-y-1 pb-2">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="outline" className={cn("text-xs", config.className)}>
-            {config.label}
+            {t(eventTypeKey)}
           </Badge>
           <span className="text-xs text-muted-foreground">
-            {formatDateTime(event.timestamp)}
+            {formatDateTime(event.timestamp, locale)}
           </span>
         </div>
         {event.actorName && (
-          <p className="text-xs text-muted-foreground">by {event.actorName}</p>
+          <p className="text-xs text-muted-foreground">
+            {t("by", { name: event.actorName })}
+          </p>
         )}
         {event.mileageKm != null && (
           <p className="text-xs text-muted-foreground">
-            Mileage: {event.mileageKm.toLocaleString()} km
+            {t("mileageKm", {
+              mileage: event.mileageKm.toLocaleString(locale),
+            })}
           </p>
         )}
         {showNotes && event.notes && (
@@ -229,6 +248,9 @@ export function RentalDetailDialog({
   onOpenChange,
   variant,
 }: RentalDetailDialogProps) {
+  const t = useTranslations("RentalDetailDialog");
+  const tCommon = useTranslations("Common");
+  const locale = useLocale();
   const [detailsState, setDetailsState] = useState<{
     rentalId: string;
     data: DetailData;
@@ -254,7 +276,8 @@ export function RentalDetailDialog({
   const days = calculateDays(rental.startDate, rental.endDate);
   const estimatedCost = rental.car.dailyRate * days;
 
-  const customerName = rental.userName ?? rental.guestName ?? "Unknown";
+  const customerName =
+    rental.userName ?? rental.guestName ?? tCommon("unknown");
   const customerEmail = rental.userEmail ?? rental.guestEmail ?? "—";
   const customerPhone = details?.customerPhone ?? rental.guestPhone ?? null;
   const isGuest = !!rental.guestName;
@@ -263,53 +286,75 @@ export function RentalDetailDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
-          <div className="flex items-center gap-2">
-            <DialogTitle className="flex items-center gap-2">
-              {rental.car.brandLogoPath ? (
-                <BrandLogo
-                  logoPath={rental.car.brandLogoPath}
-                  brandName={rental.car.make}
-                  size={20}
+          <div className="flex items-start gap-3">
+            {/* Small square thumbnail */}
+            {rental.car.imageUrl && (
+              <div className="relative size-14 shrink-0 overflow-hidden rounded-md bg-muted border">
+                <Image
+                  src={rental.car.imageUrl}
+                  alt={`${rental.car.make} ${rental.car.model}`}
+                  fill
+                  className="object-cover"
+                  sizes="56px"
                 />
-              ) : (
-                <Car className="size-5 text-muted-foreground" />
-              )}
-              {rental.car.make} {rental.car.model} ({rental.car.year})
-            </DialogTitle>
-            <RentalStatusBadge status={rental.status} />
+              </div>
+            )}
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <DialogTitle className="flex items-center gap-2">
+                  {rental.car.brandLogoPath ? (
+                    <BrandLogo
+                      logoPath={rental.car.brandLogoPath}
+                      brandName={rental.car.make}
+                      size={20}
+                    />
+                  ) : (
+                    <Car className="size-5 text-muted-foreground" />
+                  )}
+                  {rental.car.make} {rental.car.model} ({rental.car.year})
+                </DialogTitle>
+                <RentalStatusBadge status={rental.status} />
+              </div>
+              <DialogDescription>{rental.car.licensePlate}</DialogDescription>
+            </div>
           </div>
-          <DialogDescription>{rental.car.licensePlate}</DialogDescription>
         </DialogHeader>
 
         {/* Rental Details */}
         <div className="space-y-1">
           <h4 className="flex items-center gap-1.5 text-sm font-semibold">
             <CalendarDays className="size-3.5 text-muted-foreground" />
-            Rental Details
+            {t("sections.rentalDetails")}
           </h4>
           <div className="grid grid-cols-2 gap-3 rounded-lg border bg-muted/30 p-3">
             <div>
-              <p className="text-xs text-muted-foreground">Start Date</p>
+              <p className="text-xs text-muted-foreground">
+                {t("fields.startDate")}
+              </p>
               <p className="text-sm font-medium">
-                {formatDate(rental.startDate)}
+                {formatDate(rental.startDate, locale)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">End Date</p>
+              <p className="text-xs text-muted-foreground">
+                {t("fields.endDate")}
+              </p>
               <p className="text-sm font-medium">
-                {formatDate(rental.endDate)}
+                {formatDate(rental.endDate, locale)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Duration</p>
-              <p className="text-sm font-medium">
-                {days} day{days !== 1 ? "s" : ""}
+              <p className="text-xs text-muted-foreground">
+                {t("fields.duration")}
               </p>
+              <p className="text-sm font-medium">{t("days", { days })}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Estimated Cost</p>
+              <p className="text-xs text-muted-foreground">
+                {t("fields.estimatedCost")}
+              </p>
               <p className="text-sm font-semibold text-primary">
-                {formatCurrency(estimatedCost)}
+                {formatCurrency(estimatedCost, locale)}
               </p>
             </div>
           </div>
@@ -323,23 +368,31 @@ export function RentalDetailDialog({
             <div className="space-y-2">
               <h4 className="flex items-center gap-1.5 text-sm font-semibold">
                 <User className="size-3.5 text-muted-foreground" />
-                Customer Info
+                {t("sections.customerInfo")}
                 {isGuest && (
                   <Badge
                     variant="outline"
                     className="border-amber-500/50 bg-amber-500/10 text-xs text-amber-700 dark:text-amber-400"
                   >
-                    Guest
+                    {t("guestBadge")}
                   </Badge>
                 )}
               </h4>
               <div className="rounded-lg border bg-muted/30 p-3 space-y-1.5">
-                <DetailRow icon={User} label="Name" value={customerName} />
-                <DetailRow icon={Mail} label="Email" value={customerEmail} />
+                <DetailRow
+                  icon={User}
+                  label={t("fieldName")}
+                  value={customerName}
+                />
+                <DetailRow
+                  icon={Mail}
+                  label={t("fieldEmail")}
+                  value={customerEmail}
+                />
                 <DetailRow
                   icon={Phone}
-                  label="Phone"
-                  value={customerPhone ?? "Not provided"}
+                  label={t("fieldPhone")}
+                  value={customerPhone ?? t("notProvided")}
                 />
               </div>
             </div>
@@ -357,8 +410,8 @@ export function RentalDetailDialog({
             <ContactSection
               title={
                 variant === "user"
-                  ? "Your assigned agent"
-                  : "Current assigned agent"
+                  ? t("assignedAgentUser")
+                  : t("assignedAgentAdmin")
               }
               name={details.agentContact.name}
               email={details.agentContact.email}
@@ -372,11 +425,11 @@ export function RentalDetailDialog({
               <h4 className="flex items-center gap-1.5 text-sm font-semibold">
                 <Shield className="size-3.5 text-muted-foreground" />
                 {variant === "user"
-                  ? "Your assigned agent"
-                  : "Current assigned agent"}
+                  ? t("assignedAgentUser")
+                  : t("assignedAgentAdmin")}
               </h4>
               <p className="text-sm text-muted-foreground italic">
-                No agent assigned yet.
+                {t("noAgent")}
               </p>
             </div>
             <Separator />
@@ -390,23 +443,25 @@ export function RentalDetailDialog({
             <div className="space-y-2">
               <h4 className="flex items-center gap-1.5 text-sm font-semibold">
                 <FileText className="size-3.5 text-muted-foreground" />
-                Invoice
+                {t("sections.invoice")}
               </h4>
               {loading ? (
                 <div className="flex items-center gap-2 py-2">
                   <Loader2 className="size-4 animate-spin text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">
-                    Loading invoice…
+                    {t("loadingInvoice")}
                   </span>
                 </div>
               ) : details?.invoice ? (
                 <div className="flex items-center justify-between rounded-lg border bg-muted/30 p-3">
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium">
-                      {formatCurrency(details.invoice.amount)}
+                      {formatCurrency(details.invoice.amount, locale)}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Issued {formatDate(details.invoice.issuedAt)}
+                      {t("issued", {
+                        date: formatDate(details.invoice.issuedAt, locale),
+                      })}
                     </p>
                   </div>
                   <Button asChild size="sm" variant="outline">
@@ -416,13 +471,13 @@ export function RentalDetailDialog({
                       className="flex items-center gap-1.5"
                     >
                       <Download className="size-3.5" />
-                      Download PDF
+                      {t("downloadPdf")}
                     </a>
                   </Button>
                 </div>
               ) : (
                 <p className="text-sm italic text-muted-foreground">
-                  Invoice data unavailable.
+                  {t("invoiceUnavailable")}
                 </p>
               )}
             </div>
@@ -433,7 +488,7 @@ export function RentalDetailDialog({
         <div className="space-y-3">
           <h4 className="flex items-center gap-1.5 text-sm font-semibold">
             <Clock className="size-3.5 text-muted-foreground" />
-            Status History
+            {t("sections.statusHistory")}
           </h4>
           {loading ? (
             <div className="flex items-center justify-center py-4">
@@ -447,7 +502,7 @@ export function RentalDetailDialog({
             </div>
           ) : (
             <p className="text-sm text-muted-foreground italic">
-              No events recorded.
+              {t("noEvents")}
             </p>
           )}
         </div>
