@@ -18,10 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { Navbar } from "@/components/shared/navbar";
 import { BackLink } from "@/components/shared/back-link";
 import { RentalRequestForm } from "@/components/cars/rental-request-form";
-import {
-  CarInUseBadge,
-  CarStatusBadge,
-} from "@/components/cars/car-status-badge";
+import { CarStatusBadge } from "@/components/cars/car-status-badge";
 import { BrandLogo } from "@/components/cars/brand-logo";
 
 export default async function CarDetailPage({

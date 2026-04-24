@@ -35,9 +35,7 @@
         "brands_name_unique": {
           "name": "brands_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       },
       "policies": {},
@@ -155,12 +153,8 @@
           "name": "cars_brand_id_brands_id_fk",
           "tableFrom": "cars",
           "tableTo": "brands",
-          "columnsFrom": [
-            "brand_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["brand_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -170,9 +164,7 @@
         "cars_license_plate_unique": {
           "name": "cars_license_plate_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "license_plate"
-          ]
+          "columns": ["license_plate"]
         }
       },
       "policies": {},
@@ -238,12 +230,8 @@
           "name": "invoices_rental_id_rentals_id_fk",
           "tableFrom": "invoices",
           "tableTo": "rentals",
-          "columnsFrom": [
-            "rental_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["rental_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -251,12 +239,8 @@
           "name": "invoices_issued_by_users_id_fk",
           "tableFrom": "invoices",
           "tableTo": "users",
-          "columnsFrom": [
-            "issued_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["issued_by"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -266,9 +250,7 @@
         "invoices_rental_id_unique": {
           "name": "invoices_rental_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "rental_id"
-          ]
+          "columns": ["rental_id"]
         }
       },
       "policies": {},
@@ -353,12 +335,8 @@
           "name": "rental_events_rental_id_rentals_id_fk",
           "tableFrom": "rental_events",
           "tableTo": "rentals",
-          "columnsFrom": [
-            "rental_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["rental_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -366,12 +344,8 @@
           "name": "rental_events_actor_id_users_id_fk",
           "tableFrom": "rental_events",
           "tableTo": "users",
-          "columnsFrom": [
-            "actor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["actor_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -555,12 +529,8 @@
           "name": "rentals_car_id_cars_id_fk",
           "tableFrom": "rentals",
           "tableTo": "cars",
-          "columnsFrom": [
-            "car_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["car_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -568,12 +538,8 @@
           "name": "rentals_user_id_users_id_fk",
           "tableFrom": "rentals",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -581,12 +547,8 @@
           "name": "rentals_agent_id_users_id_fk",
           "tableFrom": "rentals",
           "tableTo": "users",
-          "columnsFrom": [
-            "agent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["agent_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -661,9 +623,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -675,22 +635,12 @@
     "public.car_status": {
       "name": "car_status",
       "schema": "public",
-      "values": [
-        "AVAILABLE",
-        "MAINTENANCE",
-        "UNAVAILABLE"
-      ]
+      "values": ["AVAILABLE", "MAINTENANCE", "UNAVAILABLE"]
     },
     "public.rental_event_type": {
       "name": "rental_event_type",
       "schema": "public",
-      "values": [
-        "REQUEST",
-        "APPROVE",
-        "REJECT",
-        "HANDOVER",
-        "RETURN"
-      ]
+      "values": ["REQUEST", "APPROVE", "REJECT", "HANDOVER", "RETURN"]
     },
     "public.rental_status": {
       "name": "rental_status",
@@ -707,11 +657,7 @@
     "public.user_role": {
       "name": "user_role",
       "schema": "public",
-      "values": [
-        "user",
-        "agent",
-        "admin"
-      ]
+      "values": ["user", "agent", "admin"]
     }
   },
   "schemas": {},
