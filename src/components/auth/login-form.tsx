@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -6,10 +7,12 @@ import { signIn, getSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import Link from "next/link";
 
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { USER_ROLE } from "@/types";
 import { useRouter } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,10 +24,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { SocialButtons } from "@/components/auth/social-buttons";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function LoginForm() {
   const t = useTranslations("Auth.forms");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -65,6 +71,20 @@ export function LoginForm() {
 
   return (
     <div className="grid gap-6">
+      {error === "Please verify your email before logging in" && (
+        <Alert>
+          <AlertDescription>
+            <p className="mb-2">Your email address is not verified.</p>
+            <Button
+              variant="link"
+              className="p-0 h-auto"
+              asChild
+            >
+              <Link href="/verify-email">Resend verification email</Link>
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
           <FormField
@@ -91,7 +111,7 @@ export function LoginForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{t("passwordLabel")}</FormLabel>
-                <FormControl>
+              <FormControl>
                   <Input
                     type="password"
                     placeholder="••••••••"

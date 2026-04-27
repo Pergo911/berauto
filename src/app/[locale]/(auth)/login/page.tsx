@@ -21,6 +21,14 @@ export default async function LoginPage() {
       </CardHeader>
       <CardContent>
         <LoginForm />
+        <div className="mt-4 text-center text-sm">
+          <Link
+            href="/forgot-password"
+            className="font-medium underline underline-offset-4"
+          >
+            {t("forgotPassword")}
+          </Link>
+        </div>
         <div className="mt-6 text-center text-sm">
           {t("noAccount")}{" "}
           <Link

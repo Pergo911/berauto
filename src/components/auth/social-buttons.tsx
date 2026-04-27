@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { signIn } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -54,8 +55,7 @@ export function SocialButtons() {
         <Button
           variant="outline"
           type="button"
-          disabled
-          className="disabled:cursor-not-allowed"
+          onClick={() => signIn("google")}
         >
           <GoogleIcon className="size-4" />
           Google
@@ -63,8 +63,7 @@ export function SocialButtons() {
         <Button
           variant="outline"
           type="button"
-          disabled
-          className="disabled:cursor-not-allowed"
+          onClick={() => signIn("github")}
         >
           <GitHubIcon className="size-4" />
           GitHub

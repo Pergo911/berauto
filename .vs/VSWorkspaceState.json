@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\.github\\workflows",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\api\\invoices\\[rentalId]",
+    "\\src\\app\\api\\invoices\\[rentalId]\\pdf",
+    "\\src\\app\\[locale]",
+    "\\src\\app\\[locale]\\(auth)",
+    "\\src\\app\\[locale]\\(auth)\\verify-email",
+    "\\src\\components\\cars",
+    "\\src\\lib\\validations"
+  ],
+  "SelectedNode": "\\src\\app\\[locale]\\(auth)\\verify-email\\page.tsx",
+  "PreviewInSolutionExplorer": false
+}

@@ -1,5 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github";
 import bcryptjs from "bcryptjs";
 import { eq } from "drizzle-orm";
 
@@ -92,6 +94,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
+        // Check if email is verified (only for credential-based login)
+        if (user.emailVerified === null) {
+          throw new Error("Please verify your email before logging in");
+        }
+
         const isPasswordValid = await bcryptjs.compare(
           password,
           user.passwordHash
@@ -109,6 +116,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         };
       },
     }),
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+      allowDangerousEmailAccountLinking: true,
+    }),
+    GitHub({
+      clientId: process.env.AUTH_GITHUB_ID!,
+      clientSecret: process.env.AUTH_GITHUB_SECRET!,
+      allowDangerousEmailAccountLinking: true,
+    }),
   ],
   session: {
     strategy: "jwt",
@@ -118,11 +135,41 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id as string;
         token.role = user.role;
       }
+
+      // Handle OAuth sign-in (Google/GitHub)
+      if (account && account.provider !== "credentials") {
+        const [existingUser] = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, token.email!))
+          .limit(1);
+
+        if (existingUser) {
+          // Update role if user exists
+          token.role = existingUser.role;
+        } else {
+          // Create new user for OAuth sign-in
+          const [newUser] = await db
+            .insert(users)
+            .values({
+              name: token.name!,
+              email: token.email!,
+              passwordHash: "", // OAuth users don't have password
+              role: "user",
+              emailVerified: new Date(), // OAuth emails are already verified
+            })
+            .returning({ id: users.id, role: users.role });
+
+          token.id = newUser.id;
+          token.role = newUser.role;
+        }
+      }
+
       return token;
     },
     async session({ session, token }) {
