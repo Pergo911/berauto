@@ -1,4 +1,4 @@
-import { Car, Clock, Loader } from "lucide-react";
+import { Car, Clock, Loader, Settings } from "lucide-react";
 import type { Session } from "next-auth";
 import { getTranslations } from "next-intl/server";
 
@@ -47,12 +47,20 @@ export default async function DashboardPage({
             {t("welcomeBack", { name: user.name })}
           </p>
         </div>
-        <Button asChild>
-          <Link href="/#available-cars">
-            <Car className="mr-2 h-4 w-4" />
-            {t("rentButton")}
-          </Link>
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild variant="outline">
+            <Link href="/dashboard/profile">
+              <Settings className="mr-2 h-4 w-4" />
+              {t("profileButton")}
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link href="/#available-cars">
+              <Car className="mr-2 h-4 w-4" />
+              {t("rentButton")}
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

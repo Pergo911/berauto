@@ -14,7 +14,8 @@
       "activeRentals": "Active Rentals",
       "invoices": "Invoices",
       "cars": "Cars",
-      "users": "Users"
+      "users": "Users",
+      "profile": "My Profile"
     },
     "actions": {
       "login": "Login",
@@ -105,6 +106,7 @@
     "title": "Dashboard",
     "welcomeBack": "Welcome back, {name}",
     "rentButton": "Rent a Car",
+    "profileButton": "My Profile",
     "myRentals": "My Rentals",
     "stats": {
       "totalRentals": {
@@ -120,6 +122,10 @@
         "description": "Rentals awaiting approval."
       }
     }
+  },
+  "Profile": {
+    "title": "My Profile",
+    "comingSoon": "Profile details coming soon."
   },
   "Agent": {
     "dashboard": {

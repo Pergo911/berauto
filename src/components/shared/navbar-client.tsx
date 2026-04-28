@@ -17,6 +17,7 @@ import {
   LogOut,
   Moon,
   Monitor,
+  Settings,
   Sun,
   User,
   ShieldUser,
@@ -390,6 +391,23 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
                     </DropdownMenuGroup>
                   </>
                 )}
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    asChild
+                    className={cn(
+                      isActive("/dashboard/profile") &&
+                        "bg-accent text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    )}
+                  >
+                    <Link href="/dashboard/profile">
+                      <Settings className="size-4" />
+                      {t("routes.profile")}
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
 
                 <DropdownMenuSeparator />
 

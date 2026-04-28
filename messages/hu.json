@@ -14,7 +14,8 @@
       "activeRentals": "Aktív bérlések",
       "invoices": "Számlák",
       "cars": "Autók",
-      "users": "Felhasználók"
+      "users": "Felhasználók",
+      "profile": "Saját profil"
     },
     "actions": {
       "login": "Bejelentkezés",
@@ -105,6 +106,7 @@
     "title": "Vezérlőpult",
     "welcomeBack": "Üdv újra, {name}",
     "rentButton": "Autóbérlés",
+    "profileButton": "Saját profil",
     "myRentals": "Bérléseim",
     "stats": {
       "totalRentals": {
@@ -120,6 +122,10 @@
         "description": "Jóváhagyásra váró igénylések."
       }
     }
+  },
+  "Profile": {
+    "title": "Saját profil",
+    "comingSoon": "A profiladatok hamarosan elérhetők."
   },
   "Agent": {
     "dashboard": {
