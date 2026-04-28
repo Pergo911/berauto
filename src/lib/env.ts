@@ -11,6 +11,10 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     UPLOADTHING_TOKEN: z.string().min(1),
+    AUTH_GOOGLE_ID: z.string().optional(),
+    AUTH_GOOGLE_SECRET: z.string().optional(),
+    AUTH_GITHUB_ID: z.string().optional(),
+    AUTH_GITHUB_SECRET: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_DEFAULT_LOCALE: z.enum(["hu", "en"]).default("hu"),
@@ -22,6 +26,10 @@ export const env = createEnv({
     AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
     NODE_ENV: process.env.NODE_ENV,
     UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
+    AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+    AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
+    AUTH_GITHUB_ID: process.env.AUTH_GITHUB_ID,
+    AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
     NEXT_PUBLIC_DEFAULT_LOCALE: process.env.NEXT_PUBLIC_DEFAULT_LOCALE,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

@@ -551,8 +551,7 @@
     "noHistory": "No rental history for this car."
   },
   "SocialButtons": {
-    "orContinueWith": "Or continue with",
-    "comingSoon": "Social login coming soon"
+    "orContinueWith": "Or continue with"
   },
   "CarForm": {
     "brandLabel": "Brand",

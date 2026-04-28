@@ -551,8 +551,7 @@
     "noHistory": "Nincs bérlési előzmény ehhez az autóhoz."
   },
   "SocialButtons": {
-    "orContinueWith": "Vagy folytatás ezzel",
-    "comingSoon": "Közösségi bejelentkezés hamarosan"
+    "orContinueWith": "Vagy folytatás ezzel"
   },
   "CarForm": {
     "brandLabel": "Márka",

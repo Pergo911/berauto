@@ -1,5 +1,6 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -54,8 +55,7 @@ export function SocialButtons() {
         <Button
           variant="outline"
           type="button"
-          disabled
-          className="disabled:cursor-not-allowed"
+          onClick={() => signIn("google", { redirectTo: "/dashboard" })}
         >
           <GoogleIcon className="size-4" />
           Google
@@ -63,16 +63,12 @@ export function SocialButtons() {
         <Button
           variant="outline"
           type="button"
-          disabled
-          className="disabled:cursor-not-allowed"
+          onClick={() => signIn("github", { redirectTo: "/dashboard" })}
         >
           <GitHubIcon className="size-4" />
           GitHub
         </Button>
       </div>
-      <p className="text-center text-xs text-muted-foreground">
-        {t("comingSoon")}
-      </p>
     </div>
   );
 }
