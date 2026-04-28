@@ -304,7 +304,7 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/40 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-black/10 dark:border-white/10 bg-background/40 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-1">
           <Link

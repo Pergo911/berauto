@@ -12,6 +12,7 @@ import { registerUser } from "@/actions/auth";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
   Form,
   FormControl,
@@ -109,8 +110,7 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel>{t("passwordLabel")}</FormLabel>
                 <FormControl>
-                  <Input
-                    type="password"
+                  <PasswordInput
                     placeholder="••••••••"
                     autoComplete="new-password"
                     {...field}
@@ -127,8 +127,7 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel>{t("confirmPasswordLabel")}</FormLabel>
                 <FormControl>
-                  <Input
-                    type="password"
+                  <PasswordInput
                     placeholder="••••••••"
                     autoComplete="new-password"
                     {...field}
