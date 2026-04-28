@@ -2,8 +2,8 @@
   "Navbar": {
     "companyLogoAlt": "Céglogó",
     "panel": {
-      "userMode": "Felhasználói mód",
-      "agentMode": "Ügyintézői mód",
+      "userMode": "Felhasználó mód",
+      "agentMode": "Ügyintéző mód",
       "adminMode": "Admin mód"
     },
     "routes": {
@@ -34,10 +34,10 @@
   },
   "HomePage": {
     "hero": {
-      "badge": "Autók hétköznapokra és hétvégi kiruccanásokhoz",
-      "title": "Indulj el azzal az autóval, amit tényleg te szemeltél ki – ne csak az elsővel, ami épp szabad.",
-      "description": "A BerAuto gyors és letisztult böngészést kínál: válassz másodpercek alatt, és könnyedén add le igényed.",
-      "exploreButton": "A flottánk böngészése",
+      "badge": "Megbízható autók minden napra és minden útra",
+      "title": "Indulj útnak a kiválasztott autóval amit nem csak lefoglalsz hanem élvezel.",
+      "description": "A BerAuto gyors és letisztult böngészést kínál, szűrj a flottán pillanatok alatt és foglalj gond nélkül.",
+      "exploreButton": "A flottánk felfedezése",
       "openDashboardButton": "Vezérlőpult megnyitása",
       "createAccountButton": "Fiók létrehozása"
     },
@@ -51,7 +51,7 @@
     },
     "promo": {
       "whyLabel": "Miért a BerAuto?",
-      "title": "Egyszerűbb módja a következő autód megtalálásának.",
+      "title": "Egy könnyebb út a következő autód kiválasztásához.",
       "badge": "Igény szerint"
     },
     "highlights": {
@@ -61,17 +61,17 @@
       },
       "simpleBooking": {
         "title": "Egyszerű kölcsönzési folyamat",
-        "description": "Válassz autót, add le az igénylést, és intézd mindent egy helyen."
+        "description": "Válassz egy autót, add le az igénylést és intézz mindent egy helyen."
       },
       "clearDetails": {
         "title": "Átlátható részletek",
-        "description": "Egyértelmű árak és státuszok, mielőtt döntesz."
+        "description": "Egyértelmű árak és járműállapot, mielőtt elkötelezed magad."
       }
     },
     "fleet": {
       "label": "Flottánk",
       "title": "Elérhető autók",
-      "description": "Szűrj modell, ár, kilométeróra vagy elérhetőség alapján",
+      "description": "Szűrj modell, ár, megtett kilométer vagy elérhetőség alapján.",
       "empty": "Nincs találat a megadott szűrők mellett."
     },
     "footer": "BerAuto Autóbérlés {year}"
@@ -144,7 +144,7 @@
         },
         "invoices": {
           "title": "Számlák",
-          "description": "Bérleti számlák kezelése",
+          "description": "Bérleti számlák megtekeintése és kezelése",
           "subLabel": "számlázatlan bérlés"
         }
       }
@@ -238,11 +238,11 @@
     },
     "carsPage": {
       "backToDashboard": "Vissza a vezérlőpultra",
-      "title": "Autókezelés"
+      "title": "Autók kezelése"
     },
     "usersPage": {
       "backToDashboard": "Vissza a vezérlőpultra",
-      "title": "Felhasználókezelés",
+      "title": "Felhasználók kezelése",
       "staffTitle": "Személyzet (Adminisztrátorok és ügyintézők)",
       "members": "{count, plural, one {# tag} other {# tag}}",
       "usersTitle": "Felhasználók",
@@ -257,7 +257,7 @@
       "model": "Modell",
       "year": "Évjárat",
       "licensePlate": "Rendszám",
-      "mileage": "Kilométeróra",
+      "mileage": "Kilométeróra állása",
       "added": "Hozzáadva",
       "dailyRate": "Napi díj"
     },
@@ -282,7 +282,7 @@
     },
     "noResults": "Nincs találat.",
     "toggleColumns": "Oszlopok",
-    "view": "Oszlopok",
+    "view": "Nézet",
     "optional": "(opcionális)",
     "cancel": "Mégsem",
     "reset": "Visszaállítás",
@@ -346,7 +346,7 @@
       "makeModel": "Márka / Modell",
       "year": "Évjárat",
       "licensePlate": "Rendszám",
-      "mileage": "Kilométeróra",
+      "mileage": "Kilométeróra állása",
       "dailyRate": "Napi díj",
       "status": "Státusz"
     },
@@ -396,18 +396,18 @@
     "rejecting": "Elutasítás…",
     "cancel": "Mégsem",
     "approveTitle": "Kölcsönzési igény jóváhagyása",
-    "checkingConflicts": "Ütközések ellenőrzése…",
+    "checkingConflicts": "Ütköző kérések ellenőrzése…",
     "approveDescNoConflict": "Biztosan jóvá akarod hagyni ezt a kölcsönzési igényt?",
-    "approveDescConflicts": "A jóváhagyás automatikusan elutasít {count, plural, one {# ütköző függőben lévő igénylést} other {# ütköző függőben lévő igénylést}}.",
+    "approveDescConflicts": "A következő jóváhagyása automatikusan elutasít {count, plural, one {# ütköző függőben lévő igénylést} other {# ütköző függőben lévő igénylést}}.",
     "reasonLabel": "Indok",
     "reasonOptional": "(opcionális)",
     "approveNotePlaceholder": "Megjegyzés a jóváhagyáshoz…",
     "conflictsSectionTitle": "Elutasításra kerülő kérelmek",
     "rejectTitle": "Kölcsönzési igény elutasítása",
-    "rejectDesc": "Add meg az elutasítás okát. Ez bekerül a kölcsönzési előzményekbe.",
+    "rejectDesc": "Kérjünk add meg az elutasítás okát. Ezt rögzítjük a kölcsönzési előzményekbe.",
     "rejectNotePlaceholder": "Elutasítás oka…",
     "rejectionMessagePlaceholder": "Elutasítás üzenete…",
-    "defaultConflictNote": "Sajnáljuk, ezt az igénylést automatikusan elutasítottuk, mert egy másik kölcsönzést ugyanazokra a dátumokra hagytak jóvá.",
+    "defaultConflictNote": "Sajnáljuk, ezt az igénylést automatikusan elutasítottuk, mivel egy másik kölcsönzést ugyanazokra a dátumokra hagytak jóvá.",
     "toastApproved": "Bérlés jóváhagyva",
     "toastRejected": "Bérlés elutasítva",
     "toastNeedReason": "Kérjük, add meg az elutasítás okát"
@@ -415,7 +415,7 @@
   "HandoverReturnActions": {
     "recordHandover": "Átadás rögzítése",
     "recordReturn": "Visszaadás rögzítése",
-    "mileageLabel": "Kilométeróra (km)",
+    "mileageLabel": "Kilométeróra állása (km)",
     "lastRecorded": "Legutóbb rögzített:",
     "noteLabel": "Megjegyzés",
     "noteOptional": "(opcionális)",
@@ -423,7 +423,7 @@
     "saving": "Mentés…",
     "toastHandover": "Átadás rögzítve",
     "toastReturn": "Visszaadás rögzítve",
-    "validMileageError": "Kérjük, adj meg érvényes kilométerállást"
+    "validMileageError": "Kérjük, adj meg érvényes kilométeróra állást"
   },
   "IssueInvoiceButton": {
     "amountLabel": "Összeg (HUF)",
@@ -454,7 +454,7 @@
     "notesPlaceholder": "Különleges kérések vagy megjegyzések az ügyintézőnek… (opcionális)",
     "submitButton": "Kölcsönzési igény leadása",
     "successTitle": "Kölcsönzési igény leadva!",
-    "successDescription": "Igénylésedet fogadtuk. Az ügyintéző hamarosan átnézi, és értesítünk a döntésről."
+    "successDescription": "Az igénylésedet megkaptuk. Egy ügyintéző hamarosan felülvizsgálja, és értesíteni fog a döntésről."
   },
   "RentalDetailDialog": {
     "sections": {
@@ -481,7 +481,7 @@
     "issued": "Kiállítva: {date}",
     "downloadPdf": "PDF letöltése",
     "by": "{name} által",
-    "mileageKm": "Kilométeróra: {mileage} km",
+    "mileageKm": "Kilométeróra állása: {mileage} km",
     "fieldName": "Név",
     "fieldEmail": "Email",
     "fieldPhone": "Telefon",
@@ -523,7 +523,7 @@
   },
   "CarCard": {
     "year": "Évjárat",
-    "mileage": "Kilométeróra",
+    "mileage": "Kilométeróra állása",
     "license": "Rendszám",
     "perDay": "/nap",
     "viewDetails": "Részletek"
@@ -564,7 +564,7 @@
     "yearLabel": "Évjárat",
     "licensePlateLabel": "Rendszám",
     "licensePlatePlaceholder": "pl. ABC-123",
-    "mileageLabel": "Kilométeróra (km)",
+    "mileageLabel": "Kilométeróra állása (km)",
     "dailyRateLabel": "Napi díj (HUF)",
     "statusLabel": "Státusz",
     "statusPlaceholder": "Válassz státuszt",
@@ -579,7 +579,7 @@
     "toastUpdated": "Autó sikeresen módosítva.",
     "imageLabel": "Autó fotó",
     "imageUpload": "Kattints vagy húzd ide a feltöltéshez",
-    "imageDragActive": "Engedd el a képet",
+    "imageDragActive": "Húzd ide a képet",
     "imageHint": "JPG, PNG, WebP vagy GIF · max 4 MB",
     "imageReplace": "Fotó cseréje",
     "imageRemove": "Eltávolítás",
