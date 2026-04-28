@@ -124,8 +124,18 @@
     }
   },
   "Profile": {
+    "Settings": {
+      "phoneLabel": "Telefonszám",
+      "addressLabel": "Lakcím",
+      "passwordSection": "Jelszó módosítása",
+      "newPasswordLabel": "Új jelszó",
+      "confirmPasswordLabel": "Jelszó megerősítése",
+      "submit": "Mentés",
+      "success": "Profil sikeresen frissítve"
+    },
     "title": "Saját profil",
     "comingSoon": "A profiladatok hamarosan elérhetők."
+    
   },
   "Agent": {
     "dashboard": {
