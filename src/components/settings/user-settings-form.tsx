@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { Phone, MapPin, Lock } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
@@ -77,20 +78,24 @@ export function UserSettingsForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
-        <div className="grid gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="space-y-4">
           <FormField
             control={form.control}
             name="phone"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{t("phoneLabel")}</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="+1234567890"
-                    autoComplete="tel"
-                    {...field}
-                  />
+                <FormControl className="relative">
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="+1234567890"
+                      autoComplete="tel"
+                      className="pl-9"
+                      {...field}
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -102,12 +107,16 @@ export function UserSettingsForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{t("addressLabel")}</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="123 Main St, City"
-                    autoComplete="street-address"
-                    {...field}
-                  />
+                <FormControl className="relative">
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="123 Main St, City"
+                      autoComplete="street-address"
+                      className="pl-9"
+                      {...field}
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -116,21 +125,25 @@ export function UserSettingsForm({
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="mb-4 text-sm font-medium">{t("passwordSection")}</h3>
-          <div className="grid gap-4">
+          <h3 className="mb-4 text-base font-semibold">{t("passwordSection")}</h3>
+          <div className="space-y-4">
             <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("newPasswordLabel")}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      autoComplete="new-password"
-                      {...field}
-                    />
+                  <FormControl className="relative">
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        autoComplete="new-password"
+                        className="pl-9"
+                        {...field}
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,13 +155,17 @@ export function UserSettingsForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("confirmPasswordLabel")}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      autoComplete="new-password"
-                      {...field}
-                    />
+                  <FormControl className="relative">
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        autoComplete="new-password"
+                        className="pl-9"
+                        {...field}
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -159,7 +176,7 @@ export function UserSettingsForm({
 
         <Button
           type="submit"
-          className="w-full"
+          className="w-full bg-green-600 hover:bg-green-700 border border-green-600 hover:border-green-700 text-white font-medium px-6 py-2.5 rounded-md transition-all"
           disabled={form.formState.isSubmitting}
         >
           {form.formState.isSubmitting && (
