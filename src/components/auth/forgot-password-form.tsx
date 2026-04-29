@@ -6,7 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 
-import { forgotPasswordSchema, type ForgotPasswordInput } from "@/lib/validations/auth";
+import {
+  forgotPasswordSchema,
+  type ForgotPasswordInput,
+} from "@/lib/validations/auth";
 import { requestPasswordReset } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,7 +66,11 @@ export function ForgotPasswordForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={form.formState.isSubmitting}
+        >
           {form.formState.isSubmitting && <Loader2 className="animate-spin" />}
           {t("submitButton")}
         </Button>

@@ -203,4 +203,3 @@ export const passwordResetTokens = pgTable(
   },
   (table) => [index("prt_user_idx").on(table.userId)]
 );
-

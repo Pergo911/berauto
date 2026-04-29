@@ -6,7 +6,10 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { updateUserSchema, updateOwnProfileSchema } from "@/lib/validations/users";
+import {
+  updateUserSchema,
+  updateOwnProfileSchema,
+} from "@/lib/validations/users";
 import { idSchema } from "@/lib/validations/rentals";
 
 type ActionResult<T> =

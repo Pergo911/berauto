@@ -6,7 +6,10 @@ import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { resetPasswordSchema, type ResetPasswordInput } from "@/lib/validations/auth";
+import {
+  resetPasswordSchema,
+  type ResetPasswordInput,
+} from "@/lib/validations/auth";
 import { resetPassword } from "@/actions/auth";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -80,7 +83,11 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={form.formState.isSubmitting}
+        >
           {form.formState.isSubmitting && <Loader2 className="animate-spin" />}
           {t("submitButton")}
         </Button>

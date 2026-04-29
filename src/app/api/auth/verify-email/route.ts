@@ -7,7 +7,9 @@ export async function GET(request: NextRequest) {
   const token = request.nextUrl.searchParams.get("token");
 
   if (!token) {
-    return NextResponse.redirect(new URL("/en/login?error=invalid-token", request.url));
+    return NextResponse.redirect(
+      new URL("/en/login?error=invalid-token", request.url)
+    );
   }
 
   const [tokenRow] = await db
