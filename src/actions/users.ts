@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { updateUserSchema } from "@/lib/validations/users";
+import { updateUserSchema, updateOwnProfileSchema } from "@/lib/validations/users";
 import { idSchema } from "@/lib/validations/rentals";
 
 type ActionResult<T> =
@@ -43,6 +43,34 @@ export async function updateUser(
   }
 
   revalidatePath("/admin/users");
+
+  return { success: true, data: { id: user.id } };
+}
+
+export async function updateOwnProfile(
+  input: unknown
+): Promise<ActionResult<{ id: string }>> {
+  const session = await auth();
+  if (!session?.user) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const parsed = updateOwnProfileSchema.safeParse(input);
+  if (!parsed.success) {
+    return { success: false, error: "Invalid input" };
+  }
+
+  const [user] = await db
+    .update(users)
+    .set(parsed.data)
+    .where(eq(users.id, session.user.id))
+    .returning({ id: users.id });
+
+  if (!user) {
+    return { success: false, error: "User not found" };
+  }
+
+  revalidatePath("/dashboard/profile");
 
   return { success: true, data: { id: user.id } };
 }

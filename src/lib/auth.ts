@@ -157,7 +157,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: user.name ?? user.email.split("@")[0],
             passwordHash: null,
             role: "user",
+            emailVerified: true,
           });
+        } else if (!existing.emailVerified) {
+          // Auto-verify OAuth users who previously registered via credentials
+          await db
+            .update(users)
+            .set({ emailVerified: true })
+            .where(eq(users.id, existing.id));
         }
 
         return true;

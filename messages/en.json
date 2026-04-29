@@ -74,20 +74,51 @@
       "description": "Narrow the list by model, price, mileage, or availability.",
       "empty": "No cars found matching your criteria."
     },
-    "footer": "BerAuto Car Rental {year}"
+    "footer": "BerAuto Car Rental {year}",
+    "privacyPolicy": "Privacy Policy"
   },
   "Auth": {
     "loginPage": {
       "title": "Welcome back",
       "description": "Sign in to your account to manage rentals",
       "noAccount": "Don't have an account?",
-      "register": "Register"
+      "register": "Register",
+      "forgotPassword": "Forgot password?"
     },
     "registerPage": {
       "title": "Create an account",
       "description": "Register to start renting cars",
       "hasAccount": "Already have an account?",
       "signIn": "Sign in"
+    },
+    "forgotPasswordPage": {
+      "title": "Forgot your password?",
+      "description": "Enter your email address and we'll send you a reset link.",
+      "emailLabel": "Email address",
+      "submitButton": "Send reset link",
+      "successMessage": "If an account exists for that email, you'll receive a password reset link shortly.",
+      "backToLogin": "Back to sign in"
+    },
+    "resetPasswordPage": {
+      "title": "Set a new password",
+      "description": "Enter and confirm your new password below.",
+      "newPasswordLabel": "New password",
+      "confirmNewPasswordLabel": "Confirm new password",
+      "submitButton": "Reset password",
+      "successMessage": "Your password has been reset. You can now sign in.",
+      "errors": {
+        "invalidToken": "This reset link is invalid or has expired. Please request a new one."
+      }
+    },
+    "emailVerificationBanner": {
+      "message": "Please verify your email address to ensure uninterrupted access.",
+      "resendButton": "Resend email",
+      "resendSuccess": "Verification email sent! Check your inbox.",
+      "resendError": "Failed to send email. Please try again."
+    },
+    "incompleteProfileBanner": {
+      "message": "Your profile is incomplete. Please add your phone number and address.",
+      "goToProfileButton": "Go to Profile"
     },
     "forms": {
       "nameLabel": "Name",
@@ -452,6 +483,11 @@
     "phonePlaceholder": "+36 30 123 4567",
     "notes": "Notes",
     "notesPlaceholder": "Any special requests or notes for the agent… (optional)",
+    "emailUnverifiedTitle": "Email not verified",
+    "emailUnverifiedDescription": "Please verify your email address before submitting a rental request. Check your inbox for a verification link.",
+    "profileIncompleteTitle": "Profile incomplete",
+    "profileIncompleteDescription": "Please add your phone number and address to your profile before submitting a rental request.",
+    "completeProfileButton": "Complete Profile",
     "submitButton": "Submit Rental Request",
     "successTitle": "Rental request submitted!",
     "successDescription": "Your request has been received. An agent will review it shortly and you will be notified of the decision."
@@ -583,5 +619,87 @@
     "imageReplace": "Replace photo",
     "imageRemove": "Remove",
     "imageUploading": "Uploading..."
+  },
+  "PrivacyPolicy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: April 29, 2026",
+    "backHome": "Back to Home",
+    "sections": {
+      "intro": {
+        "title": "Introduction",
+        "content": "BerAuto (\"we\", \"us\", or \"our\") operates the BerAuto car rental platform. This Privacy Policy explains how we collect, use, store, and protect your personal data when you use our website and services. We are committed to protecting your privacy in accordance with the General Data Protection Regulation (GDPR) and applicable Hungarian data protection law."
+      },
+      "controller": {
+        "title": "Data Controller",
+        "content": "The data controller responsible for your personal data is BerAuto. If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us at the details provided in the Contact section below."
+      },
+      "dataCollected": {
+        "title": "Personal Data We Collect",
+        "intro": "We collect the following categories of personal data:",
+        "items": [
+          "Account data: name, email address, and password (stored as a secure hash).",
+          "Contact data: phone number and postal address, which you may provide in your profile.",
+          "Rental data: details of rental requests, including selected vehicle, requested dates, notes, and the status history of each rental.",
+          "Financial data: invoice amounts and rental cost information linked to your account.",
+          "Usage data: log data, IP addresses, browser type, and pages visited, collected automatically when you use our platform.",
+          "Uploaded files: car photos uploaded by staff for fleet management purposes."
+        ]
+      },
+      "purposes": {
+        "title": "How We Use Your Data",
+        "intro": "We process your personal data for the following purposes and legal bases:",
+        "items": [
+          "Contract performance: to process rental requests, manage active rentals, issue invoices, and provide customer support (GDPR Art. 6(1)(b)).",
+          "Legal obligation: to comply with accounting, tax, and other legal requirements (GDPR Art. 6(1)(c)).",
+          "Legitimate interests: to maintain the security of our platform, prevent fraud, and improve our services (GDPR Art. 6(1)(f)).",
+          "Consent: to send transactional emails such as email verification and password reset messages. You may withdraw consent at any time (GDPR Art. 6(1)(a))."
+        ]
+      },
+      "retention": {
+        "title": "Data Retention",
+        "content": "We retain your personal data for as long as your account is active or as necessary to provide our services. Account data is kept until you request deletion. Rental and invoice records are retained for a minimum of 8 years to comply with Hungarian accounting law. Usage logs are retained for up to 90 days."
+      },
+      "sharing": {
+        "title": "Data Sharing and Third Parties",
+        "intro": "We do not sell your personal data. We may share data with the following trusted service providers who process data on our behalf under appropriate data processing agreements:",
+        "content": "We do not sell your personal data. We may share data with the following trusted service providers who process data on our behalf under appropriate data processing agreements:",
+        "items": [
+          "Resend – for sending transactional emails.",
+          "UploadThing – for secure file storage of vehicle photos.",
+          "Vercel – for hosting the platform and serving the application.",
+          "Neon (PostgreSQL) – for secure database storage."
+        ]
+      },
+      "security": {
+        "title": "Data Security",
+        "content": "We implement appropriate technical and organisational measures to protect your personal data against unauthorised access, accidental loss, or destruction. Passwords are hashed and never stored in plain text. All data is transmitted over encrypted HTTPS connections."
+      },
+      "rights": {
+        "title": "Your Rights",
+        "intro": "Under the GDPR, you have the following rights regarding your personal data:",
+        "items": [
+          "Right of access: you may request a copy of the personal data we hold about you.",
+          "Right to rectification: you may request correction of inaccurate or incomplete data.",
+          "Right to erasure: you may request deletion of your data where there is no compelling reason for us to continue processing it.",
+          "Right to restriction: you may request that we limit the processing of your data in certain circumstances.",
+          "Right to data portability: you may request your data in a structured, machine-readable format.",
+          "Right to object: you may object to processing based on legitimate interests.",
+          "Right to withdraw consent: where processing is based on consent, you may withdraw it at any time without affecting prior processing."
+        ],
+        "complaint": "You also have the right to lodge a complaint with the Hungarian National Authority for Data Protection and Freedom of Information (NAIH) at www.naih.hu."
+      },
+      "cookies": {
+        "title": "Cookies and Session Data",
+        "content": "We use essential session cookies to keep you logged in and maintain your authentication state. We do not use tracking, advertising, or analytics cookies. No third-party cookies are set by this platform."
+      },
+      "contact": {
+        "title": "Contact",
+        "content": "If you have questions about this Privacy Policy or wish to exercise your data protection rights, please contact us by email. We will respond to your request within 30 days."
+      },
+      "changes": {
+        "title": "Changes to This Policy",
+        "content": "We may update this Privacy Policy from time to time. The date of the latest revision is shown at the top of this page. Continued use of our services after any changes constitutes your acceptance of the updated policy."
+      }
+    }
   }
 }

@@ -242,6 +242,11 @@ export default async function HomePage({
 
       <footer className="border-t py-6 text-center text-sm text-muted-foreground">
         <p>{t("footer", { year: new Date().getFullYear() })}</p>
+        <p className="mt-1">
+          <Link href="/privacy" className="underline-offset-4 hover:underline">
+            {t("privacyPolicy")}
+          </Link>
+        </p>
       </footer>
     </div>
   );

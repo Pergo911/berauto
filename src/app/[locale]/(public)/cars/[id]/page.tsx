@@ -5,6 +5,8 @@ import Image from "next/image";
 import { auth } from "@/lib/auth";
 import { getBookedIntervals, getCarById } from "@/lib/data/cars";
 import { formatCurrency, formatDate, toIntlLocale } from "@/lib/utils";
+import { getUserById, getRentalBlockReason } from "@/lib/data/users";
+import type { RentalBlockReason } from "@/lib/data/users";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +35,15 @@ export default async function CarDetailPage({
   ]);
 
   const [car, session] = await Promise.all([getCarById(id), auth()]);
-  const bookedIntervals = car ? await getBookedIntervals(car.id) : [];
+  const [bookedIntervals, userProfile] = await Promise.all([
+    car ? getBookedIntervals(car.id) : Promise.resolve([]),
+    session?.user ? getUserById(session.user.id) : Promise.resolve(null),
+  ]);
+
+  let blockedReason: RentalBlockReason | null = null;
+  if (userProfile) {
+    blockedReason = getRentalBlockReason(userProfile);
+  }
 
   if (!car) {
     notFound();
@@ -172,6 +182,7 @@ export default async function CarDetailPage({
                   dailyRate={car.dailyRate}
                   isLoggedIn={!!session?.user}
                   bookedIntervals={bookedIntervals}
+                  blockedReason={blockedReason}
                 />
               ) : (
                 <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-950">
