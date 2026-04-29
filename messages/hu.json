@@ -132,6 +132,17 @@
   },
   "Profile": {
     "Settings": {
+      "passwordStrength": {
+        "very-weak": "Nagyon gyenge",
+        "weak": "Gyenge",
+        "fair": "Közepes",
+        "good": "Jó",
+        "strong": "Erős"
+      },
+      "passwordHint": "Legalább 6 karakter, betűk, számok és szimbólumok kombinációjával",
+      "personalInfoDesc": "Frissítsd az elérhetőségi adataidat",
+      "personalInfo": "Személyes adatok",
+      "passwordSectionDesc": "Módosítsd a jelszavad a fiókod biztonsága érdekében",
       "phoneLabel": "Telefonszám",
       "addressLabel": "Lakcím",
       "passwordSection": "Jelszó módosítása",
@@ -141,6 +152,7 @@
       "success": "Profil sikeresen frissítve"
     },
     "title": "Saját profil",
+    "subtitle": "Kezeld a fiókbeállításaidat és biztonsági adataidat",
     "comingSoon": "A profiladatok hamarosan elérhetők."
     
   },

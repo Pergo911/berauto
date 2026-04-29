@@ -21,14 +21,19 @@ export default async function ProfilePage({
   const user = await getUserById(userId);
 
   return (
-    <div>
-      <PageHeader title={t("title")} />
-      <div className="mt-6 max-w-xl">
-        <div className="bg-black/50 border border-white/10 rounded-lg p-8 shadow-sm">
-          <UserSettingsForm
-            initialPhone={user?.phone ?? ""}
-            initialAddress={user?.address ?? ""}
-          />
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
+      <div className="container mx-auto px-4 py-8 max-w-3xl">
+        <PageHeader title={t("title")} />
+        <p className="mt-2 text-sm text-muted-foreground">
+          {t("subtitle", { defaultValue: "Manage your account settings and security preferences" })}
+        </p>
+        <div className="mt-8">
+          <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl shadow-lg shadow-black/5 p-8">
+            <UserSettingsForm
+              initialPhone={user?.phone ?? ""}
+              initialAddress={user?.address ?? ""}
+            />
+          </div>
         </div>
       </div>
     </div>
