@@ -1,10 +1,13 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github";
 import bcryptjs from "bcryptjs";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { users } from "@/db/schema";
+import { env } from "@/lib/env";
 
 import type { UserRole } from "@/types";
 import { hasLocale } from "next-intl";
@@ -56,7 +59,6 @@ function stripLocalePrefix(pathname: string) {
     return pathname.slice(prefixed.length);
   }
 
-  // Pathname does not start with a known locale prefix; return as-is.
   return pathname;
 }
 
@@ -65,9 +67,30 @@ function localizedPath(path: string, locale: string) {
   return `/${locale}${path}`;
 }
 
+const oauthProviders = [];
+
+if (env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET) {
+  oauthProviders.push(
+    Google({
+      clientId: env.AUTH_GOOGLE_ID,
+      clientSecret: env.AUTH_GOOGLE_SECRET,
+    })
+  );
+}
+
+if (env.AUTH_GITHUB_ID && env.AUTH_GITHUB_SECRET) {
+  oauthProviders.push(
+    GitHub({
+      clientId: env.AUTH_GITHUB_ID,
+      clientSecret: env.AUTH_GITHUB_SECRET,
+    })
+  );
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   providers: [
+    ...oauthProviders,
     Credentials({
       name: "credentials",
       credentials: {
@@ -88,7 +111,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .where(eq(users.email, email))
           .limit(1);
 
-        if (!user) {
+        if (!user || !user.passwordHash) {
           return null;
         }
 
@@ -118,10 +141,56 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account }) {
+      if (account?.provider === "google" || account?.provider === "github") {
+        if (!user.email) return false;
+
+        const [existing] = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, user.email))
+          .limit(1);
+
+        if (!existing) {
+          await db.insert(users).values({
+            email: user.email,
+            name: user.name ?? user.email.split("@")[0],
+            passwordHash: null,
+            role: "user",
+            emailVerified: true,
+          });
+        } else if (!existing.emailVerified) {
+          // Auto-verify OAuth users who previously registered via credentials
+          await db
+            .update(users)
+            .set({ emailVerified: true })
+            .where(eq(users.id, existing.id));
+        }
+
+        return true;
+      }
+
+      return true;
+    },
+    async jwt({ token, user, account }) {
       if (user) {
-        token.id = user.id as string;
-        token.role = user.role;
+        if (account?.provider === "google" || account?.provider === "github") {
+          // OAuth: user object comes from the provider profile — look up our DB
+          // record to get the correct UUID and role that were set in signIn.
+          const [dbUser] = await db
+            .select()
+            .from(users)
+            .where(eq(users.email, user.email!))
+            .limit(1);
+          if (dbUser) {
+            token.id = dbUser.id;
+            token.role = dbUser.role;
+          }
+        } else {
+          // Credentials: user is returned directly from authorize()
+          token.id = user.id as string;
+          token.role = user.role;
+        }
       }
       return token;
     },

@@ -17,6 +17,7 @@ import {
   LogOut,
   Moon,
   Monitor,
+  Settings,
   Sun,
   User,
   ShieldUser,
@@ -303,17 +304,20 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/40 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-black/10 dark:border-white/10 bg-background/40 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-1">
-          <Link href="/" className="text-xl font-bold flex items-center gap-4">
+          <Link
+            href="/"
+            className="text-xl font-bold flex items-center gap-2 sm:gap-4"
+          >
             <Image
               src="/com-logo.png"
               alt={t("companyLogoAlt")}
               width={42}
               height={42}
             />
-            BerAuto
+            <span className="hidden sm:inline">BerAuto</span>
           </Link>
           {showPanelSwitcher && (
             <>
@@ -331,8 +335,10 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
               {!hideLogin && (
                 <Link href="/login">
                   <Button variant="outline" size="sm">
-                    <LogIn className="mr-2 size-4" />
-                    {t("actions.login")}
+                    <LogIn className="size-4 sm:mr-2" />
+                    <span className="hidden sm:inline">
+                      {t("actions.login")}
+                    </span>
                   </Button>
                 </Link>
               )}
@@ -385,6 +391,23 @@ export function NavbarClient({ panel, user, hideLogin }: NavbarClientProps) {
                     </DropdownMenuGroup>
                   </>
                 )}
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    asChild
+                    className={cn(
+                      isActive("/dashboard/profile") &&
+                        "bg-accent text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    )}
+                  >
+                    <Link href="/dashboard/profile">
+                      <Settings className="size-4" />
+                      {t("routes.profile")}
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
 
                 <DropdownMenuSeparator />
 

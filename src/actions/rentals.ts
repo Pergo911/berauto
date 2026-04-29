@@ -9,7 +9,7 @@ import { auth } from "@/lib/auth";
 import { isCarBookable, getConflictingPendingRentals } from "@/lib/data/cars";
 import { getRentalEvents, getRentalById } from "@/lib/data/rentals";
 import { getInvoiceByRentalId } from "@/lib/data/invoices";
-import { getUserById } from "@/lib/data/users";
+import { getUserById, getRentalBlockReason } from "@/lib/data/users";
 import {
   createRentalSchema,
   idSchema,
@@ -52,6 +52,27 @@ export async function createRentalRequest(
         success: false,
         error:
           "Guest name, email, and phone are required for non-registered users",
+      };
+    }
+  } else {
+    // Logged-in users must have verified email and a complete profile
+    const user = await getUserById(session.user.id);
+    if (!user) {
+      return { success: false, error: "User not found" };
+    }
+    const blockReason = getRentalBlockReason(user);
+    if (blockReason === "email-unverified") {
+      return {
+        success: false,
+        error:
+          "Please verify your email address before submitting a rental request.",
+      };
+    }
+    if (blockReason === "profile-incomplete") {
+      return {
+        success: false,
+        error:
+          "Please complete your profile (phone number and address are required) before submitting a rental request.",
       };
     }
   }

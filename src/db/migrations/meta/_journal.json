@@ -57,6 +57,20 @@
       "when": 1745411444000,
       "tag": "0007_unaccent_extension",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1777389955450,
+      "tag": "0008_orange_gideon",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1777440660388,
+      "tag": "0009_wonderful_randall",
+      "breakpoints": true
     }
   ]
 }

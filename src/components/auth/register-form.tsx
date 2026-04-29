@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { toast } from "sonner";
 
 import { registerSchema, type RegisterInput } from "@/lib/validations/auth";
@@ -12,6 +12,7 @@ import { registerUser } from "@/actions/auth";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
   Form,
   FormControl,
@@ -24,6 +25,7 @@ import { SocialButtons } from "@/components/auth/social-buttons";
 
 export function RegisterForm() {
   const t = useTranslations("Auth.forms");
+  const locale = useLocale() as "en" | "hu";
   const router = useRouter();
 
   const form = useForm<RegisterInput>({
@@ -38,7 +40,7 @@ export function RegisterForm() {
 
   async function onSubmit(values: RegisterInput) {
     try {
-      const result = await registerUser(values);
+      const result = await registerUser(values, locale);
 
       if (!result.success) {
         toast.error(result.error);
@@ -109,8 +111,7 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel>{t("passwordLabel")}</FormLabel>
                 <FormControl>
-                  <Input
-                    type="password"
+                  <PasswordInput
                     placeholder="••••••••"
                     autoComplete="new-password"
                     {...field}
@@ -127,8 +128,7 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel>{t("confirmPasswordLabel")}</FormLabel>
                 <FormControl>
-                  <Input
-                    type="password"
+                  <PasswordInput
                     placeholder="••••••••"
                     autoComplete="new-password"
                     {...field}

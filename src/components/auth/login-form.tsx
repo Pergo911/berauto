@@ -9,9 +9,10 @@ import { toast } from "sonner";
 
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { USER_ROLE } from "@/types";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter, Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
   Form,
   FormControl,
@@ -24,6 +25,7 @@ import { SocialButtons } from "@/components/auth/social-buttons";
 
 export function LoginForm() {
   const t = useTranslations("Auth.forms");
+  const tLogin = useTranslations("Auth.loginPage");
   const router = useRouter();
 
   const form = useForm<LoginInput>({
@@ -90,10 +92,17 @@ export function LoginForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("passwordLabel")}</FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel>{t("passwordLabel")}</FormLabel>
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground"
+                  >
+                    {tLogin("forgotPassword")}
+                  </Link>
+                </div>
                 <FormControl>
-                  <Input
-                    type="password"
+                  <PasswordInput
                     placeholder="••••••••"
                     autoComplete="current-password"
                     {...field}

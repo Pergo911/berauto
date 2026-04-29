@@ -2,8 +2,8 @@
   "Navbar": {
     "companyLogoAlt": "Céglogó",
     "panel": {
-      "userMode": "Felhasználói mód",
-      "agentMode": "Ügyintézői mód",
+      "userMode": "Felhasználó mód",
+      "agentMode": "Ügyintéző mód",
       "adminMode": "Admin mód"
     },
     "routes": {
@@ -14,7 +14,8 @@
       "activeRentals": "Aktív bérlések",
       "invoices": "Számlák",
       "cars": "Autók",
-      "users": "Felhasználók"
+      "users": "Felhasználók",
+      "profile": "Saját profil"
     },
     "actions": {
       "login": "Bejelentkezés",
@@ -33,10 +34,10 @@
   },
   "HomePage": {
     "hero": {
-      "badge": "Autók hétköznapokra és hétvégi kiruccanásokhoz",
-      "title": "Indulj el azzal az autóval, amit tényleg te szemeltél ki – ne csak az elsővel, ami épp szabad.",
-      "description": "A BerAuto gyors és letisztult böngészést kínál: válassz másodpercek alatt, és könnyedén add le igényed.",
-      "exploreButton": "A flottánk böngészése",
+      "badge": "Megbízható autók minden napra és minden útra",
+      "title": "Indulj útnak a kiválasztott autóval amit nem csak lefoglalsz, hanem élvezel.",
+      "description": "A BerAuto gyors és letisztult böngészést kínál, szűrj a flottán pillanatok alatt és foglalj gond nélkül!",
+      "exploreButton": "A flottánk felfedezése",
       "openDashboardButton": "Vezérlőpult megnyitása",
       "createAccountButton": "Fiók létrehozása"
     },
@@ -50,7 +51,7 @@
     },
     "promo": {
       "whyLabel": "Miért a BerAuto?",
-      "title": "Egyszerűbb módja a következő autód megtalálásának.",
+      "title": "Egy könnyebb út a következő autód kiválasztásához.",
       "badge": "Igény szerint"
     },
     "highlights": {
@@ -60,33 +61,64 @@
       },
       "simpleBooking": {
         "title": "Egyszerű kölcsönzési folyamat",
-        "description": "Válassz autót, add le az igénylést, és intézd mindent egy helyen."
+        "description": "Válassz egy autót, add le az igénylést és intézz mindent egy helyen."
       },
       "clearDetails": {
         "title": "Átlátható részletek",
-        "description": "Egyértelmű árak és státuszok, mielőtt döntesz."
+        "description": "Egyértelmű árak és járműállapot, mielőtt elkötelezed magad."
       }
     },
     "fleet": {
       "label": "Flottánk",
       "title": "Elérhető autók",
-      "description": "Szűrj modell, ár, kilométeróra vagy elérhetőség alapján",
+      "description": "Szűrj modell, ár, megtett kilométer vagy elérhetőség alapján.",
       "empty": "Nincs találat a megadott szűrők mellett."
     },
-    "footer": "BerAuto Autóbérlés {year}"
+    "footer": "BerAuto Autóbérlés {year}",
+    "privacyPolicy": "Adatvédelmi tájékoztató"
   },
   "Auth": {
     "loginPage": {
       "title": "Üdv újra",
       "description": "Jelentkezz be a fiókodba a bérlések kezeléséhez",
       "noAccount": "Még nincs fiókod?",
-      "register": "Regisztráció"
+      "register": "Regisztráció",
+      "forgotPassword": "Elfelejtett jelszó?"
     },
     "registerPage": {
       "title": "Fiók létrehozása",
       "description": "Regisztrálj az autóbérlés megkezdéséhez",
       "hasAccount": "Már van fiókod?",
       "signIn": "Bejelentkezés"
+    },
+    "forgotPasswordPage": {
+      "title": "Elfelejtett jelszó?",
+      "description": "Add meg az e-mail-címed, és küldünk egy visszaállító linket.",
+      "emailLabel": "E-mail-cím",
+      "submitButton": "Visszaállító link küldése",
+      "successMessage": "Ha létezik fiók ezzel az e-mail-címmel, hamarosan kapsz egy jelszó-visszaállító linket.",
+      "backToLogin": "Vissza a bejelentkezéshez"
+    },
+    "resetPasswordPage": {
+      "title": "Új jelszó beállítása",
+      "description": "Add meg és erősítsd meg az új jelszavadat.",
+      "newPasswordLabel": "Új jelszó",
+      "confirmNewPasswordLabel": "Új jelszó megerősítése",
+      "submitButton": "Jelszó visszaállítása",
+      "successMessage": "Jelszavadat sikeresen visszaállítottuk. Most már bejelentkezhetsz.",
+      "errors": {
+        "invalidToken": "Ez a visszaállító link érvénytelen vagy lejárt. Kérj egy újat."
+      }
+    },
+    "emailVerificationBanner": {
+      "message": "Kérjük, erősítsd meg az e-mail-címed minden funkció eléréséhez.",
+      "resendButton": "E-mail újraküldése",
+      "resendSuccess": "Megerősítő e-mail elküldve! Ellenőrizd a beérkező leveleidet.",
+      "resendError": "Az e-mail küldése nem sikerült. Kérjük, próbáld újra."
+    },
+    "incompleteProfileBanner": {
+      "message": "A profilod hiányos. Kérjük, add meg a telefonszámod és a lakcímed.",
+      "goToProfileButton": "Ugrás a profilhoz"
     },
     "forms": {
       "nameLabel": "Név",
@@ -105,6 +137,7 @@
     "title": "Vezérlőpult",
     "welcomeBack": "Üdv újra, {name}",
     "rentButton": "Autóbérlés",
+    "profileButton": "Saját profil",
     "myRentals": "Bérléseim",
     "stats": {
       "totalRentals": {
@@ -120,6 +153,10 @@
         "description": "Jóváhagyásra váró igénylések."
       }
     }
+  },
+  "Profile": {
+    "title": "Saját profil",
+    "comingSoon": "A profiladatok hamarosan elérhetők."
   },
   "Agent": {
     "dashboard": {
@@ -138,7 +175,7 @@
         },
         "invoices": {
           "title": "Számlák",
-          "description": "Bérleti számlák kezelése",
+          "description": "Bérleti számlák megtekintése és kezelése",
           "subLabel": "számlázatlan bérlés"
         }
       }
@@ -232,11 +269,11 @@
     },
     "carsPage": {
       "backToDashboard": "Vissza a vezérlőpultra",
-      "title": "Autókezelés"
+      "title": "Autók kezelése"
     },
     "usersPage": {
       "backToDashboard": "Vissza a vezérlőpultra",
-      "title": "Felhasználókezelés",
+      "title": "Felhasználók kezelése",
       "staffTitle": "Személyzet (Adminisztrátorok és ügyintézők)",
       "members": "{count, plural, one {# tag} other {# tag}}",
       "usersTitle": "Felhasználók",
@@ -251,7 +288,7 @@
       "model": "Modell",
       "year": "Évjárat",
       "licensePlate": "Rendszám",
-      "mileage": "Kilométeróra",
+      "mileage": "Kilométeróra állása",
       "added": "Hozzáadva",
       "dailyRate": "Napi díj"
     },
@@ -276,7 +313,7 @@
     },
     "noResults": "Nincs találat.",
     "toggleColumns": "Oszlopok",
-    "view": "Oszlopok",
+    "view": "Nézet",
     "optional": "(opcionális)",
     "cancel": "Mégsem",
     "reset": "Visszaállítás",
@@ -340,7 +377,7 @@
       "makeModel": "Márka / Modell",
       "year": "Évjárat",
       "licensePlate": "Rendszám",
-      "mileage": "Kilométeróra",
+      "mileage": "Kilométeróra állása",
       "dailyRate": "Napi díj",
       "status": "Státusz"
     },
@@ -390,18 +427,18 @@
     "rejecting": "Elutasítás…",
     "cancel": "Mégsem",
     "approveTitle": "Kölcsönzési igény jóváhagyása",
-    "checkingConflicts": "Ütközések ellenőrzése…",
+    "checkingConflicts": "Ütköző kérések ellenőrzése…",
     "approveDescNoConflict": "Biztosan jóvá akarod hagyni ezt a kölcsönzési igényt?",
-    "approveDescConflicts": "A jóváhagyás automatikusan elutasít {count, plural, one {# ütköző függőben lévő igénylést} other {# ütköző függőben lévő igénylést}}.",
+    "approveDescConflicts": "A következő jóváhagyása automatikusan elutasít {count, plural, one {# ütköző függőben lévő igénylést} other {# ütköző függőben lévő igénylést}}.",
     "reasonLabel": "Indok",
     "reasonOptional": "(opcionális)",
     "approveNotePlaceholder": "Megjegyzés a jóváhagyáshoz…",
     "conflictsSectionTitle": "Elutasításra kerülő kérelmek",
     "rejectTitle": "Kölcsönzési igény elutasítása",
-    "rejectDesc": "Add meg az elutasítás okát. Ez bekerül a kölcsönzési előzményekbe.",
+    "rejectDesc": "Kérjünk add meg az elutasítás okát. Ezt rögzítjük a kölcsönzési előzményekbe.",
     "rejectNotePlaceholder": "Elutasítás oka…",
     "rejectionMessagePlaceholder": "Elutasítás üzenete…",
-    "defaultConflictNote": "Sajnáljuk, ezt az igénylést automatikusan elutasítottuk, mert egy másik kölcsönzést ugyanazokra a dátumokra hagytak jóvá.",
+    "defaultConflictNote": "Sajnáljuk, ezt az igénylést automatikusan elutasítottuk, mivel egy másik kölcsönzést ugyanazokra a dátumokra hagytak jóvá.",
     "toastApproved": "Bérlés jóváhagyva",
     "toastRejected": "Bérlés elutasítva",
     "toastNeedReason": "Kérjük, add meg az elutasítás okát"
@@ -409,7 +446,7 @@
   "HandoverReturnActions": {
     "recordHandover": "Átadás rögzítése",
     "recordReturn": "Visszaadás rögzítése",
-    "mileageLabel": "Kilométeróra (km)",
+    "mileageLabel": "Kilométeróra állása (km)",
     "lastRecorded": "Legutóbb rögzített:",
     "noteLabel": "Megjegyzés",
     "noteOptional": "(opcionális)",
@@ -417,7 +454,7 @@
     "saving": "Mentés…",
     "toastHandover": "Átadás rögzítve",
     "toastReturn": "Visszaadás rögzítve",
-    "validMileageError": "Kérjük, adj meg érvényes kilométerállást"
+    "validMileageError": "Kérjük, adj meg érvényes kilométeróra állást"
   },
   "IssueInvoiceButton": {
     "amountLabel": "Összeg (HUF)",
@@ -446,9 +483,14 @@
     "phonePlaceholder": "+36 30 123 4567",
     "notes": "Megjegyzés",
     "notesPlaceholder": "Különleges kérések vagy megjegyzések az ügyintézőnek… (opcionális)",
+    "emailUnverifiedTitle": "Email nincs megerősítve",
+    "emailUnverifiedDescription": "Kölcsönzési igény leadása előtt kérjük erősítsd meg az email címedet. Ellenőrizd a beérkező leveleidet a megerősítő linkért.",
+    "profileIncompleteTitle": "Profil hiányos",
+    "profileIncompleteDescription": "Kérjük add meg a telefonszámodat és lakcímedet a profilodban, mielőtt kölcsönzési igényt adsz le.",
+    "completeProfileButton": "Profil kiegészítése",
     "submitButton": "Kölcsönzési igény leadása",
     "successTitle": "Kölcsönzési igény leadva!",
-    "successDescription": "Igénylésedet fogadtuk. Az ügyintéző hamarosan átnézi, és értesítünk a döntésről."
+    "successDescription": "Az igénylésedet megkaptuk. Egy ügyintéző hamarosan felülvizsgálja, és értesíteni fog a döntésről."
   },
   "RentalDetailDialog": {
     "sections": {
@@ -475,7 +517,7 @@
     "issued": "Kiállítva: {date}",
     "downloadPdf": "PDF letöltése",
     "by": "{name} által",
-    "mileageKm": "Kilométeróra: {mileage} km",
+    "mileageKm": "Kilométeróra állása: {mileage} km",
     "fieldName": "Név",
     "fieldEmail": "Email",
     "fieldPhone": "Telefon",
@@ -517,7 +559,7 @@
   },
   "CarCard": {
     "year": "Évjárat",
-    "mileage": "Kilométeróra",
+    "mileage": "Kilométeróra állása",
     "license": "Rendszám",
     "perDay": "/nap",
     "viewDetails": "Részletek"
@@ -545,8 +587,7 @@
     "noHistory": "Nincs bérlési előzmény ehhez az autóhoz."
   },
   "SocialButtons": {
-    "orContinueWith": "Vagy folytatás ezzel",
-    "comingSoon": "Közösségi bejelentkezés hamarosan"
+    "orContinueWith": "Vagy folytatás ezzel"
   },
   "CarForm": {
     "brandLabel": "Márka",
@@ -558,7 +599,7 @@
     "yearLabel": "Évjárat",
     "licensePlateLabel": "Rendszám",
     "licensePlatePlaceholder": "pl. ABC-123",
-    "mileageLabel": "Kilométeróra (km)",
+    "mileageLabel": "Kilométeróra állása (km)",
     "dailyRateLabel": "Napi díj (HUF)",
     "statusLabel": "Státusz",
     "statusPlaceholder": "Válassz státuszt",
@@ -573,10 +614,92 @@
     "toastUpdated": "Autó sikeresen módosítva.",
     "imageLabel": "Autó fotó",
     "imageUpload": "Kattints vagy húzd ide a feltöltéshez",
-    "imageDragActive": "Engedd el a képet",
+    "imageDragActive": "Húzd ide a képet",
     "imageHint": "JPG, PNG, WebP vagy GIF · max 4 MB",
     "imageReplace": "Fotó cseréje",
     "imageRemove": "Eltávolítás",
     "imageUploading": "Feltöltés..."
+  },
+  "PrivacyPolicy": {
+    "title": "Adatvédelmi tájékoztató",
+    "lastUpdated": "Utolsó frissítés: 2026. április 29.",
+    "backHome": "Vissza a főoldalra",
+    "sections": {
+      "intro": {
+        "title": "Bevezető",
+        "content": "A BerAuto (\"mi\" vagy \"cégünk\") üzemelteti a BerAuto autóbérlő platformot. Ez az Adatvédelmi tájékoztató ismerteti, hogy milyen személyes adatokat gyűjtünk, azokat hogyan használjuk, tároljuk és védjük, amikor igénybe veszi weboldalunkat és szolgáltatásainkat. Elkötelezettek vagyunk személyes adatainak védelme iránt az általános adatvédelmi rendelet (GDPR) és a vonatkozó magyar adatvédelmi jogszabályok szerint."
+      },
+      "controller": {
+        "title": "Adatkezelő",
+        "content": "Az Ön személyes adataiért felelős adatkezelő a BerAuto. Ha kérdése van az Adatvédelmi tájékoztatóval kapcsolatban, vagy gyakorolni kívánja jogait, kérjük, lépjen kapcsolatba velünk az alábbi Kapcsolat szekcióban megadott elérhetőségeken."
+      },
+      "dataCollected": {
+        "title": "Általunk gyűjtött személyes adatok",
+        "intro": "A következő kategóriájú személyes adatokat gyűjtjük:",
+        "items": [
+          "Fiókadatok: név, e-mail-cím és jelszó (biztonságosan titkosított formában tároljuk).",
+          "Kapcsolati adatok: telefonszám és lakcím, amelyeket a profiljában adhat meg.",
+          "Bérlési adatok: a kölcsönzési igények részletei, beleértve a kiválasztott járművet, a kért időpontokat, megjegyzéseket és az egyes bérlések státusztörténetét.",
+          "Pénzügyi adatok: számlák összegei és bérlési költségek, amelyek az Ön fiókjához kapcsolódnak.",
+          "Használati adatok: naplóadatok, IP-címek, böngészőtípus és meglátogatott oldalak, amelyeket automatikusan gyűjtünk a platform használata során.",
+          "Feltöltött fájlok: a személyzet által a flottakezelési célokra feltöltött autófotók."
+        ]
+      },
+      "purposes": {
+        "title": "Hogyan használjuk az Ön adatait",
+        "intro": "Személyes adatait a következő célokból és jogalapokkal kezeljük:",
+        "items": [
+          "Szerződés teljesítése: kölcsönzési igények feldolgozása, aktív bérlések kezelése, számlák kiállítása és ügyfélszolgálat biztosítása (GDPR 6. cikk (1) bekezdés b) pont).",
+          "Jogi kötelezettség: számviteli, adózási és egyéb jogszabályi követelményeknek való megfelelés (GDPR 6. cikk (1) bekezdés c) pont).",
+          "Jogos érdek: a platform biztonságának fenntartása, csalások megelőzése és szolgáltatásaink fejlesztése (GDPR 6. cikk (1) bekezdés f) pont).",
+          "Hozzájárulás: tranzakciós e-mailek küldése, például e-mail-megerősítés és jelszó-visszaállítás. A hozzájárulást bármikor visszavonhatja (GDPR 6. cikk (1) bekezdés a) pont)."
+        ]
+      },
+      "retention": {
+        "title": "Adatmegőrzés",
+        "content": "Személyes adatait addig őrizzük meg, amíg fiókja aktív, vagy amíg a szolgáltatások nyújtásához szükséges. A fiókadatokat a törlési kérelem benyújtásáig tároljuk. A bérlési és számlázási adatokat a magyar számviteli törvény alapján legalább 8 évig megőrizzük. A használati naplók legfeljebb 90 napig kerülnek tárolásra."
+      },
+      "sharing": {
+        "title": "Adattovábbítás és harmadik felek",
+        "intro": "Személyes adatait nem értékesítjük. Az adatokat az alábbi megbízható szolgáltatókkal oszthatjuk meg, akik megfelelő adatfeldolgozási megállapodások alapján kezelik az adatokat a nevünkben:",
+        "content": "Személyes adatait nem értékesítjük. Az adatokat az alábbi megbízható szolgáltatókkal oszthatjuk meg, akik megfelelő adatfeldolgozási megállapodások alapján kezelik az adatokat a nevünkben:",
+        "items": [
+          "Resend – tranzakciós e-mailek küldéséhez.",
+          "UploadThing – a járműfotók biztonságos tárolásához.",
+          "Vercel – a platform üzemeltetéséhez és az alkalmazás kiszolgálásához.",
+          "Neon (PostgreSQL) – az adatok biztonságos adatbázis-tárolásához."
+        ]
+      },
+      "security": {
+        "title": "Adatbiztonság",
+        "content": "Megfelelő technikai és szervezési intézkedéseket alkalmazunk személyes adatainak védelme érdekében az illetéktelen hozzáférés, véletlen elvesztés vagy megsemmisítés ellen. A jelszavak titkosítva tárolódnak, soha nem kerülnek szöveges formában rögzítésre. Minden adat titkosított HTTPS-kapcsolaton keresztül kerül továbbításra."
+      },
+      "rights": {
+        "title": "Az Ön jogai",
+        "intro": "A GDPR alapján a következő jogok illetik meg személyes adataival kapcsolatban:",
+        "items": [
+          "Hozzáférési jog: másolatot kérhet az általunk tárolt személyes adatairól.",
+          "Helyesbítési jog: kérheti a pontatlan vagy hiányos adatok javítását.",
+          "Törlési jog: kérheti adatainak törlését, amennyiben nincs kényszerítő ok a kezelés folytatására.",
+          "Korlátozási jog: kérheti az adatkezelés korlátozását bizonyos körülmények fennállása esetén.",
+          "Adathordozhatósághoz való jog: kérheti adatait strukturált, géppel olvasható formátumban.",
+          "Tiltakozási jog: tiltakozhat a jogos érdeken alapuló adatkezelés ellen.",
+          "Hozzájárulás visszavonásának joga: amennyiben az adatkezelés hozzájáruláson alapul, azt bármikor visszavonhatja a korábbi adatkezelés jogszerűségének sérelme nélkül."
+        ],
+        "complaint": "Panaszt tehet a Nemzeti Adatvédelmi és Információszabadság Hatóságnál (NAIH) a naih.hu weboldalon."
+      },
+      "cookies": {
+        "title": "Sütik és munkamenet-adatok",
+        "content": "Elengedhetetlen munkamenet-sütiket használunk a bejelentkezési állapot fenntartásához. Nem alkalmazunk nyomkövető, hirdetési vagy elemzési sütiket. A platform nem helyez el harmadik fél sütiket."
+      },
+      "contact": {
+        "title": "Kapcsolat",
+        "content": "Ha kérdése van az Adatvédelmi tájékoztatóval kapcsolatban, vagy szeretné gyakorolni adatvédelmi jogait, kérjük, lépjen kapcsolatba velünk e-mailben. A megkeresésre 30 napon belül válaszolunk."
+      },
+      "changes": {
+        "title": "A tájékoztató módosításai",
+        "content": "Az Adatvédelmi tájékoztatót időnként frissíthetjük. A legutóbbi módosítás dátuma az oldal tetején látható. A szolgáltatásaink változtatásokat követő további igénybevétele a frissített tájékoztató elfogadásának minősül."
+      }
+    }
   }
 }

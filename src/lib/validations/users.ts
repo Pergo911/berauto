@@ -23,3 +23,23 @@ export const updateUserSchema = z.object({
 });
 
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
+
+export const updateOwnProfileSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .max(255, "Name cannot exceed 255 characters"),
+  phone: z
+    .string()
+    .max(50, "Phone cannot exceed 50 characters")
+    .transform((v) => v.trim() || null)
+    .nullable()
+    .optional(),
+  address: z
+    .string()
+    .transform((v) => v.trim() || null)
+    .nullable()
+    .optional(),
+});
+
+export type UpdateOwnProfileInput = z.infer<typeof updateOwnProfileSchema>;

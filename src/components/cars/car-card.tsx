@@ -59,7 +59,7 @@ export async function CarCard({ car, bookable }: CarCardProps) {
         </div>
 
         <CardContent className="flex flex-1 flex-col gap-4 pt-4">
-          <div className="flex flex-wrap gap-y-2 gap-x-4 text-sm text-muted-foreground">
+          <div className="flex flex-col gap-2 text-sm text-muted-foreground">
             <div className="flex items-center gap-1.5">
               <Calendar className="size-3.5 text-muted-foreground" />
               <span className="font-medium text-foreground">

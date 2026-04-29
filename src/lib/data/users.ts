@@ -13,6 +13,7 @@ export type UserDTO = {
   address: string | null;
   phone: string | null;
   role: UserRole;
+  emailVerified: boolean;
   createdAt: Date;
 };
 
@@ -24,8 +25,23 @@ const userColumns = {
   address: users.address,
   phone: users.phone,
   role: users.role,
+  emailVerified: users.emailVerified,
   createdAt: users.createdAt,
 } as const;
+
+export type RentalBlockReason = "email-unverified" | "profile-incomplete";
+
+/**
+ * Returns the reason a logged-in user is blocked from submitting a rental
+ * request, or `null` if the user is eligible.
+ */
+export function getRentalBlockReason(
+  user: Pick<UserDTO, "emailVerified" | "phone" | "address">
+): RentalBlockReason | null {
+  if (!user.emailVerified) return "email-unverified";
+  if (!user.phone?.trim() || !user.address?.trim()) return "profile-incomplete";
+  return null;
+}
 
 // ── Queries ────────────────────────────────────────────
 

@@ -17,6 +17,7 @@ import type { DateRange } from "react-day-picker";
 
 import type { CreateRentalInput } from "@/lib/validations/rentals";
 import { createRentalSchema } from "@/lib/validations/rentals";
+import type { RentalBlockReason } from "@/lib/data/users";
 import { createRentalRequest } from "@/actions/rentals";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Link } from "@/i18n/navigation";
 
 type BookedInterval = {
   start: Date;
@@ -49,6 +51,7 @@ type RentalRequestFormProps = {
   dailyRate: number;
   isLoggedIn: boolean;
   bookedIntervals: BookedInterval[];
+  blockedReason?: RentalBlockReason | null;
 };
 
 export function RentalRequestForm({
@@ -56,6 +59,7 @@ export function RentalRequestForm({
   dailyRate,
   isLoggedIn,
   bookedIntervals,
+  blockedReason,
 }: RentalRequestFormProps) {
   "use no memo";
   const t = useTranslations("RentalRequestForm");
@@ -216,6 +220,37 @@ export function RentalRequestForm({
     { before: today },
     ...normalizedIntervals.map(({ start, end }) => ({ from: start, to: end })),
   ];
+
+  if (blockedReason === "email-unverified") {
+    return (
+      <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-950">
+        <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+          {t("emailUnverifiedTitle")}
+        </p>
+        <p className="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
+          {t("emailUnverifiedDescription")}
+        </p>
+      </div>
+    );
+  }
+
+  if (blockedReason === "profile-incomplete") {
+    return (
+      <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-950">
+        <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+          {t("profileIncompleteTitle")}
+        </p>
+        <p className="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
+          {t("profileIncompleteDescription")}
+        </p>
+        <Link href="/dashboard/profile">
+          <Button variant="outline" className="mt-3" size="sm">
+            {t("completeProfileButton")}
+          </Button>
+        </Link>
+      </div>
+    );
+  }
 
   if (submitted) {
     return (

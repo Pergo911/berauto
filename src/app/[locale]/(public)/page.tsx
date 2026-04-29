@@ -90,8 +90,8 @@ export default async function HomePage({
       <Navbar />
 
       <main className="container mx-auto flex-1 px-4 py-8">
-        <section className="relative mb-12 overflow-hidden rounded-[2rem] border border-border/60 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.14),_transparent_34%),linear-gradient(135deg,_rgba(255,255,255,0.96),_rgba(240,253,250,0.92))] px-6 py-8 shadow-sm sm:px-8 sm:py-10 lg:px-12 lg:py-12 dark:bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.22),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.18),_transparent_32%),linear-gradient(135deg,_rgba(15,23,42,0.96),_rgba(17,24,39,0.92))]">
-          <div className="absolute inset-y-0 right-0 hidden w-1/3 bg-[linear-gradient(180deg,_rgba(255,255,255,0.34),_transparent)] lg:block dark:bg-[linear-gradient(180deg,_rgba(255,255,255,0.06),_transparent)]" />
+        <section className="relative mb-12 overflow-hidden rounded-[2rem] border border-border/60 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.14),transparent_34%),linear-gradient(135deg,rgba(255,255,255,0.96),rgba(240,253,250,0.92))] p-6 shadow-sm sm:px-8 sm:py-10 lg:px-12 lg:py-12 dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.22),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.18),transparent_32%),linear-gradient(135deg,rgba(15,23,42,0.96),rgba(17,24,39,0.92))]">
+          <div className="absolute inset-y-0 right-0 hidden w-1/3 bg-[linear-gradient(180deg,rgba(255,255,255,0.34),transparent)] lg:block dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent)]" />
           <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.9fr)] lg:items-center">
             <div className="min-w-0 space-y-6">
               <Badge
@@ -159,11 +159,11 @@ export default async function HomePage({
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative min-w-0">
               <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-[1.75rem] bg-primary/10 blur-2xl" />
               <div className="relative rounded-[1.75rem] border border-white/70 bg-white/85 p-5 shadow-xl backdrop-blur dark:border-white/10 dark:bg-black/20 sm:p-6">
-                <div className="mb-5 flex items-center justify-between gap-4">
-                  <div>
+                <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium uppercase tracking-[0.22em] text-muted-foreground">
                       {t("promo.whyLabel")}
                     </p>
@@ -242,6 +242,11 @@ export default async function HomePage({
 
       <footer className="border-t py-6 text-center text-sm text-muted-foreground">
         <p>{t("footer", { year: new Date().getFullYear() })}</p>
+        <p className="mt-1">
+          <Link href="/privacy" className="underline-offset-4 hover:underline">
+            {t("privacyPolicy")}
+          </Link>
+        </p>
       </footer>
     </div>
   );
