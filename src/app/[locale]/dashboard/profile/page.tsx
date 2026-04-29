@@ -24,10 +24,12 @@ export default async function ProfilePage({
     <div>
       <PageHeader title={t("title")} />
       <div className="mt-6 max-w-xl">
-        <UserSettingsForm
-          initialPhone={user?.phone ?? ""}
-          initialAddress={user?.address ?? ""}
-        />
+        <div className="bg-black/50 border border-white/10 rounded-lg p-8 shadow-sm">
+          <UserSettingsForm
+            initialPhone={user?.phone ?? ""}
+            initialAddress={user?.address ?? ""}
+          />
+        </div>
       </div>
     </div>
   );

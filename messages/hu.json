@@ -94,6 +94,13 @@
       "emailLabel": "Email",
       "passwordLabel": "Jelszó",
       "confirmPasswordLabel": "Jelszó megerősítése",
+      "passwordStrength": {
+        "very-weak": "Nagyon gyenge",
+        "weak": "Gyenge",
+        "fair": "Közepes",
+        "good": "Jó",
+        "strong": "Erős"
+      },
       "signIn": "Bejelentkezés",
       "createAccount": "Fiók létrehozása",
       "errors": {
