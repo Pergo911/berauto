@@ -106,7 +106,7 @@ export function ProfileForm({ name, email, phone, address }: ProfileFormProps) {
               <FormControl>
                 <Textarea
                   placeholder={t("addressPlaceholder")}
-                  className="min-h-[80px] resize-none"
+                  className="min-h-20 resize-none"
                   {...field}
                   value={field.value ?? ""}
                 />

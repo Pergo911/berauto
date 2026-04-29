@@ -12,7 +12,11 @@ import {
 import { signOut, auth } from "@/lib/auth";
 import { resend } from "@/lib/resend";
 import { env } from "@/lib/env";
-import { registerSchema, forgotPasswordSchema, resetPasswordSchema } from "@/lib/validations/auth";
+import {
+  registerSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+} from "@/lib/validations/auth";
 import {
   renderEmailVerification,
   emailVerificationSubject,
@@ -53,13 +57,12 @@ async function sendVerificationEmail(
     .returning({ token: emailVerificationTokens.token });
 
   const verificationUrl = `${getAppUrl()}/api/auth/verify-email?token=${tokenRow.token}`;
-  const logoUrl = `${getAppUrl()}/com-logo.png`;
 
   const { error } = await resend.emails.send({
     from: env.RESEND_FROM_EMAIL,
     to: [email],
     subject: emailVerificationSubject(locale),
-    html: renderEmailVerification({ name, verificationUrl, locale, logoUrl }),
+    html: renderEmailVerification({ name, verificationUrl, locale }),
   });
 
   if (error) {
@@ -112,13 +115,19 @@ export async function resendVerificationEmail(
   }
 
   const [user] = await db
-    .select({ id: users.id, email: users.email, name: users.name, emailVerified: users.emailVerified })
+    .select({
+      id: users.id,
+      email: users.email,
+      name: users.name,
+      emailVerified: users.emailVerified,
+    })
     .from(users)
     .where(eq(users.id, session.user.id))
     .limit(1);
 
   if (!user) return { success: false, error: "User not found" };
-  if (user.emailVerified) return { success: false, error: "Email already verified" };
+  if (user.emailVerified)
+    return { success: false, error: "Email already verified" };
 
   await sendVerificationEmail(user.id, user.email, user.name, locale);
 
@@ -137,7 +146,11 @@ export async function requestPasswordReset(
   const { email } = parsed.data;
 
   const [user] = await db
-    .select({ id: users.id, name: users.name, passwordHash: users.passwordHash })
+    .select({
+      id: users.id,
+      name: users.name,
+      passwordHash: users.passwordHash,
+    })
     .from(users)
     .where(eq(users.email, email))
     .limit(1);
@@ -160,13 +173,12 @@ export async function requestPasswordReset(
     .returning({ token: passwordResetTokens.token });
 
   const resetUrl = `${getAppUrl()}/${locale}/reset-password?token=${tokenRow.token}`;
-  const logoUrl = `${getAppUrl()}/com-logo.png`;
 
   const { error } = await resend.emails.send({
     from: env.RESEND_FROM_EMAIL,
     to: [email],
     subject: passwordResetSubject(locale),
-    html: renderPasswordReset({ name: user.name, resetUrl, locale, logoUrl }),
+    html: renderPasswordReset({ name: user.name, resetUrl, locale }),
   });
 
   if (error) {
