@@ -1,6 +1,14 @@
+// ⚠️  DEPRECATED — this script has been retired and will no longer run.
 // Seed script — run with `pnpm db:seed`
 // Populates all tables with demo data for local development.
 // Idempotent: clears existing data before re-inserting.
+
+console.error(
+  "❌  db:seed is deprecated and has been disabled.\n" +
+    "   This script is no longer maintained and must not be run against any environment.\n" +
+    "   Set up your database manually or restore from a backup."
+);
+process.exit(1);
 
 import { config } from "dotenv";
 config({ path: ".env.local" });

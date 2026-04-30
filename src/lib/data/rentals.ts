@@ -34,6 +34,7 @@ export type RentalDTO = {
   startDate: Date;
   endDate: Date;
   status: RentalStatus;
+  locale: string;
   agentId: string | null;
   agentName: string | null;
   createdAt: Date;
@@ -96,6 +97,7 @@ function toRentalDTO(row: RentalRow): RentalDTO {
     startDate: row.rental.startDate,
     endDate: row.rental.endDate,
     status: row.rental.status,
+    locale: row.rental.locale,
     agentId: row.rental.agentId,
     agentName: row.agentName,
     createdAt: row.rental.createdAt,

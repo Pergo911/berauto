@@ -7,6 +7,7 @@ import { db } from "@/db";
 import { invoices, rentals } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { issueInvoiceSchema } from "@/lib/validations/invoices";
+import { sendRentalEmail } from "@/lib/send-rental-email";
 
 type ActionResult<T> =
   | { success: true; data: T }
@@ -77,6 +78,10 @@ export async function issueInvoice(
   revalidatePath("/agent/active");
   revalidatePath("/agent");
   revalidatePath("/dashboard/rentals");
+
+  sendRentalEmail(rentalId, "INVOICE", { amount: parsed.data.amount }).catch(
+    (err) => console.error("[issueInvoice] Failed to send email:", err)
+  );
 
   return { success: true, data: { id: invoice.id } };
 }

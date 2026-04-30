@@ -125,6 +125,14 @@
       "emailLabel": "Email",
       "passwordLabel": "Jelszó",
       "confirmPasswordLabel": "Jelszó megerősítése",
+      "passwordStrength": {
+        "very-weak": "Nagyon gyenge",
+        "weak": "Gyenge",
+        "fair": "Közepes",
+        "good": "Jó",
+        "strong": "Erős",
+        "very-strong": "Nagyon erős"
+      },
       "signIn": "Bejelentkezés",
       "createAccount": "Fiók létrehozása",
       "errors": {
@@ -155,7 +163,34 @@
     }
   },
   "Profile": {
+    "Settings": {
+      "passwordStrength": {
+        "very-weak": "Nagyon gyenge",
+        "weak": "Gyenge",
+        "fair": "Közepes",
+        "good": "Jó",
+        "strong": "Erős",
+        "very-strong": "Nagyon erős"
+      },
+      "passwordHint": "Legalább 6 karakter, betűk, számok és szimbólumok kombinációjával",
+      "personalInfoDesc": "Frissítsd az elérhetőségi adataidat",
+      "personalInfo": "Személyes adatok",
+      "nameLabel": "Teljes név",
+      "namePlaceholder": "Teljes neved",
+      "passwordSectionDesc": "Módosítsd a jelszavad a fiókod biztonsága érdekében",
+      "phoneLabel": "Telefonszám",
+      "addressLabel": "Lakcím",
+      "passwordSection": "Jelszó módosítása",
+      "newPasswordLabel": "Új jelszó",
+      "confirmPasswordLabel": "Jelszó megerősítése",
+      "submit": "Mentés",
+      "success": "Profil sikeresen frissítve",
+      "errors": {
+        "generic": "Valami hiba történt. Kérjük, próbálja újra."
+      }
+    },
     "title": "Saját profil",
+    "subtitle": "Kezeld a fiókbeállításaidat és biztonsági adataidat",
     "comingSoon": "A profiladatok hamarosan elérhetők."
   },
   "Agent": {

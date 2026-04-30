@@ -10,6 +10,7 @@ import { isCarBookable, getConflictingPendingRentals } from "@/lib/data/cars";
 import { getRentalEvents, getRentalById } from "@/lib/data/rentals";
 import { getInvoiceByRentalId } from "@/lib/data/invoices";
 import { getUserById, getRentalBlockReason } from "@/lib/data/users";
+import { sendRentalEmail } from "@/lib/send-rental-email";
 import {
   createRentalSchema,
   idSchema,
@@ -26,7 +27,8 @@ type ActionResult<T> =
 // ── 1. Create Rental Request ───────────────────────────
 
 export async function createRentalRequest(
-  input: unknown
+  input: unknown,
+  locale: "en" | "hu" = "hu"
 ): Promise<ActionResult<{ id: string }>> {
   const parsed = createRentalSchema.safeParse(input);
   if (!parsed.success) {
@@ -84,6 +86,7 @@ export async function createRentalRequest(
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       status: "PENDING",
+      locale,
       // Attach userId if logged in, otherwise use guest fields
       userId: session?.user ? session.user.id : null,
       guestName: session?.user ? null : (guestName ?? null),
@@ -101,6 +104,10 @@ export async function createRentalRequest(
 
   revalidatePath("/");
   revalidatePath("/agent/requests");
+
+  sendRentalEmail(rental.id, "REQUEST", { notes }).catch((err) =>
+    console.error("[createRentalRequest] Failed to send email:", err)
+  );
 
   return { success: true, data: { id: rental.id } };
 }
@@ -247,6 +254,7 @@ export async function approveRental(
   });
 
   // Auto-reject conflicting PENDING rentals
+  const autoRejectedIds: Array<{ id: string; conflictNote: string }> = [];
   if (options?.autoRejectConflicts) {
     const conflicts = await getConflictingPendingRentals(
       rental.carId,
@@ -265,15 +273,24 @@ export async function approveRental(
         })
         .where(eq(rentals.id, conflict.id));
 
+      // Localised default rejection reason for auto-rejected rentals
+      const conflictRental = await getRentalById(conflict.id);
+      const conflictLocale = (conflictRental?.locale as "en" | "hu") ?? "hu";
       const defaultConflictNote =
-        "Sorry, this request was automatically rejected because another rental was approved for the same dates.";
+        conflictLocale === "hu"
+          ? "Sajnáljuk, ezt a kérelmet automatikusan elutasítottuk, mert ugyanazokra a dátumokra egy másik bérlést jóváhagytak."
+          : "Sorry, this request was automatically rejected because another rental was approved for the same dates.";
+      const conflictNote =
+        options?.conflictNotes?.[conflict.id]?.trim() || defaultConflictNote;
+
       await db.insert(rentalEvents).values({
         rentalId: conflict.id,
         eventType: "REJECT",
         actorId: session.user.id,
-        notes:
-          options?.conflictNotes?.[conflict.id]?.trim() || defaultConflictNote,
+        notes: conflictNote,
       });
+
+      autoRejectedIds.push({ id: conflict.id, conflictNote });
     }
   }
 
@@ -281,6 +298,19 @@ export async function approveRental(
   revalidatePath("/agent/requests");
   revalidatePath("/agent/active");
   revalidatePath("/dashboard/rentals");
+
+  // Send email notifications after all DB writes complete
+  sendRentalEmail(rentalId, "APPROVE", { notes: options?.notes }).catch((err) =>
+    console.error("[approveRental] Failed to send approval email:", err)
+  );
+  for (const { id, conflictNote } of autoRejectedIds) {
+    sendRentalEmail(id, "REJECT", { notes: conflictNote }).catch((err) =>
+      console.error(
+        `[approveRental] Failed to send auto-reject email for ${id}:`,
+        err
+      )
+    );
+  }
 
   return { success: true, data: { id: rentalId } };
 }
@@ -342,6 +372,10 @@ export async function rejectRental(
   revalidatePath("/");
   revalidatePath("/agent/requests");
   revalidatePath("/dashboard/rentals");
+
+  sendRentalEmail(rentalId, "REJECT", { notes: parsed.data.reason }).catch(
+    (err) => console.error("[rejectRental] Failed to send email:", err)
+  );
 
   return { success: true, data: { id: rentalId } };
 }
@@ -405,10 +439,15 @@ export async function handoverRental(
   revalidatePath("/agent/active");
   revalidatePath("/dashboard/rentals");
 
+  sendRentalEmail(rentalId, "HANDOVER", {
+    mileageKm: parsed.data.mileageKm,
+    notes: parsed.data.notes,
+  }).catch((err) =>
+    console.error("[handoverRental] Failed to send email:", err)
+  );
+
   return { success: true, data: { id: rentalId } };
 }
-
-// ── 6. Return Rental ───────────────────────────────────
 
 export async function returnRental(
   rentalId: string,
@@ -476,6 +515,11 @@ export async function returnRental(
   revalidatePath("/agent/invoices");
   revalidatePath("/dashboard/rentals");
   revalidatePath("/admin/cars");
+
+  sendRentalEmail(rentalId, "RETURN", {
+    mileageKm: parsed.data.mileageKm,
+    notes: parsed.data.notes,
+  }).catch((err) => console.error("[returnRental] Failed to send email:", err));
 
   return { success: true, data: { id: rentalId } };
 }

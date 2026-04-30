@@ -184,6 +184,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             .limit(1);
           if (dbUser) {
             token.id = dbUser.id;
+            token.name = dbUser.name;
             token.role = dbUser.role;
           }
         } else {
