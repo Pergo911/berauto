@@ -1,0 +1,1 @@
+ALTER TABLE "rentals" ADD COLUMN "locale" varchar(10) DEFAULT 'hu' NOT NULL;

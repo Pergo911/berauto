@@ -104,6 +104,7 @@ export const rentals = pgTable(
     startDate: timestamp("start_date", { withTimezone: true }).notNull(),
     endDate: timestamp("end_date", { withTimezone: true }).notNull(),
     status: rentalStatusEnum("status").notNull().default("PENDING"),
+    locale: varchar("locale", { length: 10 }).notNull().default("hu"),
     agentId: uuid("agent_id").references(() => users.id),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()

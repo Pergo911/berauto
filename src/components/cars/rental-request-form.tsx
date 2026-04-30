@@ -191,7 +191,7 @@ export function RentalRequestForm({
   }
 
   async function onSubmit(values: CreateRentalInput) {
-    const result = await createRentalRequest(values);
+    const result = await createRentalRequest(values, locale as "en" | "hu");
 
     if (!result.success) {
       toast.error(result.error);
