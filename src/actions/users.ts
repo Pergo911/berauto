@@ -63,9 +63,15 @@ export async function updateOwnProfile(
     return { success: false, error: "Invalid input" };
   }
 
+  const { name, phone, address } = parsed.data;
+
   const [user] = await db
     .update(users)
-    .set(parsed.data)
+    .set({
+      name,
+      phone: phone?.trim() || null,
+      address: address?.trim() || null,
+    })
     .where(eq(users.id, session.user.id))
     .returning({ id: users.id });
 

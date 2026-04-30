@@ -156,7 +156,34 @@
   },
   "Profile": {
     "title": "My Profile",
-    "comingSoon": "Profile details coming soon."
+    "subtitle": "Manage your account settings and security preferences",
+    "comingSoon": "Profile details coming soon.",
+    "Settings": {
+      "personalInfo": "Personal Information",
+      "personalInfoDesc": "Update your contact details",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "Your full name",
+      "phoneLabel": "Phone Number",
+      "addressLabel": "Home Address",
+      "passwordSection": "Change Password",
+      "passwordSectionDesc": "Change your password to keep your account secure",
+      "newPasswordLabel": "New Password",
+      "confirmPasswordLabel": "Confirm Password",
+      "passwordHint": "6+ characters with mix of letters, numbers & symbols",
+      "passwordStrength": {
+        "very-weak": "Very Weak",
+        "weak": "Weak",
+        "fair": "Fair",
+        "good": "Good",
+        "strong": "Strong",
+        "very-strong": "Very Strong"
+      },
+      "submit": "Save Changes",
+      "success": "Profile updated successfully",
+      "errors": {
+        "generic": "Something went wrong. Please try again."
+      }
+    }
   },
   "Agent": {
     "dashboard": {

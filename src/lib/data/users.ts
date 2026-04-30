@@ -91,3 +91,61 @@ export async function getUserById(id: string): Promise<UserDTO | null> {
 
   return row ?? null;
 }
+
+/** Get a single user with passwordHash by ID (for auth operations). */
+export async function getUserByIdWithPassword(
+  id: string
+): Promise<(UserDTO & { passwordHash: string | null }) | null> {
+  const [row] = await db
+    .select({
+      ...userColumns,
+      passwordHash: users.passwordHash,
+    })
+    .from(users)
+    .where(eq(users.id, id))
+    .limit(1);
+
+  return row ?? null;
+}
+
+/** Update user settings (name, phone, address) and optionally password. */
+export async function updateUserSettings(
+  id: string,
+  data: {
+    name?: string;
+    phone: string | null;
+    address: string | null;
+    passwordHash?: string | null;
+  }
+): Promise<UserDTO | null> {
+  const updateData: Record<string, unknown> = {
+    phone: data.phone,
+    address: data.address,
+    updatedAt: new Date(),
+  };
+
+  if (data.name) {
+    updateData.name = data.name;
+  }
+
+  if (data.passwordHash) {
+    updateData.passwordHash = data.passwordHash;
+  }
+
+  const [updated] = await db
+    .update(users)
+    .set(updateData)
+    .where(eq(users.id, id))
+    .returning({
+      id: users.id,
+      email: users.email,
+      name: users.name,
+      address: users.address,
+      phone: users.phone,
+      role: users.role,
+      emailVerified: users.emailVerified,
+      createdAt: users.createdAt,
+    });
+
+  return updated ?? null;
+}
