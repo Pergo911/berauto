@@ -1,6 +1,6 @@
 # berauto
 
-[berauto.vercel.app](https://berauto.vercel.app/)
+[berautoapp.hu](https://www.berautoapp.hu/)
 
 A car rental platform built as a school assignment. Supports the complete rental lifecycle — from request submission through vehicle handover to invoicing — with role-based access for users, agents, and admins.
 
