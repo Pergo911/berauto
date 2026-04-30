@@ -39,7 +39,11 @@ export async function sendRentalEmail(
   const isRegisteredUser = rental.userId !== null;
   const customerEmail = rental.userEmail ?? rental.guestEmail;
   const customerName =
-    rental.userName ?? rental.guestName ?? (rental.userEmail ?? rental.guestEmail ?? "");
+    rental.userName ??
+    rental.guestName ??
+    rental.userEmail ??
+    rental.guestEmail ??
+    "";
 
   if (!customerEmail) {
     console.warn(

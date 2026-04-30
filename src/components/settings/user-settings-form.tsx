@@ -113,7 +113,10 @@ export function UserSettingsForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit, onInvalid)}
+        className="space-y-6"
+      >
         {/* Personal Info Card */}
         <div className="rounded-xl border border-border/50 bg-muted/30 p-6 shadow-sm">
           <div className="mb-4">

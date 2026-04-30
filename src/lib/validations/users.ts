@@ -13,12 +13,11 @@ export const updateUserSchema = z.object({
     .max(255, "Name cannot exceed 255 characters")
     .optional(),
   email: z.email("Invalid email address").optional(),
-  phone:
-    z
-      .string()
-      .max(50, "Phone cannot exceed 50 characters")
-      .optional()
-      .nullable(),
+  phone: z
+    .string()
+    .max(50, "Phone cannot exceed 50 characters")
+    .optional()
+    .nullable(),
   address: z.string().optional().nullable(),
   role: z.enum(["user", "agent", "admin"]).optional(),
 });
@@ -32,10 +31,7 @@ export const updateOwnProfileSchema = z
       .trim()
       .min(1, "Name is required")
       .max(255, "Name cannot exceed 255 characters"),
-    phone: z
-      .string()
-      .max(50, "Phone cannot exceed 50 characters")
-      .optional(),
+    phone: z.string().max(50, "Phone cannot exceed 50 characters").optional(),
     address: z.string().optional(),
     password: z.string().optional(),
     confirmPassword: z.string().optional(),
@@ -51,13 +47,18 @@ export const updateOwnProfileSchema = z
       return true;
     },
     {
-      message: "Both password and confirmation are required if changing password",
+      message:
+        "Both password and confirmation are required if changing password",
       path: ["confirmPassword"],
     }
   )
   .refine(
     (data) => {
-      if (data.password && data.confirmPassword && data.password !== data.confirmPassword) {
+      if (
+        data.password &&
+        data.confirmPassword &&
+        data.password !== data.confirmPassword
+      ) {
         return false;
       }
       return true;

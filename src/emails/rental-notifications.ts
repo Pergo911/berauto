@@ -63,8 +63,13 @@ function rentalDays(startDate: Date, endDate: Date): number {
   );
 }
 
-function renderShell(innerHtml: string, locale: Locale, subject: string): string {
-  const footerText = locale === "hu" ? "BerAuto Autókölcsönző" : "BerAuto Car Rental";
+function renderShell(
+  innerHtml: string,
+  locale: Locale,
+  subject: string
+): string {
+  const footerText =
+    locale === "hu" ? "BerAuto Autókölcsönző" : "BerAuto Car Rental";
   return `<!DOCTYPE html>
 <html lang="${escapeHtml(locale)}">
 <head>
@@ -237,7 +242,9 @@ function renderApprove(data: RentalEmailData): string {
   const intro = isHu
     ? "Örömmel értesítünk, hogy foglalási kérelmedet jóváhagytuk."
     : "Great news! Your rental request has been approved.";
-  const agentNotesLabel = isHu ? "Üzenet az ügynöktől:" : "Note from our agent:";
+  const agentNotesLabel = isHu
+    ? "Üzenet az ügynöktől:"
+    : "Note from our agent:";
   const arriveMsg = isHu
     ? "Kérjük, érkezz pontosan a megbeszélt időpontban."
     : "Please arrive as scheduled for your pickup.";
@@ -276,7 +283,9 @@ function renderReject(data: RentalEmailData): string {
     ? "Sajnálattal értesítünk, hogy foglalási kérelmedet nem tudtuk jóváhagyni."
     : "Unfortunately, we were unable to approve your rental request.";
   const reasonLabel = isHu ? "Indoklás:" : "Reason:";
-  const browseLabel = isHu ? "Elérhető autók böngészése" : "Browse available cars";
+  const browseLabel = isHu
+    ? "Elérhető autók böngészése"
+    : "Browse available cars";
   const closing = isHu
     ? "Köszönjük megértésedet. Reméljük, hogy a jövőben újra találkozunk!"
     : "Thank you for your understanding. We hope to see you again!";
@@ -287,9 +296,7 @@ function renderReject(data: RentalEmailData): string {
          <p style="margin:0 0 24px;font-size:14px;color:#374151;background:#f9fafb;border-radius:4px;padding:12px 16px;">${escapeHtml(notes.trim())}</p>`
       : "";
 
-  const ctaHtml = appUrl
-    ? ctaButton(`${appUrl}/${locale}`, browseLabel)
-    : "";
+  const ctaHtml = appUrl ? ctaButton(`${appUrl}/${locale}`, browseLabel) : "";
 
   const inner = `<p style="margin:0 0 20px;font-size:15px;color:#374151;">${greeting}</p>
 <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#374151;">${intro}</p>
@@ -312,11 +319,15 @@ function renderHandover(data: RentalEmailData): string {
   const intro = isHu
     ? "Az autódat átadtuk — kellemes utat kívánunk!"
     : "Your car has been handed over — enjoy your rental!";
-  const mileageLabel = isHu ? "Kilométer-állás az átadáskor:" : "Mileage at handover:";
+  const mileageLabel = isHu
+    ? "Kilométer-állás az átadáskor:"
+    : "Mileage at handover:";
   const returnMsg = isHu
     ? `Kérjük, add vissza az autót legkésőbb <strong>${escapeHtml(formatDate(endDate, locale))}</strong>-ig.`
     : `Please return the car by <strong>${escapeHtml(formatDate(endDate, locale))}</strong>.`;
-  const agentNotesLabel = isHu ? "Megjegyzés az ügynöktől:" : "Note from our agent:";
+  const agentNotesLabel = isHu
+    ? "Megjegyzés az ügynöktől:"
+    : "Note from our agent:";
 
   const mileageHtml =
     mileageKm != null
@@ -350,11 +361,15 @@ function renderReturn(data: RentalEmailData): string {
   const intro = isHu
     ? "Köszönjük, hogy a BerAuto-t választottad! Az autódat sikeresen visszavettük."
     : "Thank you for choosing BerAuto! Your car has been successfully returned.";
-  const mileageLabel = isHu ? "Kilométer-állás a visszaadáskor:" : "Mileage at return:";
+  const mileageLabel = isHu
+    ? "Kilométer-állás a visszaadáskor:"
+    : "Mileage at return:";
   const invoiceMsg = isHu
     ? "Hamarosan kiállítjuk a számlát és értesítünk e-mailben."
     : "An invoice will be issued shortly and you will be notified by email.";
-  const agentNotesLabel = isHu ? "Megjegyzés az ügynöktől:" : "Note from our agent:";
+  const agentNotesLabel = isHu
+    ? "Megjegyzés az ügynöktől:"
+    : "Note from our agent:";
 
   const mileageHtml =
     mileageKm != null
@@ -378,7 +393,8 @@ ${notesHtml}
 }
 
 function renderInvoice(data: RentalEmailData): string {
-  const { locale, customerName, amount, isRegisteredUser, appUrl, rentalId } = data;
+  const { locale, customerName, amount, isRegisteredUser, appUrl, rentalId } =
+    data;
   const isHu = locale === "hu";
   const subject = subjects.INVOICE[locale];
 
@@ -401,7 +417,10 @@ function renderInvoice(data: RentalEmailData): string {
 
   const ctaHtml =
     isRegisteredUser && appUrl
-      ? ctaButton(`${appUrl}/api/invoices/${encodeURIComponent(rentalId)}/pdf`, downloadLabel)
+      ? ctaButton(
+          `${appUrl}/api/invoices/${encodeURIComponent(rentalId)}/pdf`,
+          downloadLabel
+        )
       : `<p style="margin:0 0 24px;font-size:14px;color:#6b7280;">${guestMsg}</p>`;
 
   const inner = `<p style="margin:0 0 20px;font-size:15px;color:#374151;">${greeting}</p>

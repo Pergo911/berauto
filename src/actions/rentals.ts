@@ -305,7 +305,10 @@ export async function approveRental(
   );
   for (const { id, conflictNote } of autoRejectedIds) {
     sendRentalEmail(id, "REJECT", { notes: conflictNote }).catch((err) =>
-      console.error(`[approveRental] Failed to send auto-reject email for ${id}:`, err)
+      console.error(
+        `[approveRental] Failed to send auto-reject email for ${id}:`,
+        err
+      )
     );
   }
 
@@ -370,8 +373,8 @@ export async function rejectRental(
   revalidatePath("/agent/requests");
   revalidatePath("/dashboard/rentals");
 
-  sendRentalEmail(rentalId, "REJECT", { notes: parsed.data.reason }).catch((err) =>
-    console.error("[rejectRental] Failed to send email:", err)
+  sendRentalEmail(rentalId, "REJECT", { notes: parsed.data.reason }).catch(
+    (err) => console.error("[rejectRental] Failed to send email:", err)
   );
 
   return { success: true, data: { id: rentalId } };
@@ -516,9 +519,7 @@ export async function returnRental(
   sendRentalEmail(rentalId, "RETURN", {
     mileageKm: parsed.data.mileageKm,
     notes: parsed.data.notes,
-  }).catch((err) =>
-    console.error("[returnRental] Failed to send email:", err)
-  );
+  }).catch((err) => console.error("[returnRental] Failed to send email:", err));
 
   return { success: true, data: { id: rentalId } };
 }
